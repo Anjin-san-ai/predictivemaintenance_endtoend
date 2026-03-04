@@ -2,9 +2,12 @@
   "name": "aircraft-intelligence-platform",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "18.17.1"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/ 2>/dev/null || true",
     "start": "next start",
     "lint": "eslint"
   },

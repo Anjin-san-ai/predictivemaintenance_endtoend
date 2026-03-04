@@ -28,7 +28,7 @@ jobs:
           action: "upload"
           app_location: "COMPASS-Demo"
           api_location: ""
-          output_location: ".next"
+          output_location: ""
           app_build_command: "npm ci && npm run build"
         env:
           A400_API_URL: ${{ secrets.A400_API_URL }}
