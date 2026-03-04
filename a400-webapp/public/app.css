@@ -54,9 +54,7 @@ body { margin: 0; overflow: hidden; font-family: var(--font-mono); background-co
 #info-details-grid .label { color: var(--sci-fi-cyan); }
 .value { color: #fff; font-weight: 500; }
 #info-description { font-size: 0.9em; line-height: 1.6; color: #ccc; }
-#webcam-container { position: absolute; bottom: 20px; right: 20px; width: 240px; height: 180px; border: 2px solid var(--sci-fi-cyan); border-radius: 4px; box-shadow: 0 0 15px var(--sci-fi-glow); overflow: hidden; transition: opacity 0.5s; opacity: 0; pointer-events: none; }
-#webcam-container.visible { opacity: 1; }
-#webcam-feed, #overlay-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); }
+/* webcam/gesture styles removed */
 #control-hint { position: absolute; left: 18px; top: 74px; background: rgba(0,0,0,0.45); color: var(--sci-fi-cyan); padding: 8px 12px; border-radius: 8px; font-size: 13px; pointer-events: none; box-shadow: 0 6px 18px rgba(0,0,0,0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 40; }
 #component-list-panel { position: absolute; left: 18px; top: 166px; width: 300px; max-height: 60vh; overflow: auto; background: linear-gradient(180deg, rgba(2,6,12,0.9), rgba(2,6,12,0.75)); border: 1px solid var(--color-border-tactical); padding: 10px; border-radius: 8px; z-index: 70; box-shadow: var(--shadow-card); }
 #component-list-panel h3 { margin: 0 0 8px 0; font-size: 13px; color: var(--sci-fi-cyan); }
@@ -66,8 +64,7 @@ body { margin: 0; overflow: hidden; font-family: var(--font-mono); background-co
 .component-item .title { font-size:13px; color:#dff; font-weight:600; }
 .component-item .subtitle { font-size:11px; color:#9fe; opacity:0.85; }
 .component-item.active { outline: 2px solid rgba(0,255,255,0.12); background: linear-gradient(90deg, rgba(0,255,255,0.02), rgba(0,120,160,0.03)); }
-#calibration-overlay { display: none; }
-#gesture-cursor { position: fixed; width: 28px; height: 28px; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); mix-blend-mode: screen; border-radius:50%; box-shadow:0 8px 24px rgba(0,255,255,0.12); }
+/* calibration/gesture-cursor styles removed */
 #mode-badge { position: absolute; left: 18px; top: 116px; background: rgba(0,0,0,0.6); color: var(--color-accent-tactical); padding: 6px 10px; border-radius: 8px; font-weight: 700; z-index: 60; box-shadow: var(--shadow-tactical); backdrop-filter: blur(6px); }
 #help-panel { position: absolute; left: 18px; bottom: 18px; width: 320px; background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6)); padding: 10px 12px; border-radius: 10px; font-size: 13px; z-index: 55; color: #bfeff0; }
 .marker-label { position: absolute; transform: translate(-50%, -120%); pointer-events: none; white-space: nowrap; padding: 6px 8px; border-radius: 6px; background: rgba(0,0,0,0.6); color: #e6ffff; font-weight:600; font-size:12px; text-shadow:0 2px 8px rgba(0,0,0,0.6); z-index:70; }

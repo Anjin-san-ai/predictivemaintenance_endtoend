@@ -35,27 +35,9 @@
         <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end;"><button id="load-flight" class="tutorial-btn primary">Load</button></div>
     </div>
     <!-- arrow overlay removed -->
-    <!-- gesture tuner (temporary debug UI) -->
-    <div id="gesture-tuner" style="position:fixed;left:18px;top:18px;transform:translateY(80px);width:320px;background:rgba(0,0,0,0.6);padding:10px;border-radius:8px;z-index:120;box-shadow:0 12px 40px rgba(0,0,0,0.6);display:none;flex-direction:column;gap:8px;font-size:13px;color:#bfe;">
-        <div style="display:flex;justify-content:space-between;align-items:center"><strong style="color:var(--sci-fi-cyan)">Gesture Tuner</strong><button id="hide-tuner" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--sci-fi-cyan);padding:4px 8px;border-radius:6px;cursor:pointer">Hide</button></div>
-        <label>Zoom Scale <span id="tz-val" style="float:right">12000</span></label>
-        <input id="tz" type="range" min="1000" max="40000" step="250" value="12000">
-        <label>Pinch Enter <span id="pe-val" style="float:right">0.09</span></label>
-        <input id="pe" type="range" min="0.02" max="0.25" step="0.005" value="0.09">
-        <label>Pinch Leave <span id="pl-val" style="float:right">0.12</span></label>
-        <input id="pl" type="range" min="0.03" max="0.35" step="0.005" value="0.12">
-        <label>Sensitivity <span id="sens-val" style="float:right">1.0</span></label>
-        <input id="sens" type="range" min="0.4" max="2.0" step="0.02" value="1.0">
-        <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:6px;">
-            <label style="font-size:12px;opacity:0.9;">Precision Mode</label>
-            <input id="precision-toggle" type="checkbox" title="When held via modifier pinch, reduces acceleration for fine control">
-        </div>
-        <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end;">
-            <button id="learn-cal" class="tutorial-btn">Learn</button>
-        </div>
-    </div>
+    <!-- gesture tuner removed -->
     <div id="canvas-container"></div>
-    <div id="mode-badge">Mode: Mouse</div>
+    <div id="mode-badge" style="display:none;"></div>
     <div id="fps-counter">FPS: --</div>
         <div id="help-panel" class="collapsed" aria-expanded="false">
             <div class="help-header" role="button" tabindex="0" aria-controls="help-body">
@@ -70,13 +52,13 @@
             <div id="help-body" class="help-body">
                 <div class="help-content">
                     <div class="help-line">
-                        <strong>G</strong> toggle Gesture mode · <strong>C</strong> start/collect Calibration · <strong>D</strong> toggle Debug anchors
+                        <strong>D</strong> toggle Debug anchors
                     </div>
                     <div class="help-line">
-                        <strong>F</strong> open Flight selector · <strong>T</strong> toggle Gesture Tuner UI · <strong>I</strong> invert gesture X mapping · <strong>Z</strong> toggle invert zoom
+                        <strong>F</strong> open Flight selector
                     </div>
                     <div class="help-line">
-                        <strong>[</strong>/<strong>]</strong> decrease/increase pitch scale · <strong>,</strong>/<strong>.</strong> decrease/increase yaw scale · <strong>0</strong> reset gesture scales
+                        <strong>Esc</strong> close overlays
                     </div>
                     <div class="help-line">
                         <strong>Esc</strong> close overlays / cancel calibration · <strong>←</strong>/<strong>→</strong> tutorial navigation
@@ -85,10 +67,7 @@
                         <label class="control-label">Test Mode</label>
                         <input id="test-mode-toggle" type="checkbox" title="Enable test mode: pixel overlays + 1Hz logging">
                     </div>
-                    <div class="help-controls">
-                        <label class="control-label">Gesture Debug</label>
-                        <input id="gesture-debug-toggle" type="checkbox" title="Show/Hide gesture debug panel">
-                    </div>
+                    <!-- gesture debug removed -->
                     <div id="cal-progress" class="help-cal"><i></i></div>
                     <div class="help-links">Need a refresher? <a href="#" id="reopen-tour">Show tour</a> · <a href="#" id="list-nodes">List model nodes</a></div>
                 </div>
@@ -99,7 +78,7 @@
         <div class="backdrop"></div>
         <div id="tutorial-card">
             <h2>Welcome to Sentry AI Holographic Monitor</h2>
-            <p id="tutorial-text">A quick tour will show core controls: mouse, gestures, calibration, and how to inspect components.</p>
+            <p id="tutorial-text">A quick tour will show core controls: mouse navigation and how to inspect components.</p>
             <div id="tutorial-progress"></div>
             <div id="tutorial-controls">
                 <button id="tutorial-skip" class="tutorial-btn">Skip</button>
@@ -133,17 +112,14 @@
             </div>
         </div>
     </div>
-    <div id="control-hint">Controls: Mouse — Move & click · Gesture — Pinch to click</div>
+    <div id="control-hint">Controls: Mouse — Move & click</div>
     <!-- Camera zoom slider (controls camera distance only) -->
     <div id="camera-zoom-ui" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:420px;background:rgba(0,0,0,0.6);padding:10px;border-radius:8px;z-index:200;display:flex;gap:8px;align-items:center;box-shadow:0 8px 30px rgba(0,0,0,0.45);">
         <label style="color:var(--sci-fi-cyan);font-weight:700;margin-right:6px;">Camera</label>
         <input id="camera-zoom-slider" type="range" min="100" max="60000" step="10" style="flex:1;" />
         <div id="camera-zoom-val" style="width:86px;text-align:right;color:#bfe;font-size:13px;">--</div>
     </div>
-    <div id="webcam-container">
-        <video id="webcam-feed" autoplay playsinline></video>
-        <canvas id="overlay-canvas"></canvas>
-    </div>
+    <!-- webcam container removed: gesture control disabled -->
     <!-- AI Chat widget (bottom-right, hidden when gesture mode is active) -->
     <div id="ai-chat" style="position:fixed;right:40px;bottom:40px;width:520px;height:680px;backdrop-filter:blur(14px) saturate(140%);background:rgba(10,22,32,0.55);border:1px solid rgba(0,255,255,0.18);border-radius:18px;padding:0;box-shadow:0 28px 90px -8px rgba(0,0,0,0.65),0 0 0 1px rgba(0,255,255,0.08) inset;z-index:260;display:none;flex-direction:column;overflow:hidden;transform:translateY(18px) scale(.92);opacity:0;">
         <div id="ai-chat-header" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid rgba(0,255,255,0.12);background:linear-gradient(90deg,rgba(0,40,60,0.55),rgba(0,20,30,0.3));user-select:none;">
@@ -175,30 +151,7 @@
         </div>
     </div>
     <!-- AI Assistant button removed (accessible via COMPASS nav: AI Assistant) -->
-    <!-- Calibration overlay (positioned above webcam) -->
-    <div id="calibration-overlay" style="position:fixed;right:20px;bottom:220px;display:none;align-items:flex-start;justify-content:center;pointer-events:auto;z-index:160;width:280px;">
-        <div style="background:rgba(0,0,0,0.72);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);color:#fff;text-align:center;width:100%;">
-            <h3 style="margin:0 0 6px 0;color:var(--sci-fi-cyan);font-size:14px;">Hand Calibration</h3>
-            <p style="margin:0 0 10px 0;font-size:13px;">Place your pointing finger inside the box shown on the webcam and press <strong>C</strong> to capture several samples.</p>
-            <div id="cal-box" style="width:240px;height:140px;margin:0 auto;border:2px dashed var(--sci-fi-cyan);border-radius:6px;display:block;box-sizing:border-box;">
-                <div style="position:relative;width:100%;height:100%;"></div>
-            </div>
-            <p style="margin-top:8px;font-size:12px;opacity:0.9;">Press <strong>Esc</strong> to cancel.</p>
-        </div>
-    </div>
-
-    <!-- Learn overlay for auto-calibration (countdown, live sparkline, progress) -->
-    <div id="learn-overlay" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);display:none;z-index:200;">
-        <div style="width:420px;background:rgba(2,6,12,0.95);padding:16px;border-radius:10px;border:1px solid rgba(0,255,255,0.06);color:#dff;box-shadow:0 20px 60px rgba(0,0,0,0.8);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong style="color:var(--sci-fi-cyan)">Auto Learn</strong><div id="learn-countdown" style="font-size:14px;opacity:0.9">Ready</div></div>
-            <div style="font-size:13px;color:#bfe;margin-bottom:8px;">Follow the on-screen prompts: slowly sweep, then quickly flick, repeat. We'll learn comfortable sensitivity and smoothing.</div>
-            <canvas id="learn-spark" width="380" height="64" style="background:rgba(0,0,0,0.18);border-radius:6px;display:block;margin:0 auto 8px;border:1px solid rgba(255,255,255,0.03);"></canvas>
-            <div id="learn-progress" style="height:10px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;">
-                <i style="display:block;height:100%;width:0%;background:linear-gradient(90deg,#00fef0,#00aaff);transition:width 120ms linear;"></i>
-            </div>
-            <div style="display:flex;justify-content:flex-end;margin-top:10px;"><button id="cancel-learn" class="tutorial-btn">Cancel</button></div>
-        </div>
-    </div>
+    <!-- Calibration and learn overlays removed: gesture control disabled -->
 
     <!-- Toast container -->
     <div id="toast-root" style="position:fixed;right:18px;top:18px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;"></div>
@@ -263,12 +216,7 @@
     <!-- All Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <!-- TensorFlow/MediaPipe removed: gesture control disabled -->
     <script type="importmap">
         { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
     </script>
@@ -531,6 +479,14 @@ STYLE: Punchy, analytic, no fluff. Avoid repeating raw numbers without interpret
         })();
     </script>
 
+    <script>
+        // Stubs for removed MediaPipe/gesture dependencies
+        if (typeof Hands === 'undefined') { window.Hands = function(){}; Hands.prototype.setOptions = function(){}; Hands.prototype.onResults = function(){}; }
+        if (typeof Camera === 'undefined') { window.Camera = function(){}; Camera.prototype.start = function(){}; }
+        if (typeof drawConnectors === 'undefined') { window.drawConnectors = function(){}; }
+        if (typeof drawLandmarks === 'undefined') { window.drawLandmarks = function(){}; }
+        if (typeof HAND_CONNECTIONS === 'undefined') { window.HAND_CONNECTIONS = []; }
+    </script>
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -1182,14 +1138,8 @@ STYLE: Punchy, analytic, no fluff. Avoid repeating raw numbers without interpret
             }catch(e){return true;}
         }
         
-        const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
-    // allow two-hand detection so we can support a two-thumb precision modifier gesture
-    hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6 });
-        hands.onResults(onResults);
-        
-        const videoElement = document.getElementById('webcam-feed');
-        const videoCamera = new Camera(videoElement, { onFrame: async () => { await hands.send({image: videoElement}); }, width: 640, height: 480 });
-        videoCamera.start();
+        // Gesture / camera system disabled — mouse-only mode
+        const videoElement = null;
 
         // audio feedback: create a small WebAudio click generator (more reliable than an empty data URI)
         const clickAudio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA='); // keep as fallback
