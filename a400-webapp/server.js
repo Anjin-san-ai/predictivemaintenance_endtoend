@@ -10,7 +10,7 @@ const neuroSanClientRouteFactory = require('./server/routes/neurosan_client');
 const app = express();
 const PORT = config.port || 3000;
 
-// CORS — allow COMPASS (Next.js on port 3001) and any localhost origin to consume the API
+// CORS — allow COMPASS (localhost + Azure Static Web Apps) to consume the API
 const ALLOWED_ORIGINS = [
   'http://localhost:3001',
   'http://localhost:3000',
@@ -19,7 +19,9 @@ const ALLOWED_ORIGINS = [
 ];
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+  // Allow exact matches OR Azure Static Web Apps domains (*.azurestaticapps.net)
+  const isAllowed = !origin || ALLOWED_ORIGINS.includes(origin) || /\.azurestaticapps\.net$/.test(origin);
+  if (isAllowed) {
     res.setHeader('Access-Control-Allow-Origin', origin || '*');
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
