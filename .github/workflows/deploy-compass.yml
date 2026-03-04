@@ -27,7 +27,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.17.1'
+          node-version: '20.x'
           cache: 'npm'
           cache-dependency-path: COMPASS-Demo/package-lock.json
 
