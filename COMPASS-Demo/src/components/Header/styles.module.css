@@ -1,0 +1,245 @@
+/* Header Styles */
+
+.header {
+  background: var(--header-gradient);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 0 24px;
+  height: 64px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    padding: 10px 15px;
+    gap: 10px;
+  }
+}
+
+/* Logo Section */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 100%;
+  
+  @media (max-width: 768px) {
+    justify-content: center;
+    margin-bottom: 0;
+    height: auto;
+  }
+}
+
+.platformName {
+  color: var(--header-logo-text);
+  font-family: var(--font-family-poppins);
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Navigation Menu */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  height: 64px;
+  
+  @media (max-width: 768px) {
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 60px;
+    gap: 5px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgba(114, 131, 168, 0.2);
+    border-bottom: 1px solid rgba(114, 131, 168, 0.2);
+  }
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  padding: 0 15px;
+  height: 64px;
+
+  @media (max-width: 768px) {
+    flex: 1;
+    height: 50px;
+    padding: 0 5px;
+    border: none;
+  }
+}
+
+.navItem span {
+  color: var(--header-text);
+  font-family: var(--font-family-roboto);
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  width: 100%;
+  font-weight: normal;
+  
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+}
+
+.active span {
+  color: var(--header-active-text);
+  font-weight: 600;
+}
+
+.navItem::after {
+  content: '';
+  background-color: var(--neon-carrot);
+  height: 6.5px;
+  width: calc(100% + 10px);
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+  opacity: 0;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 4px;
+    left: 0;
+    bottom: -2px;
+    transform: none;
+    border-radius: 2px;
+  }
+}
+
+.active::after {
+  opacity: 1;
+}
+
+
+/* Utilities Section */
+.utilities {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+  height: 100%;
+  
+  @media (max-width: 768px) {
+    margin: 0;
+    width: 100%;
+    justify-content: space-evenly;
+    height: 60px;
+    padding: 0;
+  }
+}
+
+.aiAssistantButton {
+  background-color: transparent;
+  border: 1.33px solid #c473d0;
+  border-radius: 66.67px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 21.33px 21.33px 21.33px 17.33px;
+  height: 48px;
+  gap: 13.33px;
+}
+
+.aiAssistantButton:hover {
+  filter: brightness(1.25);
+}
+
+.aiAssistantText {
+  color: var(--brand--white);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-s);
+  font-weight: 700;
+}
+
+.icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+}
+
+.icon:hover {
+  filter: brightness(1.25);
+}
+
+.avatar {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notificationBadge {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--neon-carrot);
+  border-radius: 29.33px;
+  color: var(--mirage);
+  font-family: var(--font-family-open_sans);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  height: 23px;
+  width: 32px;
+  left: 12px;
+  top: -5px;
+}
+
+.chatbotNavItem {
+  color: var(--color-accent-tactical, #00c8ff) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .platformName {
+    font-size: var(--font-size-s);
+  }
+  
+  .aiAssistantButton span {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .platformName {
+    font-size: var(--header-mobile-font-size);
+  }
+  
+  .navItem span {
+    font-size: var(--header-mobile-font-size);
+  }
+  
+  .utilities {
+    gap: 15px;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+}

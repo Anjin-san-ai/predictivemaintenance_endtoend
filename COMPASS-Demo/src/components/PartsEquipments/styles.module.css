@@ -1,0 +1,59 @@
+.statusIndicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: var(--font-size-s);
+  white-space: nowrap;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* Part status colors */
+.inStock {
+  background-color: rgba(72, 187, 120, 0.2);
+  color: #48bb78;
+}
+
+.lowStock {
+  background-color: rgba(237, 137, 54, 0.2);
+  color: #ed8936;
+}
+
+.outOfStock {
+  background-color: rgba(245, 101, 101, 0.2);
+  color: #f56565;
+}
+
+.onOrder {
+  background-color: rgba(66, 153, 225, 0.2);
+  color: #4299e1;
+}
+
+.discontinued {
+  background-color: rgba(160, 174, 192, 0.2);
+  color: #a0aec0;
+}
+
+/* Equipment status colors */
+.inStore {
+  background-color: rgba(72, 187, 120, 0.2);
+  color: #48bb78;
+}
+
+.outForRepair {
+  background-color: rgba(237, 137, 54, 0.2);
+  color: #ed8936;
+}
+
+.outForCalibration {
+  background-color: rgba(66, 153, 225, 0.2);
+  color: #4299e1;
+}
+
+.default {
+  background-color: rgba(160, 174, 192, 0.2);
+  color: #a0aec0;
+}

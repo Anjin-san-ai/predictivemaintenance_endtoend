@@ -1,0 +1,86 @@
+{
+  "summary": "## 1. Executive Summary\nThe squadron is in a **guarded readiness posture**, with 60% deployable aircraft but significant risks from critical components. The **cockpit canopy** is the dominant risk vector, appearing repeatedly in critical statuses. Deployment confidence is moderate but hinges on immediate mitigation of high-risk components.\n\n## 2. Key Metrics Table\n| Metric         | Count | % Fleet / % Maint | Interpretation                              |\n|----------------|-------|--------------------|--------------------------------------------|\n| Good           | 62    | 51.7%             | Barely half the fleet is fully operational. |\n| Warning        | 45    | 37.5%             | Elevated risk; requires close monitoring.   |\n| Critical       | 13    | 10.8%             | High-priority failures; immediate action.   |\n| 0-7 Days       | 20    | 27.8%             | Urgent maintenance required.                |\n| 8-15 Days      | 8     | 11.1%             | Short-term planning window.                 |\n| 16-30 Days     | 30    | 41.7%             | Largest opportunity for stabilization.      |\n| 31-60 Days     | 14    | 19.4%             | Mid-term focus for resource allocation.     |\n| Risk Index     | 0.70  | N/A               | Elevated risk; critical issues dominate.    |\n\n## 3. Risk Drivers\n- **Cockpit Canopy** – Repeated critical failures; jeopardizes flight safety and readiness.\n- **Vertical Stabilizer** – Structural integrity concerns; impacts maneuverability.\n- **Landing Gear** – Critical for safe takeoff/landing; operational exposure high.\n- **Nose Avionics** – Potential mission system degradation; affects combat effectiveness.\n- **Maintenance Backlog** – High proportion in 16–30 day window; risks compounding delays.\n\n## 4. Critical Component Spotlight\nThe **cockpit canopy** is the most pressing constraint, with 8 out of 13 critical issues linked to it. This component directly affects pilot safety and mission readiness. Secondary concerns include the **vertical stabilizer** and **landing gear**, both critical for flight operations. Addressing these will have the greatest impact on availability.\n\n## 5. Recommended Immediate Actions\n1. **Prioritize Cockpit Canopy Repairs** | Mitigates dominant risk vector | Stabilizes readiness posture.\n2. **Inspect and Reinforce Vertical Stabilizers** | Prevents structural failures | Ensures flight safety.\n3. **Accelerate Maintenance in 0–7 Day Window** | Clears urgent backlog | Improves short-term deployability.\n4. **Audit Maintenance Workflow** | Identifies bottlenecks | Enhances resource allocation efficiency.\n5. **Monitor Risk Index Weekly** | Tracks critical trends | Enables proactive adjustments.\n\n## 6. Maintenance Focus (Next 60 Days)\nSurge resources into the **16–30 day window**, as it represents the largest opportunity to stabilize the fleet. Addressing this backlog early prevents cascading delays into the 31–60 day period.\n\n## 7. Operational Outlook (7–14 Days)\n**Guarded** – Deployability is moderate, but critical risks (e.g., cockpit canopy) require immediate intervention to avoid escalation.\n\n## 8. Data Quality Note\nNo anomalies detected, but the dataset lacks detailed telemetry for non-critical components, limiting full-spectrum analysis.",
+  "backend": "azure",
+  "project": "raf_data_analysis_cell",
+  "ts": 1756911664765,
+  "stats": {
+    "statusCounts": {
+      "Good": 62,
+      "Warning": 45,
+      "Critical": 13
+    },
+    "maintBuckets": {
+      "0-7": 20,
+      "8-15": 8,
+      "16-30": 30,
+      "31-60": 14
+    },
+    "criticalComponents": [
+      {
+        "id": "A400-01:canopy",
+        "displayName": "Cockpit Canopy",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-02:left-wing",
+        "displayName": "Left Wing",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-03:canopy",
+        "displayName": "Cockpit Canopy",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-04:canopy",
+        "displayName": "Cockpit Canopy",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-06:canopy",
+        "displayName": "Cockpit Canopy",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-09:tail",
+        "displayName": "Vertical Stabilizer",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-11:canopy",
+        "displayName": "Cockpit Canopy",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-12:right-gear",
+        "displayName": "Right Landing Gear",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-14:canopy",
+        "displayName": "Cockpit Canopy",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-16:nose",
+        "displayName": "Nose Avionics",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-18:canopy",
+        "displayName": "Cockpit Canopy",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-19:canopy",
+        "displayName": "Cockpit Canopy",
+        "status": "Critical"
+      },
+      {
+        "id": "A400-20:canopy",
+        "displayName": "Cockpit Canopy",
+        "status": "Critical"
+      }
+    ]
+  }
+}

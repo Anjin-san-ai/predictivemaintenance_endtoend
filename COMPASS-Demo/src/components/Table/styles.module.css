@@ -1,0 +1,416 @@
+/* Table component wrapper */
+.tableComponentWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Base table styles */
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-family-roboto);
+  background-color: transparent;
+  box-shadow: 0px 5.33px 10.67px #0000000f , 0px 0px 5.33px #0000000a;
+}
+
+.tableHeader {
+  background-color: #e7e5ff;
+  border-bottom: 1px solid rgba(129, 142, 165, 0.2);
+}
+
+.tableHeaderLight {
+  background-color: #f5f5f5; 
+  color: #101B34;
+  font-family: 'Roboto', sans-serif;
+  font-size: 21.3px;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 16px;
+}
+
+.tableHeaderCell {
+  padding: 16px 20px;
+  text-align: left;
+  color: var(--mirage);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(129, 142, 165, 0.2);
+}
+
+.tableBody {
+  background-color: transparent;
+}
+
+/* Row styles */
+.tableRow {
+  transition: background-color 0.2s ease;
+  background-color: white;
+}
+
+.tableRow:nth-child(even) {
+  background-color: #F6F7F8;
+}
+
+.tableRow:not(:last-child) {
+  border-bottom: 1px solid rgba(129, 142, 165, 0.1);
+}
+
+/* Light theme row */
+.tableRowLight {
+  transition: background-color 0.2s ease;
+}
+
+.tableRowLight:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.tableRowLight:hover {
+  background-color: rgba(16, 27, 52, 0.05); 
+  cursor: pointer;
+}
+
+.tableCell {
+  padding: 16px 20px;
+  color: var(--mirage);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 400;
+  vertical-align: middle;
+}
+
+.tableCellLight {
+  color: #101B34;
+  font-family: 'Roboto', sans-serif;
+  font-size: 21.3px;
+  font-weight: 400;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.highlightOnHover:hover {
+  background-color: rgba(66, 153, 225, 0.1);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.emptyMessage {
+  padding: 20px;
+  text-align: center;
+  color: var(--mirage);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-m);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.statusIndicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: var(--font-size-m);
+  white-space: nowrap;
+  min-width: 180px;
+  text-align: left;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  min-width: 180px;
+  text-align: left;
+}
+
+.inStock {
+  background-color: rgba(72, 187, 120, 0.2);
+  color: #48bb78;
+}
+
+.lowStock {
+  background-color: rgba(237, 137, 54, 0.2);
+  color: #ed8936;
+}
+
+.outOfStock {
+  background-color: rgba(245, 101, 101, 0.2);
+  color: #f56565;
+}
+
+.onOrder {
+  background-color: rgba(66, 153, 225, 0.2);
+  color: #4299e1;
+}
+
+.discontinued {
+  background-color: rgba(160, 174, 192, 0.2);
+  color: #a0aec0;
+}
+
+.inStockLight {
+  color: #48802B;
+  background-color: rgba(72, 128, 43, 0.1);
+}
+
+.lowStockLight {
+  color: #C35C56;
+  background-color: rgba(195, 92, 86, 0.1);
+}
+
+.outOfStockLight {
+  color: #C35C56; 
+  background-color: rgba(195, 92, 86, 0.1);
+}
+
+.onOrderLight {
+  color: #A0700E;
+  background-color: rgba(160, 112, 14, 0.1);
+}
+
+.discontinuedLight {
+  color: #595A5C;
+  background-color: rgba(89, 90, 92, 0.1);
+}
+
+.inStore {
+  background-color: rgba(72, 187, 120, 0.2);
+  color: #48bb78;
+}
+
+.outForRepair {
+  background-color: rgba(237, 137, 54, 0.2);
+  color: #ed8936;
+}
+
+.outForCalibration {
+  background-color: rgba(66, 153, 225, 0.2);
+  color: #4299e1;
+}
+
+/* Pagination container */
+.paginationContainer {
+  width: 100%;
+  margin-top: 16px;
+  background: transparent;
+  border: none;
+  /* Reset any table-related styling */
+  clear: both;
+  padding-top: 40px;
+  /* Ensure pagination sits outside of any table layout */
+  position: relative;
+  display: block;
+}
+
+/* Pagination styles */
+.pagination {
+  align-items: center;
+  display: inline-flex;
+  gap: 10.67px;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Mobile pagination styles */
+.mobilePagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+  margin: 15px 0;
+}
+
+.mobileArrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.mobileArrow:active {
+  transform: scale(0.95);
+  background-color: #e0e0e0;
+}
+
+.mobileArrow img {
+  width: 16px;
+  height: 16px;
+}
+
+.mobileArrow.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mobilePageIndicator {
+  font-family: var(--font-family-roboto);
+  font-size: 16px;
+  font-weight: 400;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.currentPage {
+  background-color: var(--mirage);
+  color: var(--cultured-pearl);
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.outOfText {
+  color: #a1a1a1;
+}
+
+.totalPagesText {
+  color: #1e1e1e;
+}
+
+.paginationPrevious {
+  border-radius: 10.67px;
+  display: inline-flex;
+  gap: 10.67px;
+  justify-content: center;
+  align-items: center;
+  padding: 10.67px 16px;
+  opacity: 0.5;
+}
+
+.paginationPrevious.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationPrevious:not(.disabled) {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.paginationPrevious .arrowIcon {
+  height: 21.33px;
+  width: 21.33px;
+}
+
+.paginationPrevious .previousText {
+  color: #757575;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  line-height: 21.3px;
+  white-space: nowrap;
+}
+
+.paginationList {
+  display: inline-flex;
+  align-items: center;
+  gap: 10.67px;
+}
+
+.paginationPage {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10.67px 0px;
+  border-radius: 10.67px;
+}
+
+.paginationPageCurrent {
+  align-items: center;
+  background-color: var(--mirage);
+  border-radius: 10.67px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10.67px 16px;
+  position: relative;
+}
+
+.paginationPageCurrent .pageNumber {
+  color: var(--cultured-pearl);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  line-height: 21.3px;
+  white-space: nowrap;
+}
+
+.paginationPage .outOf {
+  color: #a1a1a1;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  line-height: 21.3px;
+  white-space: nowrap;
+}
+
+.paginationPage .totalPages {
+  color: #1e1e1e;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  line-height: 21.3px;
+  white-space: nowrap;
+}
+
+.paginationNext {
+  border-radius: 10.67px;
+  display: inline-flex;
+  gap: 10.67px;
+  justify-content: center;
+  align-items: center;
+  padding: 10.67px 16px;
+  cursor: pointer;
+}
+
+.paginationNext.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationNext .nextText {
+  color: var(--mirage);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  line-height: 21.3px;
+  white-space: nowrap;
+}
+
+.paginationNext .arrowIcon {
+  height: 21.33px;
+  width: 21.33px;
+  position: relative;
+}
+
+.arrow {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

@@ -1,0 +1,140 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+/* @import url("https://fonts.googleapis.com/css?family=Poppins:500,500italic|Roboto:500,400,700,600|Open+Sans:700,400"); */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Base colors */
+    --background: 210 40% 11%;
+    --foreground: 210 40% 98%;
+    --card: 210 40% 12%;
+    --card-foreground: 210 40% 98%;
+    --popover: 210 40% 12%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 180 100% 50%;
+    --primary-foreground: 210 40% 11%;
+    --secondary: 210 40% 16%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 210 40% 16%;
+    --muted-foreground: 210 40% 65%;
+    --accent: 210 40% 16%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 210 40% 18%;
+    --input: 210 40% 18%;
+    --ring: 180 100% 50%;
+    --radius: 0.5rem;
+
+
+    --black: #000000;
+    --brand--white: #ffffff;
+    --buttered-rum: #a0700e;
+    --chicago: #595a5c;
+    --cloud: #c7c7c7;
+    --cultured-pearl: #f5f5f5;
+    --fern-green: #48802b;
+    --fuzzy-wuzzy-brown: #c35c56;
+    --madang: #bffbc6;
+    --mirage: #101b34;
+    --neon-carrot: #fe9f4d;
+    --peach-schnapps: #ffdddb;
+    --sandy-beach: #ffecc8;
+  
+    --font-size-l: 24px;
+    --font-size-m: 21.3px;
+    --font-size-s: 18.7px;
+    --font-size-xl: 32px;
+    --font-size-xs: 13.3px;
+  
+    --font-family-open_sans: "Open Sans", Helvetica;
+    --font-family-poppins: "Poppins", Helvetica;
+    --font-family-roboto: "Roboto", Helvetica;
+    
+    --header-gradient: linear-gradient(180deg, var(--header-bg-start) 0%, var(--header-bg-end) 70%);
+    --header-bg-start: rgba(39, 75, 155, 1);
+    --header-bg-end: rgba(14, 26, 53, 1);
+    --header-text: #7283a8;
+    --header-active-text: #b8c6e5;
+    --header-logo-text: #9eb4eb;
+
+    /* ── Unified Fleet Platform Design Tokens ── */
+    /* Backgrounds */
+    --color-bg-primary: #0d1526;
+    --color-bg-surface: #15213d;
+    --color-bg-elevated: #1c2d4f;
+    --color-bg-overlay: rgba(13, 21, 38, 0.92);
+
+    /* Brand accents */
+    --color-accent-primary: #4270e0;
+    --color-accent-primary-hover: #5580f0;
+    --color-accent-tactical: #00c8ff;
+    --color-accent-tactical-glow: rgba(0, 200, 255, 0.35);
+    --color-accent-tactical-dim: rgba(0, 200, 255, 0.12);
+
+    /* Status colours (shared across both apps) */
+    --color-status-critical: #ff4757;
+    --color-status-critical-bg: rgba(255, 71, 87, 0.12);
+    --color-status-warning: #ffa502;
+    --color-status-warning-bg: rgba(255, 165, 2, 0.12);
+    --color-status-good: #2ed573;
+    --color-status-good-bg: rgba(46, 213, 115, 0.12);
+
+    /* Text */
+    --color-text-primary: #e8f0ff;
+    --color-text-secondary: #7283a8;
+    --color-text-muted: #4a5a7a;
+    --color-text-tactical: #00c8ff;
+
+    /* Borders */
+    --color-border-default: rgba(66, 112, 224, 0.2);
+    --color-border-tactical: rgba(0, 200, 255, 0.25);
+    --color-border-subtle: rgba(255, 255, 255, 0.06);
+
+    /* Typography */
+    --font-primary: "Inter", "Roboto", Helvetica, sans-serif;
+    --font-mono: "Fira Code", "Courier New", monospace;
+
+    /* Shadows & glows */
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+    --shadow-tactical: 0 0 20px rgba(0, 200, 255, 0.15);
+    --glow-critical: 0 0 8px rgba(255, 71, 87, 0.6);
+    --glow-warning: 0 0 8px rgba(255, 165, 2, 0.6);
+    --glow-good: 0 0 8px rgba(46, 213, 115, 0.6);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-smooth: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.react-datepicker-popper {
+  z-index: 9999 !important;
+}
+
+.react-datepicker {
+  font-family: inherit !important;
+}

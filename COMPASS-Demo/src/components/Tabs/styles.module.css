@@ -1,0 +1,89 @@
+.tabsContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tabsWrapper {
+  display: flex;
+  gap: 70px;
+  align-items: center;
+}
+
+.tab {
+  cursor: pointer;
+  font-family: var(--font-family-roboto, 'Roboto', sans-serif);
+  font-size: 32px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.tab:not(.activeTab) {
+  color: #0e1a35;
+  font-weight: 400;
+}
+
+.activeTab {
+  color: #4371e0;
+  font-weight: 700;
+}
+
+.tabsLine {
+  position: relative;
+  margin-top: 15px;
+  height: 3px;
+  width: 100%;
+}
+
+.tabsBottomLine {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  left: 0;
+  right: 0;
+}
+
+.tabsActiveLine {
+  position: absolute;
+  height: 5px;
+  background-color: #4371e0;
+  transition: all 0.3s ease;
+  width: var(--active-tab-width);
+  left: var(--active-tab-left);
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .tabsWrapper {
+    gap: 30px;
+  }
+  
+  .tab {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabsContainer {
+    margin-top: 15px;
+  }
+  
+  .tabsWrapper {
+    gap: 20px;
+  }
+  
+  .tab {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabsContainer {
+    margin-top: 20px;
+  }
+  
+  .tabsWrapper {
+    gap: 15px;
+  }
+}

@@ -1,0 +1,2289 @@
+
+.maintenance-overview .section-divider {
+  width: 100%;
+  height: 1rem;
+  background: #e0e0e0;
+  box-shadow: 0 8px 48px 0 rgba(0,0,0,0.18), 0px 1px 4px rgba(0,0,0,0.06);
+  margin: 2rem 0;
+  border-radius: 4px;
+}
+.maintenance-overview table {
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.08), 0px 1px 4px rgba(0,0,0,0.06);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.maintenance-overview {
+  align-items: center;
+  background-color: var(--brand--white);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.maintenance-overview table th,
+.maintenance-overview table td {
+  vertical-align: middle;
+}
+
+/* Responsive header */
+.maintenance-overview .frame-5051 {
+  align-items: center;
+  background: linear-gradient(180deg, rgba(39, 75, 155, 1) 0%, rgba(14, 26, 53, 1) 70%);
+  display: flex;
+  min-height: 60px;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 2vw;
+  box-sizing: border-box;
+}
+
+
+/* Responsive logo section */
+.maintenance-overview .frame-112 {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+
+/* Responsive logo image */
+.maintenance-overview .airplane {
+  height: 3vw;
+  width: 3vw;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 60px;
+  max-height: 60px;
+}
+
+
+/* Responsive header text */
+.maintenance-overview .aircraft-intelligence-platform {
+  color: #9eb4eb;
+  font-family: var(--font-family-poppins);
+  font-size: clamp(1.2rem, 2vw, 2.2rem);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+
+/* Responsive nav section */
+.maintenance-overview .frame-5045 {
+  align-items: flex-end;
+  display: flex;
+  gap: 0.7rem;
+  justify-content: center;
+}
+
+
+/* Responsive nav item */
+.maintenance-overview .frame-5015 {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 120px;
+  max-width: 220px;
+  width: 15vw;
+}
+
+
+/* Responsive nav text */
+.maintenance-overview .smart-scheduling {
+  color: #b8c5e4;
+  font-family: var(--font-family-roboto);
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  font-weight: 600;
+  text-align: center;
+}
+
+
+
+
+/* Responsive icon group */
+.maintenance-overview .group-47 {
+  display: flex;
+  height: 3vw;
+  width: 3vw;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 60px;
+  max-height: 60px;
+}
+
+
+.maintenance-overview .group-46-4 {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: flex;
+  height: 3vw;
+  width: 3vw;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 60px;
+  max-height: 60px;
+}
+
+.maintenance-overview .ai {
+  align-items: flex-end;
+  display: flex;
+  height: 2vw;
+  width: 2vw;
+  min-width: 24px;
+  min-height: 24px;
+  max-width: 40px;
+  max-height: 40px;
+  margin-left: 1vw;
+  margin-top: 0.5vw;
+  padding: 0.2vw;
+}
+
+.maintenance-overview .vector {
+  height: 27px;
+  width: 27px;
+}
+
+.maintenance-overview .ai-assistant {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-bottom: -7.00px;
+  margin-top: -9.67px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .group-43 {
+  height: 3vw;
+  width: 3vw;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 60px;
+  max-height: 60px;
+}
+
+.maintenance-overview .overlap-group-6 {
+  height: 3vw;
+  width: 3vw;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 60px;
+  max-height: 60px;
+}
+
+.maintenance-overview .layer_1 {
+  align-items: flex-start;
+  background-image: url(/images/maintenance-overview/vector-5@2x.png);
+  background-size: cover;
+  display: flex;
+  gap: 0.1vw;
+  height: 2vw;
+  width: 2vw;
+  min-width: 24px;
+  min-height: 24px;
+  max-width: 40px;
+  max-height: 40px;
+  padding: 0.2vw;
+}
+
+.maintenance-overview .vector-1 {
+  height: 10px;
+  margin-top: 2.4px;
+  width: 3px;
+}
+
+.maintenance-overview .vector-2 {
+  height: 2px;
+  width: 4px;
+}
+
+
+.maintenance-overview .frame-5124 {
+  flex-direction: row;
+  align-items: center;
+  align-self: flex-start;
+  display: inline-flex;
+  gap: 21.33px;
+  margin-left: 1.5rem;
+  margin-top: 20px;
+  position: relative;
+}
+
+.maintenance-overview .group-1047 {
+  background-size: cover;
+  height: 2.5vw;
+  width: 2.5vw;
+  min-width: 32px;
+  min-height: 32px;
+  max-width: 48px;
+  max-height: 48px;
+}
+
+.maintenance-overview .frame-5112-1 {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: auto;
+  word-break: break-word;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: var(--cod-gray-2);
+  border: 1.33px solid var(--neon-carrot);
+  border-radius: 0.7rem;
+  gap: 1vw;
+  justify-content: center;
+  padding: 1vw;
+}
+.maintenance-overview .frame-5102 {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+
+.maintenance-overview .overlap-group16 {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 180px;
+  margin: 20px 0 0 0;
+  box-sizing: border-box;
+}
+
+
+/* Responsive frame-512 */
+.maintenance-overview .frame-512 {
+  align-items: flex-start;
+  background: linear-gradient(0deg, rgba(236, 236, 236, 1) 0%, rgba(133, 137, 150, 1) 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 120px;
+  padding: 2rem 2vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* Responsive main content row */
+.maintenance-overview .frame-124 {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  width: 100%;
+  max-width: 90vw;
+  box-sizing: border-box;
+}
+
+
+/* Responsive card */
+.maintenance-overview .frame-1 {
+  align-items: center;
+  background-color: var(--brand--white);
+  border: 1.33px solid var(--cloud);
+  border-radius: 0.7rem;
+  box-shadow: 0px 5px 20px -1px #00000021;
+  display: flex;
+  gap: 0.7rem;
+  min-height: 50px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 15%;
+  box-sizing: border-box;
+  flex-direction: row;
+  min-width: 300px;
+}
+
+
+.maintenance-overview .group-1 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -7.17px;
+  margin-top: -7.17px;
+  position: relative;
+  width: 142px;
+}
+
+.maintenance-overview .flight-number {
+  height: 25px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+  width: 140px;
+}
+
+.maintenance-overview .group-46 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -7.17px;
+  margin-right: -2.00px;
+  margin-top: -7.17px;
+  position: relative;
+  width: 65px;
+}
+
+.maintenance-overview .zz182 {
+  height: 25px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+  width: 63px;
+}
+
+/* Responsive card */
+.maintenance-overview .frame-119 {
+  background-color: var(--brand--white);
+  border: 1.33px solid var(--cloud);
+  border-radius: 0.7rem;
+  box-shadow: 0px 5px 20px -1px #00000021;
+  display: flex;
+  gap: 1rem;
+  min-height: 50px;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+
+.maintenance-overview .group-1-1 {
+  display: flex;
+  margin: 0.5rem;
+}
+
+.maintenance-overview .serviceable-status {
+  height: 25px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+  width: 181px;
+  position: relative;
+  margin-top: 0.2rem;
+}
+
+/* Responsive status card */
+.maintenance-overview .frame-123 {
+  align-items: center;
+  background-color: var(--neon-carrot);
+  border-radius: 0 0.5rem 0.5rem 0;
+  display: flex;
+  min-height: 40px;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  justify-content: center;
+  padding: 0.7rem 1rem;
+  width: 100%;
+  max-width: 180px;
+  box-sizing: border-box;
+}
+
+
+.maintenance-overview .in-maintenance {
+  /* ...existing code... */
+  line-height: normal;
+  margin-bottom: -0.50px;
+  margin-left: -0.83px;
+  margin-right: -0.83px;
+  margin-top: -3.17px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .group-1-2 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -7.17px;
+  margin-top: -7.17px;
+  position: relative;
+  width: 174px;
+}
+
+.maintenance-overview .total-flying-hours {
+  height: 25px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+  width: 172px;
+}
+
+.maintenance-overview .group-46-1 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -7.17px;
+  margin-right: -2.00px;
+  margin-top: -7.17px;
+  position: relative;
+  width: 51px;
+}
+
+.maintenance-overview .number {
+  height: 25px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+  width: 49px;
+}
+
+.maintenance-overview .group-1-3 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -7.17px;
+  margin-top: -7.17px;
+  position: relative;
+  width: 156px;
+}
+
+.maintenance-overview .maintenance-id {
+  height: 25px;
+  width: 154px;
+}
+
+.maintenance-overview .frame-122 {
+  align-items: center;
+  background-color: var(--brand--white);
+  border: 1.33px solid;
+  position: relative;
+
+  border: 1.33px solid var(--cloud);
+  border-radius: 0.7rem;
+  box-shadow: 0px 5px 20px -1px #00000021;
+  display: flex;
+  gap: 0.7rem;
+  min-height: 50px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 15%;
+  box-sizing: border-box;
+  flex-direction: row;
+  
+}
+
+.maintenance-overview .group-1-4 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -7.17px;
+  margin-top: -7.17px;
+  position: relative;
+  width: 128px;
+}
+
+.maintenance-overview .date-created {
+  height: 25px;
+  white-space: nowrap;
+  width: 126px;
+}
+
+.maintenance-overview .group-46-2 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -7.17px;
+  margin-top: -7.17px;
+  position: relative;
+  width: 130px;
+}
+
+.maintenance-overview .address {
+  height: 25px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+  width: 128px;
+}
+
+.maintenance-overview .servicing-status {
+  letter-spacing: 0;
+  line-height: normal;
+  position: static;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 14.7px
+}
+
+.maintenance-overview .component-1 {
+  align-items: center;
+  background-color: #c4c5c7;
+  border-radius: 32.67px;
+  display: flex;
+  padding-right: 4rem;
+  min-width: 40%;
+  flex-direction: row;
+  width: fit-content;
+    margin-left: 1rem;
+    flex-shrink: 0;
+}
+
+.maintenance-overview .overlap-group8 {
+  align-items: center;
+  align-self: flex-start;
+  background-color: var(--brand--white);
+  border-radius: 32.67px;
+  box-shadow: 0px 2.67px 13.33px #00000040;
+  display: flex;
+  gap: 1rem;
+  height: 57px;
+  min-width: 368px;
+  padding: 14.7px 29.3px;
+}
+
+.maintenance-overview .after-flight-af-2200-013224 {
+  color: var(--mirage);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xxl);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  min-height: 25px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .span0 {
+  color: var(--mirage);
+  font-weight: 500;
+}
+
+.maintenance-overview .span2 {
+  color: #101b3480;
+}
+
+.maintenance-overview .before-flight {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-bottom: 3.0px;
+  margin-left: 63px;
+  min-height: 25px;
+  min-width: 121px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .turn-around {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-bottom: 3.0px;
+  margin-left: 87px;
+  min-height: 25px;
+  min-width: 117px;
+  white-space: nowrap;
+}
+
+/* Responsive overlap-group14 */
+.maintenance-overview .overlap-group14 {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100vw;
+  margin: 1rem 0 0 0;
+  box-sizing: border-box;
+}
+
+
+/* Responsive rectangle-3 */
+.maintenance-overview .rectangle-3 {
+  background-color: #fdfdfd;
+  border-radius: 0.7rem 0.7rem 0 0;
+  box-shadow: 0px 10px 21px #00000014, 0px 0px 5px #0000000a;
+  min-height: 300px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 40px;
+}
+
+
+.maintenance-overview .group-1065 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1.5rem;
+  min-height: 1%;
+}
+
+.maintenance-overview .frame-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  min-width: 80%;
+}
+
+.maintenance-overview .frame-2-1 {
+  align-items: center;
+  align-self: flex-end;
+  display: inline-flex;
+  gap: 25.33px;
+  position: relative;
+}
+
+.maintenance-overview .maintenance-overview-1 {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -0.1rem;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .frame-123-1 {
+  align-items: center;
+  background-color: var(--brand--white);
+  border-radius: 10%;
+  display: inline-flex;
+  gap: 1rem;
+  margin-left: 47px;
+  padding: 1rem 1rem 1rem 0.2rem;
+  position: relative;
+}
+
+.maintenance-overview .rectangle-151 {
+  background-color: #d7d7d7;
+  border-radius: 104px;
+  height: 32px;
+  margin-bottom: -26.67px;
+  margin-top: -26.67px;
+  position: relative;
+  width: 32px;
+}
+
+.maintenance-overview .group-1-5 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -23.17px;
+  margin-top: -23.17px;
+  position: relative;
+  width: 112px;
+}
+
+.maintenance-overview .total-tasks {
+  height: 25px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+  width: 110px;
+}
+
+.maintenance-overview .group-46-5 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -23.17px;
+  margin-right: -2.00px;
+  margin-top: -23.17px;
+  position: relative;
+  width: 27px;
+}
+
+.maintenance-overview .number-4 {
+  height: 25px;
+  white-space: nowrap;
+  width: 25px;
+}
+
+.maintenance-overview .frame-12 {
+  align-items: center;
+  background-color: var(--brand--white);
+  border-radius: 10%;
+  display: inline-flex;
+  gap: 1rem;
+  margin-left: 1rem;
+  padding: 1rem 1rem 1rem 0.2rem;
+  position: relative;
+}
+
+.maintenance-overview .rectangle-151-1 {
+  background-color: var(--apple);
+}
+
+.maintenance-overview .group-1-6 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -23.17px;
+  margin-top: -23.17px;
+  position: relative;
+  width: 170px;
+}
+
+.maintenance-overview .tasks-completed {
+  height: 25px;
+  white-space: nowrap;
+  width: 168px;
+}
+
+.maintenance-overview .group-46-3 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -23.17px;
+  margin-right: -2.00px;
+  margin-top: -23.17px;
+  position: relative;
+  width: 15px;
+}
+
+.maintenance-overview .number-1 {
+  height: 25px;
+  white-space: nowrap;
+  width: 13px;
+}
+
+.maintenance-overview .rectangle-151-2 {
+  background-color: var(--neon-carrot);
+}
+
+.maintenance-overview .group-1-7 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -23.17px;
+  margin-top: -23.17px;
+  position: relative;
+  width: 137px;
+}
+
+.maintenance-overview .tasks-started {
+  height: 25px;
+  white-space: nowrap;
+  width: 135px;
+}
+
+.maintenance-overview .frame-130 {
+  align-items: center;
+  background-color: var(--brand--white);
+  border-radius: 10%;
+  display: inline-flex;
+  gap: 1rem;
+  margin-left: 1rem;
+  padding: 1rem 1rem 1rem 0.2rem;
+  position: relative;
+}
+
+.maintenance-overview .rectangle-151-3 {
+  background-color: var(--rose);
+}
+
+.maintenance-overview .group-1-8 {
+  display: flex;
+  height: 25px;
+  margin-bottom: -23.17px;
+  margin-top: -23.17px;
+  position: relative;
+  width: 173px;
+}
+
+.maintenance-overview .tasks-not-started {
+  height: 25px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+  width: 171px;
+}
+
+.maintenance-overview .flex-row-4 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2vw;
+  padding-top: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.maintenance-overview .task-progress-bar {
+  color: var(--black);
+  font-family: var(--font-family-roboto);
+  font-size: 26.7px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: 2rem;
+  min-height: 4rem;
+  white-space: nowrap;
+}
+
+.maintenance-overview .flex-col-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 2vw;
+  width: 100%;
+  min-height: 50px;
+  box-sizing: border-box;
+  margin-top: 2rem;
+}
+
+.maintenance-overview .overlap-group-8 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  width: 100%;
+  max-width: 90vw;
+  min-height: 2.5rem;
+  border-radius: 2rem;
+  box-sizing: border-box;
+}
+
+.maintenance-overview .number-5 {
+  color: var(--chicago);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xl);
+  font-weight: 400;
+  text-align: right;
+  margin-left: auto;
+  margin-right: 1vw;
+  width: auto;
+  position: static;
+  padding-left: 1rem;
+}
+
+.maintenance-overview .rectangle-172 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: #d7d7d7;
+  border-radius: 2rem;
+  box-sizing: border-box;
+}
+
+.maintenance-overview .overlap-group-8 > *:not(.rectangle-172) {
+  position: relative;
+  z-index: 2;
+}
+
+.maintenance-overview .rectangle-173 {
+  background-color: var(--rose);
+  border-radius: 5.33px;
+  height: 1rem;
+  display: flex;
+  flex-direction: row; 
+  width: 40%;
+}
+
+.maintenance-overview .rectangle-174 {
+  background-color: var(--neon-carrot);
+  border-radius: 5.33px 0px 0px 5.33px;
+  height: 1rem;
+  display: flex;
+  flex-direction: row; 
+  width: 40%;
+}
+
+.maintenance-overview .rectangle-175 {
+  background-color: var(--apple);
+  border-radius: 5.33px 0px 0px 5.33px;
+  height: 1rem;
+  display: flex;
+  flex-direction: row; 
+  width: 20%;
+}
+
+.maintenance-overview .line-19 {
+  position: relative;
+  width: 1px;
+  height: 2rem;
+  display: flex;
+  flex-direction: row; 
+}
+
+.maintenance-overview .number-6 {
+  color: var(--chicago);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xl);
+  font-weight: 400;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  left: unset;
+  top: unset;
+  margin: 0 1rem 0 0;
+  width: auto;
+  min-width: 0;
+  vertical-align: middle;
+  padding-left: 1rem;
+}
+
+.maintenance-overview .line-19-1 {
+  align-self: flex-end;
+  height: 1px;
+  width: 100%;
+}
+
+.maintenance-overview .frame-5104-1 {
+  background-color: var(--cod-gray);
+  border-radius: 21.33px;
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+}
+
+.maintenance-overview .group-1075 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 49.33px;
+  margin-left: 38.7px;
+  margin-top: 26.7px;
+  width: 228.67px;
+    padding-bottom: 1rem;
+}
+
+.maintenance-overview .frame-5104-2 {
+  align-items: flex-start;
+  display: flex;
+  gap: 13.33px;
+  height: 25.33px;
+  position: relative;
+  width: 226.67px;
+}
+
+.maintenance-overview .airbus-a400-m-atlas {
+  color: var(--cornflower);
+  flex: 1;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xxl);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.33px;
+  position: relative;
+}
+
+.maintenance-overview .real-time-video-maintenance-monitor {
+  height: 16px;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-left: 0;
+  width: 226.67px;
+}
+
+.maintenance-overview .frame-5021 {
+  align-items: center;
+  display: flex;
+  gap: 13.33px;
+  height: 100%;
+  justify-content: flex-end;
+  margin-top: 23px;
+  margin-left: auto;
+  position: relative;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+  width:  fit-content;
+  color: white;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xxl);
+}
+
+.maintenance-overview .collapse {
+  color: white;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xxl);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  text-align: right;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .arrow_drop_down {
+  aspect-ratio: 1;
+  height: 32px;
+  position: relative;
+  width: 32px;
+}
+
+.maintenance-overview .frame-5111 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2vw;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  min-height: 400px;
+}
+
+.maintenance-overview .frame-5109 {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 2vw;
+  width: 100%;
+  min-height: 200px;
+  max-width: 100vw;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.maintenance-overview .frame-5108 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+  border-radius: 0.7rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 200px;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.maintenance-overview .overlap-group3 {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 200px;
+  box-sizing: border-box;
+}
+
+.maintenance-overview .rectangle-2924 {
+  background: linear-gradient(137deg, rgba(173, 181, 181, 1) 0%, rgba(101, 114, 118, 1) 100%);
+  border-radius: 1.5rem;
+  width: 100%;
+  min-height: 40rem;
+  max-width: 100vw;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.maintenance-overview .frame-5102 {
+  align-items: center;
+  background: linear-gradient(90deg, rgba(53, 65, 80, 1) 0%, rgba(64, 74, 87, 1) 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+  width: 100%;
+  min-width: 120px;
+  max-width: 400px;
+  height: 100%;
+  overflow: scroll;
+  padding: 1vw;
+  position: relative;
+  min-height: 50rem;
+}
+
+.maintenance-overview .frame-5112-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--cod-gray-2);
+  border: 1.33px solid var(--neon-carrot);
+  border-radius: 0.7rem;
+  width: 80%;
+  max-width: 400px;
+  min-height: 80px;
+  margin: 0 auto;
+  padding: 1vw;
+  position: absolute;
+}
+.maintenance-overview .port-out-engine-oil {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .span1 {
+  color: var(--brand--white);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xl);
+  font-weight: 400;
+}
+
+.maintenance-overview .frame-5103 {
+  align-items: center;
+  background-color: var(--cod-gray-2);
+  border: 1.33px solid;
+  border-color: var(--neon-carrot);
+  border-radius: 10.67px;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 13.33px;
+  justify-content: center;
+  max-width: 293.33px;
+  padding: 21.33px;
+  position: relative;
+  width: 100%;
+}
+
+.maintenance-overview .frame-5104 {
+  align-items: flex-start;
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 13.33px;
+  position: relative;
+  width: 100%;
+}
+
+.maintenance-overview .exeral-visual-inspection-12456 {
+  flex: 1;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.33px;
+  position: relative;
+}
+
+.maintenance-overview .frame-5105 {
+  align-items: center;
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 5.33px;
+  position: relative;
+  width: 100%;
+}
+
+.maintenance-overview .frame-5089 {
+  align-items: center;
+  display: flex;
+  gap: 13.33px;
+  height: 22.67px;
+  justify-content: center;
+  position: relative;
+  width: 22.67px;
+}
+
+.maintenance-overview .x24px-ic_warning {
+  height: 22.67px;
+  margin-bottom: -13.33px;
+  margin-left: -13.33px;
+  margin-right: -13.33px;
+  margin-top: -13.33px;
+  position: relative;
+  width: 22.67px;
+}
+
+.maintenance-overview .critical-high {
+  flex: 1;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .component-turboprop-engine-2 {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .next-maintenance-15-days {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .priority-medium {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .check-and-top-up-cil-1 {
+  align-self: stretch;
+  position: relative;
+}
+
+.maintenance-overview .frame-510 {
+  align-items: center;
+  background-color: var(--cod-gray-2);
+  border-radius: 10.67px;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 13.33px;
+  justify-content: center;
+  max-width: 293.33px;
+  padding: 21.33px;
+  position: relative;
+  width: 100%;
+}
+
+.maintenance-overview .internal-cabin-and-c {
+  flex: 1;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.33px;
+  position: relative;
+}
+
+.maintenance-overview .oil-pressure-slightl {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .engine-system-checks-65321 {
+  flex: 1;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.33px;
+  position: relative;
+}
+
+.maintenance-overview .frame-5103-1 {
+  left: 151px;
+  top: 505px;
+}
+
+.maintenance-overview .port-out-engine-tp400-d6 {
+  flex: 1;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.33px;
+  position: relative;
+}
+
+.maintenance-overview .rectangle-2957 {
+  background-color: var(--alto);
+  border-radius: 1.5vw 0 0 1.5vw;
+  width: 100%;
+  position: relative;
+  min-height: 100%;
+}
+
+.maintenance-overview .group-1036 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1vw;
+  padding-left: 1.5rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 80px;
+  box-sizing: border-box;
+  padding-right: 1.5rem;
+}
+
+.maintenance-overview .flex-col-3 {
+  display: flex;
+  flex-direction: column;
+  gap: 2vw;
+  min-height: 80px;
+  width: auto;
+  flex-wrap: wrap;
+}
+
+.maintenance-overview .frame-131 {
+  align-items: center;
+  display: flex;
+  gap: 1vw;
+  position: relative;
+}
+
+.maintenance-overview .maintenance-scope {
+  margin-top: -1.33px;
+  position: relative;
+  width: fit-content;
+}
+
+.maintenance-overview .overlap-group-10 {
+  align-items: center;
+  background-color: var(--brand--white);
+  border: 1.33px solid;
+  border-color: var(--cloud);
+  border-radius: 10.67px;
+  display: flex;
+  height: 3rem;
+  min-height: 50px;
+  margin-left: 0;
+  width: 75%;
+  max-width: 100%;
+  min-width: 300px;
+  padding: 13.4px 25.4px;
+  margin-bottom: 0.5rem;
+}
+
+.maintenance-overview .search {
+  color: #8e8e8e;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xxl);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  min-height: 25px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .frame-50 {
+  align-items: center;
+  background-color: var(--brand--white);
+  border: 1.33px solid;
+  border-color: var(--cloud);
+  border-radius: 10.67px;
+  display: flex;
+  gap: 21.33px;
+  height: 3rem;
+  min-height: 50px;
+  margin-left: 0;
+  width: 10%;
+  min-width: 110px;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  position: relative;
+}
+
+.maintenance-overview .filter_list {
+  aspect-ratio: 1;
+  height: 32px;
+  position: relative;
+  width: 32px;
+}
+
+.maintenance-overview .filter {
+  color: var(--chicago);
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xxl);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  text-align: center;
+  width: 52.27px;
+}
+
+.maintenance-overview .frame-container-1 {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  flex-grow: 1;
+  min-width: 4rem;
+  width: auto;
+}
+
+.maintenance-overview .frame-5105-1 {
+  align-items: center;
+  background: linear-gradient(180deg, rgba(52, 156, 230, 1) 0%, rgba(41, 116, 169, 1) 100%);
+  border: 1.33px solid;
+  border-color: #1165a2;
+  border-radius: 5rem;
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: 0;
+  padding: 0.5rem 4rem;
+  position: relative;
+  flex-direction: row;
+
+}
+
+.maintenance-overview .add-task {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.33px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .frame-51 {
+  align-items: center;
+  background-color: var(--brand--white);
+  border: 1.33px solid;
+  border-color: var(--cloud);
+  border-radius: 10.67px;
+  display: flex;
+  gap: 24px;
+  height: 3rem;
+  min-height: 50px;
+  position: relative;
+  width: 100%;
+}
+
+.maintenance-overview .format_line_spacing {
+  aspect-ratio: 1;
+  height: 32px;
+  position: relative;
+  width: 32px;
+}
+
+.maintenance-overview .sort-by-latest-task-added {
+  color: transparent;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xxl);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .span0-1 {
+  color: var(--chicago);
+}
+
+.maintenance-overview .span1-1 {
+  color: var(--blueberry);
+}
+
+.maintenance-overview .group-54 {
+  background-color: var(--brand--white);
+  border: 1.33px solid;
+  border-color: #dad9e4;
+  border-radius: 10.67px;
+  box-shadow: 0px 5.33px 10.67px #0000000f , 0px 0px 5.33px #0000000a;
+  display: flex;
+  flex-direction: column;
+  gap: 18.5px;
+  height: auto;
+  width: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.maintenance-overview .group-54-1 {
+  background-color: #e8e6ff;
+  height: 50.77px;
+  margin-left: 1.4px;
+  margin-top: 1.0px;
+  width: 100%;
+}
+
+
+.maintenance-overview .exeral-visual-inspection {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: 7.0px;
+  min-height: 25px;
+  min-width: 226px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .status {
+  left: 1542px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 23px;
+  width: 64px;
+}
+
+.maintenance-overview .frame-237 {
+  background-color: #ffecc8;
+  align-items: center;
+  border-radius: 5.33px;
+  display: flex;
+  height: 2.5rem;
+  margin-top: 1rem;
+  padding: 0.4vw 1vw;
+  position: relative;
+  width: 10rem;
+  min-width: 0;
+}
+
+.maintenance-overview .started {
+  color: #a0700e;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xxl);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .frame-248 {
+  align-items: center;
+  background-color: #bffbc6;
+  border-radius: 5.33px;
+  display: flex;
+  height: 2.5rem;
+  padding: 0.4vw 1vw;
+  position: relative;
+  width: 10rem;
+  min-width: 0;
+}
+
+.maintenance-overview .completed {
+  color: #48802b;
+  font-family: var(--font-family-roboto);
+  font-size: var(--font-size-xxl);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .more_vert {
+  aspect-ratio: 1;
+  height: 32px;
+  margin-left: 125.3px;
+  width: 32px;
+}
+
+.maintenance-overview .check-and-top-up-cil {
+  left: 485px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 7px;
+}
+
+.maintenance-overview .name {
+  left: 1140px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 21px;
+  width: 136px;
+}
+
+.maintenance-overview .text {
+  left: 1354px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 21px;
+  width: 111px;
+}
+
+.maintenance-overview .overlap-group4 {
+  height: 99px;
+  left: 1px;
+  position: absolute;
+  top: 536px;
+  width: 1853px;
+}
+
+.maintenance-overview .engine-system-checks {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-left: 85px;
+  margin-top: 12.0px;
+  min-height: 25px;
+  min-width: 216px;
+  white-space: nowrap;
+}
+
+
+
+.maintenance-overview .frame-249 {
+  background-color: var(--peach-schnapps);
+  align-items: center;
+  border-radius: 5.33px;
+  display: flex;
+  height: 2.5rem;
+  margin-top: 1rem;
+  padding: 0.4vw 1vw;
+  position: relative;
+  width: 10rem;
+  min-width: 0;
+}
+
+.maintenance-overview .not-started {
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+
+.maintenance-overview .frame-25 {
+  align-items: center;
+  background-color: var(--peach-schnapps);
+  border-radius: 5.33px;
+  display: flex;
+  gap: 10.67px;
+  height: 43px;
+  margin-right: 121.29px;
+  margin-top: 91px;
+  padding: 5.33px 10.67px;
+  position: relative;
+  width: 176px;
+}
+
+.maintenance-overview .overlap-group1 {
+  align-self: flex-end;
+  height: 88px;
+  margin-bottom: 0;
+  margin-left: 76px;
+  position: relative;
+  width: 286px;
+}
+
+.maintenance-overview .frame-5120 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: #e7e6e6;
+  border-radius: 1rem;
+  margin: 1rem;
+  padding: 2vw 1vw;
+  position: relative;
+  width: 98%;
+  box-sizing: border-box;
+}
+
+.maintenance-overview .frame-5119 {
+  align-items: stretch;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 2vw;
+  position: relative;
+  width: 100%;
+}
+
+.maintenance-overview .frame-511 {
+  align-items: stretch;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vw;
+  position: relative;
+  width: 100%;
+}
+
+.maintenance-overview .frame-5112 {
+  align-items: center;
+  display: flex;
+  gap: 1vw;
+  position: relative;
+}
+
+.maintenance-overview .upcoming-maintenance {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.33px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .frame-5116 {
+  align-items: center;
+  align-self: stretch;
+  display: flex;
+  gap: 1vw;
+  overflow-x: auto;
+  position: relative;
+  width: 100%;
+}
+
+.maintenance-overview .group-104 {
+  height: 100px;
+  position: relative;
+  width: 224px;
+}
+
+.maintenance-overview .overlap-group {
+  align-items: flex-start;
+  background-color: var(--brand--white);
+  border-radius: 10.67px;
+  box-shadow: 0px 5.33px 14.67px #00000021;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-height: 100px;
+  padding: 18.0px 19.3px;
+  width: 220px;
+}
+
+.maintenance-overview .flex-row {
+  gap: 15px;
+  margin-left: 0.67px;
+  margin-top: 1px;
+  min-width: 112px;
+}
+
+.maintenance-overview .group-1041 {
+  background-color: var(--alto);
+  border-radius: 14px;
+  display: flex;
+  height: 28px;
+  width: 28px;
+}
+
+.maintenance-overview .wrench {
+  height: 17.33px;
+  margin-left: 5.3px;
+  margin-top: 5.3px;
+  width: 17.33px;
+}
+
+.maintenance-overview .number-8 {
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .address-1 {
+  align-self: flex-end;
+  min-height: 22px;
+  min-width: 138px;
+}
+
+.maintenance-overview .overlap-group-1 {
+  align-items: flex-start;
+  background-color: var(--brand--white);
+  border-radius: 10.67px;
+  box-shadow: 0px 5.33px 14.67px #00000021;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-height: 100px;
+  padding: 18.0px 18.3px;
+  width: 220px;
+}
+
+.maintenance-overview .flex-row-1 {
+  align-items: flex-start;
+  display: flex;
+  gap: 15px;
+  margin-left: 1.67px;
+  margin-top: 1px;
+  min-width: 112px;
+}
+
+.maintenance-overview .wrench-1 {
+  margin-left: 5.3px;
+  margin-top: 5.3px;
+}
+
+.maintenance-overview .number-9 {
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .address-2 {
+  align-self: flex-end;
+  min-height: 22px;
+  min-width: 139px;
+}
+
+.maintenance-overview .overlap-group-2 {
+  align-items: flex-start;
+  background-color: var(--brand--white);
+  border-radius: 10.67px;
+  box-shadow: 0px 5.33px 14.67px #00000021;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-height: 100px;
+  padding: 18.0px 20.0px;
+  width: 220px;
+}
+
+.maintenance-overview .flex-row-2 {
+  align-items: flex-start;
+  display: flex;
+  gap: 15px;
+  margin-top: 1px;
+  min-width: 112px;
+}
+
+.maintenance-overview .wrench-2 {
+  margin-left: 5.3px;
+  margin-top: 5.3px;
+}
+
+.maintenance-overview .number-10 {
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .address-7 {
+  align-self: flex-end;
+  margin-right: 0.33px;
+  min-height: 22px;
+  min-width: 137px;
+}
+
+.maintenance-overview .number-11 {
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .overlap-group4-1 {
+  align-items: flex-start;
+  background-color: var(--brand--white);
+  border-radius: 10.67px;
+  box-shadow: 0px 5.33px 14.67px #00000021;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-height: 100px;
+  padding: 18.0px 15.3px;
+  width: 220px;
+}
+
+.maintenance-overview .flex-row-7 {
+  align-items: flex-start;
+  display: flex;
+  gap: 15px;
+  margin-left: 4.67px;
+  margin-top: 1px;
+  min-width: 112px;
+}
+
+.maintenance-overview .number-12 {
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .address-8 {
+  align-self: flex-end;
+  min-height: 22px;
+  min-width: 142px;
+}
+
+.maintenance-overview .number-13 {
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .address-9 {
+  align-self: flex-end;
+  margin-right: 5.33px;
+  min-height: 22px;
+  min-width: 132px;
+}
+
+.maintenance-overview .number-14 {
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .wrench-3 {
+  margin-left: 5.3px;
+  margin-top: 5.3px;
+}
+
+.maintenance-overview .number-15 {
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .scheduled-flights {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1.33px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.maintenance-overview .group-10 {
+  background-color: var(--brand--white);
+  border-radius: 10.67px;
+  box-shadow: 0px 5.33px 14.67px #00000021;
+  display: flex;
+  height: 184px;
+  position: relative;
+  width: 440px;
+}
+
+.maintenance-overview .group-1050-1 {
+  align-items: flex-start;
+  gap: 19px;
+  height: 142px;
+  justify-content: flex-end;
+  min-width: 395.33px;
+}
+
+.maintenance-overview .overlap-group1-1 {
+  height: 111px;
+  margin-top: 1.33px;
+  position: relative;
+  width: 27px;
+}
+
+.maintenance-overview .line-15 {
+  height: 83px;
+  left: 13px;
+  position: absolute;
+  top: 15px;
+  width: 1px;
+}
+
+.maintenance-overview .ellipse-8 {
+  background-color: var(--alto);
+  border-radius: 13.33px;
+  height: 27px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 27px;
+}
+
+.maintenance-overview .ellipse-9 {
+  background-color: var(--alto);
+  border-radius: 13.33px;
+  height: 27px;
+  left: 0;
+  position: absolute;
+  top: 84px;
+  width: 27px;
+}
+
+.maintenance-overview .airplane-landing {
+  height: 15px;
+  left: 5px;
+  position: absolute;
+  top: 91px;
+  width: 15px;
+}
+
+.maintenance-overview .airplane-take-off {
+  height: 16px;
+  left: 5px;
+  position: absolute;
+  top: 7px;
+  width: 16px;
+}
+
+.maintenance-overview .flex-col-4 {
+  margin-top: 0;
+  min-height: 142px;
+  width: 350px;
+}
+
+.maintenance-overview .bzn-akt {
+  letter-spacing: 0;
+  line-height: normal;
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .group-272-1 {
+  display: flex;
+  height: 23px;
+  margin-top: 12px;
+  width: 350px;
+}
+
+.maintenance-overview .address-3 {
+  height: 22px;
+  margin-left: 0;
+  margin-top: 1.3px;
+  width: 138px;
+}
+
+.maintenance-overview .group-267-3 {
+  align-items: flex-end;
+  height: 6.67px;
+  margin-left: 8.7px;
+  min-width: 50.67px;
+}
+
+.maintenance-overview .overlap-group-3 {
+  height: 7px;
+  margin-bottom: 0;
+  position: relative;
+  width: 51px;
+}
+
+.maintenance-overview .line-16 {
+  height: 1px;
+  left: 3px;
+  position: absolute;
+  top: 3px;
+  width: 44px;
+}
+
+.maintenance-overview .ellipse-13 {
+  background-color: var(--alto);
+  border-radius: 3.33px;
+  height: 7px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 7px;
+}
+
+.maintenance-overview .ellipse-14 {
+  background-color: var(--alto);
+  border-radius: 3.33px;
+  height: 7px;
+  left: 44px;
+  position: absolute;
+  top: 0;
+  width: 7px;
+}
+
+.maintenance-overview .address-4 {
+  height: 22px;
+  margin-left: 10.7px;
+  margin-top: 0;
+  width: 138px;
+}
+
+.maintenance-overview .akt-bzn {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: 19px;
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .group-271-1 {
+  display: flex;
+  height: 23px;
+  margin-top: 8px;
+  width: 350px;
+}
+
+.maintenance-overview .group-267-4 {
+  align-items: flex-start;
+  height: 6.67px;
+  margin-left: 8.7px;
+  min-width: 50.67px;
+}
+
+.maintenance-overview .overlap-group-4 {
+  height: 7px;
+  margin-top: 0;
+  position: relative;
+  width: 51px;
+}
+
+.maintenance-overview .group-1050 {
+  align-items: flex-start;
+  display: flex;
+  gap: 19px;
+  height: 142px;
+  justify-content: flex-end;
+  margin-left: 20.0px;
+  margin-top: 18.7px;
+  min-width: 396.33px;
+}
+
+.maintenance-overview .flex-col {
+  flex-direction: column;
+  margin-top: 0;
+  min-height: 142px;
+  width: 351px;
+}
+
+.maintenance-overview .group-272 {
+  display: flex;
+  height: 23px;
+  margin-top: 12px;
+  width: 351px;
+}
+
+.maintenance-overview .address-5 {
+  height: 22px;
+  margin-left: 0;
+  margin-top: 1.3px;
+  width: 139px;
+}
+
+.maintenance-overview .group-267 {
+  align-items: flex-end;
+  display: flex;
+  height: 6.67px;
+  margin-left: 7.7px;
+  margin-top: 6.7px;
+  min-width: 50.67px;
+}
+
+.maintenance-overview .address-6 {
+  height: 22px;
+  margin-left: 10.7px;
+  margin-top: 0;
+  width: 139px;
+}
+
+.maintenance-overview .group-271 {
+  display: flex;
+  height: 23px;
+  margin-top: 8px;
+  width: 351px;
+}
+
+.maintenance-overview .group-267-1 {
+  align-items: flex-start;
+  height: 6.67px;
+  margin-left: 7.7px;
+  min-width: 50.67px;
+}
+
+.maintenance-overview .group-1050-2 {
+  align-items: flex-start;
+  gap: 19px;
+  height: 142px;
+  min-width: 396.33px;
+}
+
+.maintenance-overview .airplane-take-off-1 {
+  height: 16px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 16px;
+}
+
+.maintenance-overview .airplane-landing-1 {
+  height: 15px;
+  margin-right: -232.67px;
+  margin-top: 68px;
+  width: 15px;
+}
+
+.maintenance-overview .ellipse {
+  background-color: var(--alto);
+  border-radius: 13.33px;
+  height: 27px;
+  width: 27px;
+}
+
+.maintenance-overview .address-11 {
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.maintenance-overview .bzn-akt-7 {
+  letter-spacing: 0;
+  line-height: normal;
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.maintenance-overview .check-and-top-up-cil-4 {
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.maintenance-overview .component-turboprop-engine-2-5 {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .date-2 {
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.maintenance-overview .flex {
+  align-items: flex-start;
+  display: flex;
+}
+
+.maintenance-overview .flex-col-5 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.maintenance-overview .group-1050-6 {
+  display: flex;
+  margin-left: 20.0px;
+  margin-top: 18.7px;
+}
+
+.maintenance-overview .group-267-5 {
+  display: flex;
+  margin-top: 6.7px;
+}
+
+.maintenance-overview .maintenance {
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.maintenance-overview .next-maintenance-15-days-5 {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .number-17 {
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.maintenance-overview .oil-pressure-slightl-4 {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .priority-medium-5 {
+  align-self: stretch;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.maintenance-overview .rectangle-151-4 {
+  border-radius: 104px;
+  height: 32px;
+  margin-bottom: -26.67px;
+  margin-top: -26.67px;
+  position: relative;
+  width: 32px;
+}
+
+.maintenance-overview .task {
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.maintenance-overview .tasks {
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.maintenance-overview .wrench-5 {
+  height: 17.33px;
+  width: 17.33px;
+}
+
+.maintenance-overview .x24px-ic_warning-3 {
+  height: 22.67px;
+  margin-bottom: -13.33px;
+  margin-left: -13.33px;
+  margin-right: -13.33px;
+  margin-top: -13.33px;
+  position: relative;
+  width: 22.67px;
+}
+
+.maintenance-overview .wide-flex-row {
+  display: flex;
+  flex-direction: flex-row;
+  width: 100%;
+}

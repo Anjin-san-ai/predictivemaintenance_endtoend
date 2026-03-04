@@ -1,0 +1,14 @@
+{
+  "invertXManual": false,
+  "invertZoom": false,
+  "zoomScale": 10000,
+  "yawScale": 6,
+  "pitchScale": 0,
+  "pinchEnter": 0.085,
+  "pinchLeave": 0.065,
+  "pinchMinHold": 70,
+  "cursorSmoothing": 0.4039931929968879,
+  "zoomXScale": 9000,
+  "sensitivity": 0.90118719239641,
+  "precisionModeEnabled": false
+}

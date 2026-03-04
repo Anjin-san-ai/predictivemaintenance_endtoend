@@ -1,0 +1,132 @@
+{
+  "id": "A400-17",
+  "displayName": "A400 - Flight 17",
+  "components": [
+    {
+      "id": "engine",
+      "attachTo": "Object_9",
+      "displayName": "Port Outer Engine",
+      "status": "Good",
+      "componentName": "Turboprop Engine #4",
+      "maintenanceDue": "92 days",
+      "priorityLevel": "LOW",
+      "descriptionText": "Nominal operation.",
+      "markerOffset": [
+        -3000,
+        500,
+        1000
+      ],
+      "cameraOffset": [
+        -8000,
+        1000,
+        2000
+      ],
+      "faultCode": "ER001"
+    },
+    {
+      "id": "tail",
+      "attachTo": "Object_9",
+      "displayName": "Vertical Stabilizer",
+      "status": "Good",
+      "componentName": "Rudder Actuator",
+      "maintenanceDue": "70 days",
+      "priorityLevel": "LOW",
+      "descriptionText": "No faults.",
+      "markerOffset": [
+        2000,
+        3000,
+        -6000
+      ],
+      "cameraOffset": [
+        5000,
+        4000,
+        -12000
+      ],
+      "faultCode": "ER002"
+    },
+    {
+      "id": "canopy",
+      "attachTo": "Object_11",
+      "displayName": "Cockpit Canopy",
+      "status": "Warning",
+      "componentName": "Canopy Seal",
+      "maintenanceDue": "13 days",
+      "priorityLevel": "MEDIUM",
+      "descriptionText": "Trend indicates future attention required.",
+      "markerOffset": [
+        0,
+        200,
+        0
+      ],
+      "cameraOffset": [
+        0,
+        2000,
+        8000
+      ],
+      "faultCode": "ER003"
+    },
+    {
+      "id": "nose",
+      "attachTo": "Object_9",
+      "displayName": "Nose Avionics",
+      "status": "Good",
+      "componentName": "Avionics Suite",
+      "maintenanceDue": "48 days",
+      "priorityLevel": "LOW",
+      "descriptionText": "OK.",
+      "markerOffset": [
+        1200,
+        300,
+        4800
+      ],
+      "cameraOffset": [
+        0,
+        800,
+        6000
+      ],
+      "faultCode": "ER004"
+    },
+    {
+      "id": "left-wing",
+      "attachTo": "Object_9",
+      "displayName": "Left Wing",
+      "status": "Warning",
+      "componentName": "Aileron Actuator",
+      "maintenanceDue": "36 days",
+      "priorityLevel": "MEDIUM",
+      "descriptionText": "Slight play.",
+      "markerOffset": [
+        -5200,
+        200,
+        0
+      ],
+      "cameraOffset": [
+        -9000,
+        1000,
+        0
+      ],
+      "faultCode": "ER005"
+    },
+    {
+      "id": "right-gear",
+      "attachTo": "Object_11",
+      "displayName": "Right Landing Gear",
+      "status": "Warning",
+      "componentName": "Gear Hydraulics",
+      "maintenanceDue": "29 days",
+      "priorityLevel": "MEDIUM",
+      "descriptionText": "Minor issue flagged.",
+      "markerOffset": [
+        2000,
+        -1800,
+        -3000
+      ],
+      "cameraOffset": [
+        2000,
+        -1000,
+        -5000
+      ],
+      "faultCode": "ER006"
+    }
+  ]
+}
