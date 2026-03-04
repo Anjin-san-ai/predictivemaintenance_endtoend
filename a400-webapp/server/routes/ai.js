@@ -46,7 +46,7 @@ module.exports = function(config){
 
   router.post('/', async (req, res) => {
     try {
-  const { message, flightId, history, promptId, bypassLocal } = req.body || {};
+  const { message, flightId, history, promptId, bypassLocal, _compassSystemInjection } = req.body || {};
   if (!message || typeof message !== 'string') return res.status(400).json({ error: 'missing message' });
 
   // log incoming request summary (do not log secrets)
@@ -134,6 +134,11 @@ module.exports = function(config){
       // build system prompt from promptId and inject computed local context when classifier is not confident
       const sysPrompt = prompts[promptId] || prompts['default'] || '';
       let systemPrompt = sysPrompt;
+
+      // Allow COMPASS portal to inject enriched context (maintenance manual, fleet/parts data)
+      if (_compassSystemInjection && typeof _compassSystemInjection === 'string') {
+        systemPrompt = _compassSystemInjection + '\n\n' + systemPrompt;
+      }
 
       // If classifier identifies a squadron/group summary intent, instruct the assistant to default to
       // providing a concise squadron-level summary first (even if a flightId was provided). This ensures

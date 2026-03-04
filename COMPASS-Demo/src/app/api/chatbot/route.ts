@@ -161,7 +161,16 @@ export async function POST(req: NextRequest) {
       // A400 backend unavailable — fall through to local answer
     }
 
-    // If A400 backend is unavailable, return a context-informed local reply
+    // Detect unhelpful A400 responses and fall back to local PDF answer
+    if (reply) {
+      const isUnhelpful =
+        /can only answer based on|don't have information|cannot answer|outside.*knowledge|only use the provided flight data/i.test(reply);
+      if (isUnhelpful && relevantChunks.length > 0) {
+        reply = null;
+      }
+    }
+
+    // If A400 backend is unavailable or unhelpful, return a context-informed local reply
     if (!reply) {
       const lowerMsg = message.toLowerCase();
       const isMaintenanceQ =

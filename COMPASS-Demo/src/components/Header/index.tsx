@@ -59,6 +59,9 @@ const Header = () => {
         <Link href="/parts-and-equipment" className={`${styles.navItem} ${isActive('/parts-and-equipment') ? styles.active : ''}`}>
           <span>Repository</span>
         </Link>
+        <Link href="/fleet-monitor" className={`${styles.navItem} ${isActive('/fleet-monitor') ? styles.active : ''}`}>
+          <span>Fleet Monitor</span>
+        </Link>
         <Link href="/chatbot" className={`${styles.navItem} ${isActive('/chatbot') ? styles.active : ''}`}>
           <span className={styles.chatbotNavItem}>AI Assistant</span>
         </Link>
