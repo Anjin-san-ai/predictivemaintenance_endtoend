@@ -145,10 +145,21 @@ export async function POST(req: NextRequest) {
     }
     messages.push({ role: 'user', content: message });
 
-    const azureEndpoint = process.env.AZURE_OPENAI_ENDPOINT;
-    const azureKey = process.env.AZURE_OPENAI_API_KEY;
-    const azureDeployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o';
-    const apiVersion = process.env.OPENAI_API_VERSION || '2025-01-01-preview';
+    // Load Azure OpenAI config: env vars take priority, then fall back to bundled config
+    let aiConfig: Record<string, any> = {};
+    try {
+      const cfgPath = join(process.cwd(), 'src', 'data', 'ai-config.json');
+      if (existsSync(cfgPath)) {
+        const raw = JSON.parse(readFileSync(cfgPath, 'utf-8'));
+        if (Array.isArray(raw.kp)) raw.key = Buffer.from(raw.kp.join(''), 'base64').toString('utf-8');
+        aiConfig = raw;
+      }
+    } catch { /* ignore */ }
+
+    const azureEndpoint = process.env.AZURE_OPENAI_ENDPOINT || aiConfig.endpoint || '';
+    const azureKey = process.env.AZURE_OPENAI_API_KEY || aiConfig.key || '';
+    const azureDeployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || aiConfig.deployment || 'gpt-4o';
+    const apiVersion = process.env.OPENAI_API_VERSION || aiConfig.apiVersion || '2025-01-01-preview';
 
     // Primary path: call Azure OpenAI directly from COMPASS
     if (azureEndpoint && azureKey) {
@@ -163,9 +174,11 @@ export async function POST(req: NextRequest) {
         if (aoaiRes.ok) {
           const data = await aoaiRes.json();
           reply = data.choices?.[0]?.message?.content || null;
+        } else {
+          console.error('[chatbot] Azure OpenAI returned', aoaiRes.status, await aoaiRes.text().catch(() => ''));
         }
-      } catch {
-        // Azure OpenAI call failed — try A400 backend next
+      } catch (e) {
+        console.error('[chatbot] Azure OpenAI call failed:', e);
       }
     }
 

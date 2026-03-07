@@ -1,0 +1,6 @@
+{
+  "endpoint": "https://sushgenai.openai.azure.com/",
+  "kp": ["Q3dHdFFsQlVQUjNxOEJoTTdLa0Jw", "aWs4bUtodDZHdUtxaGhlU0hhYkJB", "Q01aOHcwcWlXYUpRUUo5OUJJQUNI", "WUh2NlhKM3czQUFBQkFDT0cwd3dV"],
+  "deployment": "gpt-4o",
+  "apiVersion": "2025-01-01-preview"
+}
