@@ -33,13 +33,13 @@
   --tints--black-50: #808080;
   --white: #ffffff99;
  
-  --font-size-l: 18px;
-  --font-size-m: 16px;
-  --font-size-s: 13.3px;
-  --font-size-xl: 18.7px;
-  --font-size-xs: 12px;
-  --font-size-xxl: 21.3px;
-  --font-size-xxxl: 24px;
+  --font-size-l: 14px;
+  --font-size-m: 13px;
+  --font-size-s: 12px;
+  --font-size-xl: 15px;
+  --font-size-xs: 11px;
+  --font-size-xxl: 15px;
+  --font-size-xxxl: 18px;
  
   --font-family-open_sans: "Open Sans", Helvetica;
   --font-family-poppins: "Poppins", Helvetica;
@@ -232,7 +232,7 @@
 .roboto-bold-black-32px {
   color: var(--black);
   font-family: var(--font-family-roboto);
-  font-size: 32px;
+  font-size: 22px;
   font-style: normal;
   font-weight: 700;
 }

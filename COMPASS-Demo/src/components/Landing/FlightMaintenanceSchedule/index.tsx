@@ -19,6 +19,7 @@ import {
   getStatusColor,
   flightScheduleData as initialFlightScheduleData,
 } from "../../../utils/aircraftUtils";
+import { getA400IndexForTail } from "../../../utils/a400Bridge";
 
 interface Aircraft {
   tailNumber: string;
@@ -70,12 +71,9 @@ export default function FlightMaintenanceSchedule(
       .catch(() => setFleetHealthError(true));
   }, []);
 
-  // Map tail-number-position in fleet health (A400 IDs don't match ZZ numbers directly;
-  // we assign health by index to give the demo a realistic feel)
   const getA400HealthForAircraft = useCallback((tailNumber: string): A400HealthEntry | null => {
     if (fleetHealth.length === 0) return null;
-    const digits = tailNumber.replace(/\D/g, '');
-    const idx = (parseInt(digits, 10) || 0) % fleetHealth.length;
+    const idx = getA400IndexForTail(tailNumber) % fleetHealth.length;
     return fleetHealth[idx] || null;
   }, [fleetHealth]);
   const router = useRouter();
@@ -831,7 +829,7 @@ export default function FlightMaintenanceSchedule(
                 return (
                   <div
                     key={aircraft.tailNumber}
-                    className="flex gap-1 relative"
+                    className="flex gap-1 relative overflow-hidden"
                     data-tail-number={aircraft.tailNumber}
                   >
                     <button
@@ -881,14 +879,6 @@ export default function FlightMaintenanceSchedule(
                             }
                             return null;
                           })()}
-                        </div>
-                        <div className="flex gap-1 items-center text-sm text-muted-foreground">
-                          <div className="text-wrapper-20">
-                            {getDynamicStatusForAircraft(aircraft)}
-                          </div>
-                          <div className="w-[11px] h-[11px]">
-                            <img src="/images/landing/open-end-wrench-24.png" />
-                          </div>
                           {/* Fleet Monitor health badge */}
                           {(() => {
                             const health = getA400HealthForAircraft(aircraft.tailNumber);
@@ -917,6 +907,14 @@ export default function FlightMaintenanceSchedule(
                             );
                           })()}
                         </div>
+                        <div className="flex gap-1 items-center text-sm text-muted-foreground">
+                          <div className="text-wrapper-20">
+                            {getDynamicStatusForAircraft(aircraft)}
+                          </div>
+                          <div className="w-[11px] h-[11px]">
+                            <img src="/images/landing/open-end-wrench-24.png" />
+                          </div>
+                        </div>
                       </div>
                     </button>
 
@@ -926,7 +924,7 @@ export default function FlightMaintenanceSchedule(
                         ref={(el) => {
                           cellRefs.current[colIndex] = el;
                         }}
-                        className={`mt-1 w-[180px] h-[54px] relative flex-shrink-0 ${date.isToday
+                        className={`mt-1 w-[180px] h-[54px] relative flex-shrink-0 overflow-hidden ${date.isToday
                           ? "bg-[#e9b7b575]"
                           : colIndex % 2 !== 0
                             ? "bg-[#e1e0e0]"

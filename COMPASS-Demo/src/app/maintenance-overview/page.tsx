@@ -5,13 +5,40 @@ import Header from "@/components/Header/index";
 import "./maintenance-overview.css";
 import "./styleguide.css";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getA400IndexForTail } from "@/utils/a400Bridge";
+
+interface ComponentHealth {
+  componentName: string;
+  status: string;
+  maintenanceDue: string;
+  priorityLevel: string;
+  descriptionText: string;
+}
 
 function AircraftMaintenanceContent() {
   const [collapsed, setCollapsed] = useState(false);
+  const [aircraftHealth, setAircraftHealth] = useState<ComponentHealth[]>([]);
+  const [worstStatus, setWorstStatus] = useState<string>('');
   const router = useRouter();
   const tailNumber = useSearchParams().get('tailNumber');
+
+  useEffect(() => {
+    if (!tailNumber) return;
+    fetch('/api/fleet-health')
+      .then(r => r.json())
+      .then(data => {
+        if (data.error || !data.aircraft) return;
+        const idx = getA400IndexForTail(tailNumber) % data.aircraft.length;
+        const ac = data.aircraft[idx];
+        if (ac) {
+          setAircraftHealth(ac.components || []);
+          setWorstStatus(ac.worstStatus || 'Good');
+        }
+      })
+      .catch(() => {});
+  }, [tailNumber]);
 
   return (
      <>
@@ -115,6 +142,49 @@ function AircraftMaintenanceContent() {
               </div>
             </div>
           </div>
+          {/* Dynamic Fleet Health for this aircraft */}
+          {aircraftHealth.length > 0 && (
+            <div style={{ margin: '0 20px 16px', padding: '14px 18px', background: '#fff', borderRadius: '8px', border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                <span style={{ fontWeight: 700, fontSize: '14px', color: '#101b34' }}>Component Health — {tailNumber}</span>
+                <span style={{
+                  padding: '2px 8px', borderRadius: '10px', fontSize: '11px', fontWeight: 700,
+                  background: worstStatus === 'Critical' ? 'rgba(255,71,87,0.12)' : worstStatus === 'Warning' ? 'rgba(255,165,2,0.12)' : 'rgba(46,213,115,0.12)',
+                  color: worstStatus === 'Critical' ? '#ff4757' : worstStatus === 'Warning' ? '#ffa502' : '#2ed573',
+                  border: `1px solid ${worstStatus === 'Critical' ? 'rgba(255,71,87,0.4)' : worstStatus === 'Warning' ? 'rgba(255,165,2,0.4)' : 'rgba(46,213,115,0.4)'}`,
+                }}>{worstStatus}</span>
+              </div>
+              <div className="overflow-x-auto rounded-lg border border-gray-200">
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                  <thead>
+                    <tr style={{ background: '#f5f7fa', borderBottom: '1px solid #e0e0e0' }}>
+                      <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: '#555' }}>Component</th>
+                      <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: '#555' }}>Status</th>
+                      <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: '#555' }}>Maintenance Due</th>
+                      <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: '#555' }}>Priority</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {aircraftHealth.map((c, i) => (
+                      <tr key={i} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                        <td style={{ padding: '8px 12px', fontWeight: 500 }}>{c.componentName}</td>
+                        <td style={{ padding: '8px 12px' }}>
+                          <span style={{
+                            padding: '2px 8px', borderRadius: '10px', fontSize: '11px', fontWeight: 600,
+                            background: c.status === 'Critical' ? 'rgba(255,71,87,0.1)' : c.status === 'Warning' ? 'rgba(255,165,2,0.1)' : 'rgba(46,213,115,0.1)',
+                            color: c.status === 'Critical' ? '#ff4757' : c.status === 'Warning' ? '#ffa502' : '#2ed573',
+                          }}>{c.status}</span>
+                        </td>
+                        <td style={{ padding: '8px 12px', color: '#666' }}>{c.maintenanceDue}</td>
+                        <td style={{ padding: '8px 12px', color: '#666' }}>{c.priorityLevel}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
           <div className="overlap-group14">
             <div className="group-1065">
               <div className="frame-container">
@@ -235,10 +305,14 @@ function AircraftMaintenanceContent() {
                     <div className="overlap-group3 roboto-normal-white-13-3px rectangle-2924">
                       <div className="rectangle-2957">
                         <iframe
-                          src="https://my.spline.design/untitled-LbuSv8Py4OV2X6KP05HOzazr/"
+                          src={typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+                            ? 'https://a400-webapp-ercscuhvf3h7ftdw.uksouth-01.azurewebsites.net'
+                            : 'http://localhost:3000'}
                           frameBorder="0"
                           width="100%"
                           height="100%"
+                          title="Fleet Monitor"
+                          allow="accelerometer; gyroscope"
                         ></iframe>
                       </div>
 

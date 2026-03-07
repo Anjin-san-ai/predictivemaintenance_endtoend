@@ -178,27 +178,7 @@ interface AddFlightPopupProps {
 export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFlightPopupProps>) {
   const [selectedCategory, setSelectedCategory] = useState(initialData?.category || 'Cargo');
   const [healthWarning, setHealthWarning] = useState<{ severity: 'Critical' | 'Warning'; components: string[] } | null>(null);
-  const [healthChecked, setHealthChecked] = useState(false);
-
-  // Check fleet health on mount — ZZ198 is the aircraft used for Add Flight
-  React.useEffect(() => {
-    fetch('/api/fleet-health')
-      .then(r => r.json())
-      .then(data => {
-        if (data.error || !data.aircraft || data.aircraft.length === 0) return;
-        // Use the last aircraft in the list as a proxy for ZZ198
-        const aircraft = data.aircraft[data.aircraft.length - 1];
-        const criticalComps = (aircraft.components || []).filter((c: any) => c.status === 'Critical');
-        const warningComps = (aircraft.components || []).filter((c: any) => c.status === 'Warning');
-        if (criticalComps.length > 0) {
-          setHealthWarning({ severity: 'Critical', components: criticalComps.map((c: any) => c.componentName) });
-        } else if (warningComps.length > 0) {
-          setHealthWarning({ severity: 'Warning', components: warningComps.map((c: any) => c.componentName) });
-        }
-        setHealthChecked(true);
-      })
-      .catch(() => setHealthChecked(true));
-  }, []);
+  const [submitted, setSubmitted] = useState(false);
 
   const currentDate = new Date();
 
@@ -315,6 +295,22 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
     if (onSubmit) {
       onSubmit(flightData);
     }
+
+    setSubmitted(true);
+    fetch('/api/fleet-health')
+      .then(r => r.json())
+      .then(data => {
+        if (data.error || !data.aircraft || data.aircraft.length === 0) return;
+        const aircraft = data.aircraft[data.aircraft.length - 1];
+        const criticalComps = (aircraft.components || []).filter((c: any) => c.status === 'Critical');
+        const warningComps = (aircraft.components || []).filter((c: any) => c.status === 'Warning');
+        if (criticalComps.length > 0) {
+          setHealthWarning({ severity: 'Critical', components: criticalComps.map((c: any) => c.componentName) });
+        } else if (warningComps.length > 0) {
+          setHealthWarning({ severity: 'Warning', components: warningComps.map((c: any) => c.componentName) });
+        }
+      })
+      .catch(() => {});
   };
 
   const addSecondLeg = () => {
@@ -348,8 +344,8 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
 
   return (
     <div className="w-full bg-white overflow-hidden h-full flex flex-col">
-      {/* Fleet Monitor Health Gate */}
-      {healthWarning && (
+      {/* Fleet Monitor Health Alert (shown after submission) */}
+      {submitted && healthWarning && (
         <div style={{
           padding: '10px 16px',
           background: healthWarning.severity === 'Critical' ? 'rgba(255,71,87,0.08)' : 'rgba(255,165,2,0.08)',
