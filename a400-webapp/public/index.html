@@ -17,15 +17,26 @@
             <span style="color:#4a5a7a;font-size:13px;">Fleet Platform</span>
         </div>
         <div style="display:flex;align-items:center;gap:4px;">
-            <a href="http://localhost:3001" style="padding:6px 14px;border-radius:6px;color:#7283a8;font-size:14px;font-weight:500;text-decoration:none;transition:all 150ms ease;" onmouseover="this.style.color='#b8c6e5';this.style.background='rgba(66,112,224,0.12)'" onmouseout="this.style.color='#7283a8';this.style.background='transparent'">Smart Scheduling</a>
-            <a href="http://localhost:3001/parts-and-equipment" style="padding:6px 14px;border-radius:6px;color:#7283a8;font-size:14px;font-weight:500;text-decoration:none;transition:all 150ms ease;" onmouseover="this.style.color='#b8c6e5';this.style.background='rgba(66,112,224,0.12)'" onmouseout="this.style.color='#7283a8';this.style.background='transparent'">Repository</a>
+            <a id="nav-scheduling" href="#" style="padding:6px 14px;border-radius:6px;color:#7283a8;font-size:14px;font-weight:500;text-decoration:none;transition:all 150ms ease;" onmouseover="this.style.color='#b8c6e5';this.style.background='rgba(66,112,224,0.12)'" onmouseout="this.style.color='#7283a8';this.style.background='transparent'">Smart Scheduling</a>
+            <a id="nav-repository" href="#" style="padding:6px 14px;border-radius:6px;color:#7283a8;font-size:14px;font-weight:500;text-decoration:none;transition:all 150ms ease;" onmouseover="this.style.color='#b8c6e5';this.style.background='rgba(66,112,224,0.12)'" onmouseout="this.style.color='#7283a8';this.style.background='transparent'">Repository</a>
             <span style="padding:6px 14px;border-radius:6px;color:#00c8ff;font-size:14px;font-weight:600;background:rgba(0,200,255,0.08);border:1px solid rgba(0,200,255,0.2);">Fleet Monitor</span>
-            <a href="http://localhost:3001/chatbot" style="padding:6px 14px;border-radius:6px;color:#7283a8;font-size:14px;font-weight:500;text-decoration:none;transition:all 150ms ease;" onmouseover="this.style.color='#b8c6e5';this.style.background='rgba(66,112,224,0.12)'" onmouseout="this.style.color='#7283a8';this.style.background='transparent'">AI Assistant</a>
+            <a id="nav-chatbot" href="#" style="padding:6px 14px;border-radius:6px;color:#7283a8;font-size:14px;font-weight:500;text-decoration:none;transition:all 150ms ease;" onmouseover="this.style.color='#b8c6e5';this.style.background='rgba(66,112,224,0.12)'" onmouseout="this.style.color='#7283a8';this.style.background='transparent'">AI Assistant</a>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
             <span id="nav-fleet-status" style="font-size:12px;color:#4a5a7a;">Loading fleet status...</span>
         </div>
     </nav>
+    <script>
+        (function() {
+            var compassBase = window.location.hostname === 'localhost'
+                ? 'http://localhost:3001'
+                : 'https://mango-mushroom-033be7b03.6.azurestaticapps.net';
+            var s = document.getElementById('nav-scheduling'); if (s) s.href = compassBase + '/';
+            var r = document.getElementById('nav-repository'); if (r) r.href = compassBase + '/parts-and-equipment';
+            var c = document.getElementById('nav-chatbot'); if (c) c.href = compassBase + '/chatbot';
+            window.COMPASS_BASE_URL = compassBase;
+        })();
+    </script>
     <div id="component-list-panel"><h3>Components & Health</h3><div id="component-list"></div></div>
     <!-- Flight selector -->
     <div id="flight-selector" style="position:fixed;left:50%;top:18px;transform:translateX(-50%);width:360px;background:rgba(2,6,12,0.9);padding:12px;border-radius:8px;z-index:130;display:none;border:1px solid rgba(0,255,255,0.06);">
@@ -1725,7 +1736,7 @@ STYLE: Punchy, analytic, no fluff. Avoid repeating raw numbers without interpret
                 const partsBtnEl = document.getElementById('info-parts-btn');
                 if (partsLinkEl && partsBtnEl && (data.status === 'Warning' || data.status === 'Critical')) {
                     const searchTerm = encodeURIComponent(data.componentName || data.displayName || '');
-                    partsBtnEl.href = `http://localhost:3001/parts-and-equipment?component=${searchTerm}`;
+                    partsBtnEl.href = `${window.COMPASS_BASE_URL || 'https://mango-mushroom-033be7b03.6.azurestaticapps.net'}/parts-and-equipment?component=${searchTerm}`;
                     partsLinkEl.style.display = 'block';
                 } else if (partsLinkEl) {
                     partsLinkEl.style.display = 'none';

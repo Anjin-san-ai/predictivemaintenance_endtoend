@@ -31,6 +31,12 @@ jobs:
         run: |
           npm ci
           npm run build
+        env:
+          A400_API_URL: ${{ secrets.A400_API_URL }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_DEPLOYMENT_NAME: gpt-4o
+          OPENAI_API_VERSION: "2025-01-01-preview"
 
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
@@ -45,6 +51,10 @@ jobs:
           skip_app_build: true
         env:
           A400_API_URL: ${{ secrets.A400_API_URL }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_DEPLOYMENT_NAME: gpt-4o
+          OPENAI_API_VERSION: "2025-01-01-preview"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
