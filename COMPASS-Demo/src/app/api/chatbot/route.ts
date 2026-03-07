@@ -132,70 +132,82 @@ export async function POST(req: NextRequest) {
       .filter(Boolean)
       .join('\n');
 
-    // Proxy to A400 Azure OpenAI backend
-    const proxyBody = {
-      message,
-      history,
-      flightId: flightId || null,
-      bypassLocal: true,
-      promptId: 'compassChatbot',
-      // Pass the enriched system content as a custom field the A400 backend respects
-      _compassSystemInjection: systemPrompt,
-    };
-
     let reply: string | null = null;
 
-    try {
-      const a400Res = await fetch(`${A400_API_URL}/api/ai-chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(proxyBody),
-        signal: AbortSignal.timeout(25000),
+    // Build chat messages array for Azure OpenAI
+    const messages: Array<{ role: string; content: string }> = [
+      { role: 'system', content: systemPrompt },
+    ];
+    if (Array.isArray(history)) {
+      history.forEach((h: any) => {
+        if (h && h.role && h.content) messages.push({ role: h.role, content: h.content });
       });
+    }
+    messages.push({ role: 'user', content: message });
 
-      if (a400Res.ok) {
-        const data = await a400Res.json();
-        reply = data.reply || null;
+    const azureEndpoint = process.env.AZURE_OPENAI_ENDPOINT;
+    const azureKey = process.env.AZURE_OPENAI_API_KEY;
+    const azureDeployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o';
+    const apiVersion = process.env.OPENAI_API_VERSION || '2025-01-01-preview';
+
+    // Primary path: call Azure OpenAI directly from COMPASS
+    if (azureEndpoint && azureKey) {
+      try {
+        const url = `${azureEndpoint.replace(/\/+$/, '')}/openai/deployments/${azureDeployment}/chat/completions?api-version=${apiVersion}`;
+        const aoaiRes = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'api-key': azureKey },
+          body: JSON.stringify({ messages, max_tokens: 1024, temperature: 0.3 }),
+          signal: AbortSignal.timeout(30000),
+        });
+        if (aoaiRes.ok) {
+          const data = await aoaiRes.json();
+          reply = data.choices?.[0]?.message?.content || null;
+        }
+      } catch {
+        // Azure OpenAI call failed — try A400 backend next
       }
-    } catch {
-      // A400 backend unavailable — fall through to local answer
     }
 
-    // Detect unhelpful A400 responses and fall back to local PDF answer
-    if (reply) {
-      const isUnhelpful =
-        /can only answer based on|don't have information|cannot answer|outside.*knowledge|only use the provided flight data/i.test(reply);
-      if (isUnhelpful && relevantChunks.length > 0) {
-        reply = null;
-      }
-    }
-
-    // If A400 backend is unavailable or unhelpful, return a context-informed local reply
+    // Fallback: proxy through A400 backend if direct Azure OpenAI is unavailable
     if (!reply) {
-      const lowerMsg = message.toLowerCase();
-      const isMaintenanceQ =
-        lowerMsg.includes('maintenance') ||
-        lowerMsg.includes('repair') ||
-        lowerMsg.includes('procedure') ||
-        lowerMsg.includes('inspect') ||
-        lowerMsg.includes('component');
-
-      if (relevantChunks.length > 0 && isMaintenanceQ) {
-        reply =
-          `Based on the 737-300 Series Maintenance Manual:\n\n` +
-          relevantChunks.map(c => `**${c.title}**\n${c.content.slice(0, 400)}`).join('\n\n---\n\n') +
-          `\n\n*Note: Fleet Monitor backend is currently offline. Showing manual-only response.*`;
-      } else {
-        reply = [
-          `I'm the COMPASS AI Assistant. Here's what I know right now:`,
-          fleetContext ? `\n• ${fleetContext}` : '',
-          partsContext ? `\n• ${partsContext}` : '',
-          `\n\nFor detailed maintenance procedures, please ask a specific question (e.g. "landing gear inspection procedure").`,
-          `\n\n*Note: The Fleet Monitor AI backend is currently offline.*`,
-        ]
-          .filter(Boolean)
-          .join('');
+      try {
+        const proxyBody = {
+          message,
+          history,
+          flightId: flightId || null,
+          bypassLocal: true,
+          promptId: 'compassChatbot',
+          _compassSystemInjection: systemPrompt,
+        };
+        const a400Res = await fetch(`${A400_API_URL}/api/ai-chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(proxyBody),
+          signal: AbortSignal.timeout(25000),
+        });
+        if (a400Res.ok) {
+          const data = await a400Res.json();
+          reply = data.reply || null;
+        }
+      } catch {
+        // A400 backend also unavailable
       }
+    }
+
+    // Final fallback: offline summary from local data
+    if (!reply) {
+      reply = [
+        `I'm the COMPASS AI Assistant. Here's what I know right now:`,
+        fleetContext ? `\n• ${fleetContext}` : '',
+        partsContext ? `\n• ${partsContext}` : '',
+        relevantChunks.length > 0
+          ? `\n\nFrom the 737-300 Maintenance Manual:\n${relevantChunks.map(c => `**${c.title}**: ${c.content.slice(0, 300)}`).join('\n\n')}`
+          : '',
+        `\n\n*AI backend is currently unavailable. Showing cached data only.*`,
+      ]
+        .filter(Boolean)
+        .join('');
     }
 
     return NextResponse.json({ reply });
