@@ -5,7 +5,7 @@ import Header from "@/components/Header/index";
 import "./maintenance-overview.css";
 import "./styleguide.css";
 
-import { useState, useEffect, Suspense } from "react";
+import { useMemo, useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getA400IndexForTail } from "@/utils/a400Bridge";
 
@@ -17,10 +17,17 @@ interface ComponentHealth {
   descriptionText: string;
 }
 
+interface SchedulerInputPayload {
+  maintenanceTasks?: Array<{ tailNumber: string }>;
+  aircraftHours?: Array<{ tailNumber: string; currentHours: number }>;
+  aircraftLandings?: Array<{ tailNumber: string; currentLandings: number }>;
+}
+
 function AircraftMaintenanceContent() {
   const [collapsed, setCollapsed] = useState(false);
   const [aircraftHealth, setAircraftHealth] = useState<ComponentHealth[]>([]);
   const [worstStatus, setWorstStatus] = useState<string>('');
+  const [schedulerInputs, setSchedulerInputs] = useState<SchedulerInputPayload>({});
   const router = useRouter();
   const tailNumber = useSearchParams().get('tailNumber');
 
@@ -39,6 +46,28 @@ function AircraftMaintenanceContent() {
       })
       .catch(() => {});
   }, [tailNumber]);
+
+  useEffect(() => {
+    fetch('/api/scheduler-inputs')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.error) return;
+        setSchedulerInputs(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  const currentHours = useMemo(() => {
+    return schedulerInputs.aircraftHours?.find((entry) => entry.tailNumber === tailNumber)?.currentHours ?? 0;
+  }, [schedulerInputs.aircraftHours, tailNumber]);
+
+  const currentLandings = useMemo(() => {
+    return schedulerInputs.aircraftLandings?.find((entry) => entry.tailNumber === tailNumber)?.currentLandings ?? 0;
+  }, [schedulerInputs.aircraftLandings, tailNumber]);
+
+  const maintenanceTaskCount = useMemo(() => {
+    return schedulerInputs.maintenanceTasks?.filter((entry) => entry.tailNumber === tailNumber).length ?? 0;
+  }, [schedulerInputs.maintenanceTasks, tailNumber]);
 
   return (
      <>
@@ -90,7 +119,7 @@ function AircraftMaintenanceContent() {
                     </div>
                   </div>
                   <div className="group-46-1">
-                    <div className="number roboto-bold-mirage-21-3px">4250</div>
+                    <div className="number roboto-bold-mirage-21-3px">{currentHours}</div>
                   </div>
                 </div>
                 <div className="frame-1">
@@ -106,12 +135,12 @@ function AircraftMaintenanceContent() {
                 <div className="frame-1">
                   <div className="group-1-4">
                     <div className="date-created date-2 roboto-normal-chicago-21-3px">
-                      Date created:
+                      Current landings:
                     </div>
                   </div>
                   <div className="group-46-2">
                     <div className="address roboto-bold-mirage-21-3px">
-                      06 Aug, 2025
+                      {currentLandings}
                     </div>
                   </div>
                 </div>
@@ -202,7 +231,7 @@ function AircraftMaintenanceContent() {
                   </div>
                   <div className="group-46-5">
                     <div className="number-4 number-17 roboto-bold-mirage-21-3px">
-                      10
+                      {maintenanceTaskCount}
                     </div>
                   </div>
                 </div>
