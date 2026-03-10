@@ -241,6 +241,9 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
   });
 
   const handleSubmit = () => {
+    const scheduleDate = new Date();
+    scheduleDate.setDate(scheduleDate.getDate() + 3);
+    scheduleDate.setHours(scheduleDate.getHours() + 6);
     const route = [];
 
     route.push({
@@ -275,29 +278,9 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
       });
     }
 
-    const departureDateTime = route.length
-      ? new Date(`${route[0].departureDate}T${route[0].departureTime}:00`)
-      : new Date();
-    const arrivalDateTime = route.length
-      ? new Date(
-          `${route[route.length - 1].arrivalDate}T${route[route.length - 1].arrivalTime}:00`,
-        )
-      : new Date();
-    const estimatedHours = Math.max(
-      (arrivalDateTime.getTime() - departureDateTime.getTime()) / (1000 * 60 * 60),
-      0.5,
-    );
-    const estimatedDays = Math.max(
-      Math.ceil(
-        (arrivalDateTime.getTime() - departureDateTime.getTime()) /
-          (1000 * 60 * 60 * 24),
-      ),
-      1,
-    );
-
     const flightData = {
-      tailNumber: 'Auto assign',
-      flightNumber: initialData?.flightNumber || `FL-${Date.now().toString().slice(-6)}`,
+      tailNumber: 'ZZ198',
+      flightNumber: 'ZZ156',
       category: selectedCategory,
       fromAirport: 'LHR',
       toAirport: 'LHR',
@@ -306,9 +289,7 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
       returnDate: returnDate,
       returnTime: returnTime,
       route: route,
-      legs: legs,
-      estimatedHours: Number(estimatedHours.toFixed(2)),
-      estimatedDays,
+      legs: legs
     };
 
     if (onSubmit) {
