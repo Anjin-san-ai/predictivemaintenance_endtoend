@@ -20,12 +20,16 @@
 }
 
 .tab:not(.activeTab) {
-  color: #0e1a35;
+  color: var(--color-muted-sage, #607A60);
   font-weight: 400;
 }
 
+.tab:not(.activeTab):hover {
+  color: var(--color-text-primary, #e8f0ea);
+}
+
 .activeTab {
-  color: #4371e0;
+  color: var(--color-cockpit-emerald, #2AF556);
   font-weight: 700;
 }
 
@@ -47,7 +51,8 @@
 .tabsActiveLine {
   position: absolute;
   height: 5px;
-  background-color: #4371e0;
+  background-color: var(--color-cockpit-emerald, #2AF556);
+  box-shadow: 0 0 10px rgba(42, 245, 86, 0.5);
   transition: all 0.3s ease;
   width: var(--active-tab-width);
   left: var(--active-tab-left);

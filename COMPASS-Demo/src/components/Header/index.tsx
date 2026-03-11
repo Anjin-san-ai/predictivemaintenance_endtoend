@@ -65,6 +65,9 @@ const Header = () => {
         <Link href="/chatbot" className={`${styles.navItem} ${isActive('/chatbot') ? styles.active : ''}`}>
           <span className={styles.chatbotNavItem}>AI Assistant</span>
         </Link>
+        <Link href="/agent-network.html" className={`${styles.navItem} ${pathname === '/agent-network.html' ? styles.active : ''}`}>
+          <span>Agent Network</span>
+        </Link>
       </nav>
 
       {/* Utilities Section */}

@@ -68,7 +68,7 @@ export default function CircularProgress({
       </svg>
       {/* Center number */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-[32px] font-bold text-[#101b34] leading-none font-roboto">
+        <span className="text-[32px] font-bold text-white leading-none font-roboto text-shadow">
           {value.toString().padStart(2, '0')}
         </span>
       </div>

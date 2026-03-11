@@ -178,10 +178,10 @@ export default function PartsAndEquipment() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg-primary)' }}>
         <div className="text-center">
-          <div className="text-blue-600 text-xl mb-4">Loading...</div>
-          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <div style={{ color: 'var(--color-cockpit-emerald)', fontSize: '1.25rem', marginBottom: '1rem' }}>Loading...</div>
+          <div style={{ width: '2rem', height: '2rem', border: '2px solid var(--color-cockpit-emerald)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto' }}></div>
         </div>
       </div>
     )
@@ -190,14 +190,14 @@ export default function PartsAndEquipment() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg-primary)' }}>
         <div className="text-center">
-          <div className="text-red-600 text-2xl mb-4">⚠️</div>
-          <div className="text-red-600 text-xl mb-4">Error loading data</div>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <div style={{ color: 'var(--color-status-critical)', fontSize: '2rem', marginBottom: '1rem' }}>⚠️</div>
+          <div style={{ color: 'var(--color-status-critical)', fontSize: '1.25rem', marginBottom: '1rem' }}>Error loading data</div>
+          <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{error}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            style={{ padding: '0.75rem 1.5rem', background: 'var(--color-cockpit-emerald)', color: 'var(--color-bg-primary)', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 700 }}
           >
             Retry
           </button>
@@ -400,7 +400,7 @@ export default function PartsAndEquipment() {
   
 
   return (
-    <React.Fragment>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <Header />
 
       {/* Predictive Demand Banner — driven by Fleet Monitor health data */}
@@ -409,9 +409,9 @@ export default function PartsAndEquipment() {
           margin: 0,
           padding: '10px 20px',
           background: maintenanceParts.criticalCount > 0
-            ? 'linear-gradient(90deg, rgba(255,71,87,0.08), rgba(253,253,253,0.0))'
-            : 'linear-gradient(90deg, rgba(255,165,2,0.08), rgba(253,253,253,0.0))',
-          borderLeft: `4px solid ${maintenanceParts.criticalCount > 0 ? '#ff4757' : '#ffa502'}`,
+            ? 'linear-gradient(90deg, rgba(255,71,87,0.08), transparent)'
+            : 'linear-gradient(90deg, rgba(199,109,65,0.1), transparent)',
+          borderLeft: `4px solid ${maintenanceParts.criticalCount > 0 ? '#ff4757' : '#C76D41'}`,
           borderBottom: '1px solid rgba(0,0,0,0.06)',
           display: 'flex',
           alignItems: 'flex-start',
@@ -420,19 +420,19 @@ export default function PartsAndEquipment() {
           <div style={{ flexShrink: 0, paddingTop: '2px' }}>
             {maintenanceParts.criticalCount > 0
               ? <AlertCircle size={18} color="#ff4757" />
-              : <AlertTriangle size={18} color="#ffa502" />
+              : <AlertTriangle size={18} color="#C76D41" />
             }
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, fontSize: '13px', color: maintenanceParts.criticalCount > 0 ? '#cc2233' : '#b87400', marginBottom: '3px' }}>
+            <div style={{ fontWeight: 600, fontSize: '13px', color: maintenanceParts.criticalCount > 0 ? '#ff4757' : '#C76D41', marginBottom: '3px' }}>
               Fleet Monitor — Predictive Demand Alert
             </div>
-            <div style={{ fontSize: '12px', color: '#555', lineHeight: 1.5 }}>
+            <div style={{ fontSize: '12px', color: '#c8e8cc', lineHeight: 1.5 }}>
               {maintenanceParts.criticalCount > 0 && (
                 <span><strong style={{ color: '#ff4757' }}>{maintenanceParts.criticalCount} Critical</strong> component{maintenanceParts.criticalCount !== 1 ? 's' : ''}{' '}</span>
               )}
               {maintenanceParts.warningCount > 0 && (
-                <span><strong style={{ color: '#ffa502' }}>{maintenanceParts.warningCount} Warning</strong> component{maintenanceParts.warningCount !== 1 ? 's' : ''}{' '}</span>
+                <span><strong style={{ color: '#C76D41' }}>{maintenanceParts.warningCount} Warning</strong> component{maintenanceParts.warningCount !== 1 ? 's' : ''}{' '}</span>
               )}
               across <strong>{maintenanceParts.affectedAircraftCount} aircraft</strong> — parts highlighted below may be required.
             </div>
@@ -446,9 +446,9 @@ export default function PartsAndEquipment() {
                     borderRadius: '10px',
                     fontSize: '11px',
                     fontWeight: 600,
-                    border: `1px solid ${d.severity === 'critical' ? 'rgba(255,71,87,0.4)' : 'rgba(255,165,2,0.4)'}`,
-                    background: d.severity === 'critical' ? 'rgba(255,71,87,0.1)' : 'rgba(255,165,2,0.1)',
-                    color: d.severity === 'critical' ? '#ff4757' : '#ffa502',
+                    border: `1px solid ${d.severity === 'critical' ? 'rgba(255,71,87,0.4)' : 'rgba(199,109,65,0.4)'}`,
+                    background: d.severity === 'critical' ? 'rgba(255,71,87,0.1)' : 'rgba(199,109,65,0.1)',
+                    color: d.severity === 'critical' ? '#ff4757' : '#C76D41',
                     cursor: 'pointer',
                   }}
                   title={d.reason}
@@ -457,11 +457,11 @@ export default function PartsAndEquipment() {
                 </button>
               ))}
               {maintenanceParts.predictedDemand.length > 6 && (
-                <span style={{ fontSize: '11px', color: '#888', padding: '2px 8px' }}>+{maintenanceParts.predictedDemand.length - 6} more</span>
+                <span style={{ fontSize: '11px', color: '#607A60', padding: '2px 8px' }}>+{maintenanceParts.predictedDemand.length - 6} more</span>
               )}
             </div>
             {selectedDemandItem && (
-              <div style={{ marginTop: '6px', padding: '6px 10px', background: '#f5f5f5', borderRadius: '6px', fontSize: '12px', color: '#444', border: '1px solid #e0e0e0' }}>
+              <div style={{ marginTop: '6px', padding: '6px 10px', background: 'var(--color-bg-elevated)', borderRadius: '6px', fontSize: '12px', color: 'var(--color-text-primary)', border: '1px solid var(--color-border-default)' }}>
                 <strong>{selectedDemandItem.aircraftName} — {selectedDemandItem.componentName}</strong><br />
                 {selectedDemandItem.reason}<br />
                 <span style={{ opacity: 0.75 }}>Look for parts matching: {selectedDemandItem.partKeywords.slice(0, 5).join(', ')}</span>
@@ -470,7 +470,7 @@ export default function PartsAndEquipment() {
           </div>
           <button
             onClick={() => setShowDemandPanel(false)}
-            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#999', padding: '2px', flexShrink: 0 }}
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#607A60', padding: '2px', flexShrink: 0 }}
             title="Dismiss"
           >
             <X size={16} />
@@ -839,6 +839,6 @@ export default function PartsAndEquipment() {
             )}
         </div>
       </div>
-    </React.Fragment>
+    </div>
   );
 }

@@ -7,91 +7,99 @@
 
 @layer base {
   :root {
-    /* Base colors */
-    --background: 210 40% 11%;
-    --foreground: 210 40% 98%;
-    --card: 210 40% 12%;
-    --card-foreground: 210 40% 98%;
-    --popover: 210 40% 12%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 180 100% 50%;
-    --primary-foreground: 210 40% 11%;
-    --secondary: 210 40% 16%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 210 40% 16%;
-    --muted-foreground: 210 40% 65%;
-    --accent: 210 40% 16%;
-    --accent-foreground: 210 40% 98%;
+    /* ── Corporate Cockpit Palette ── */
+    --color-deep-midnight:   #050B14;
+    --color-cockpit-emerald: #2AF556;
+    --color-dusk-horizon:    #C76D41;
+    --color-steel-slate:     #2C3E4A;
+    --color-muted-sage:      #607A60;
+
+    /* Base Tailwind/Radix HSL tokens — mapped to cockpit palette */
+    --background: 214 62% 4%;          /* Deep Midnight */
+    --foreground: 210 40% 92%;
+    --card: 205 25% 16%;               /* Steel Slate region */
+    --card-foreground: 210 40% 92%;
+    --popover: 205 25% 16%;
+    --popover-foreground: 210 40% 92%;
+    --primary: 137 90% 56%;            /* Cockpit Emerald */
+    --primary-foreground: 214 62% 4%;
+    --secondary: 205 25% 24%;
+    --secondary-foreground: 210 40% 92%;
+    --muted: 205 25% 24%;
+    --muted-foreground: 126 13% 44%;   /* Muted Sage */
+    --accent: 205 25% 24%;
+    --accent-foreground: 210 40% 92%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 210 40% 18%;
-    --input: 210 40% 18%;
-    --ring: 180 100% 50%;
+    --border: 205 25% 22%;
+    --input: 205 25% 22%;
+    --ring: 137 90% 56%;               /* Cockpit Emerald */
     --radius: 0.5rem;
 
-
+    /* Legacy named tokens (kept for backwards compat — mapped to new palette) */
     --black: #000000;
-    --brand--white: #ffffff;
-    --buttered-rum: #a0700e;
-    --chicago: #595a5c;
-    --cloud: #c7c7c7;
-    --cultured-pearl: #f5f5f5;
-    --fern-green: #48802b;
-    --fuzzy-wuzzy-brown: #c35c56;
-    --madang: #bffbc6;
-    --mirage: #101b34;
-    --neon-carrot: #fe9f4d;
-    --peach-schnapps: #ffdddb;
-    --sandy-beach: #ffecc8;
-  
+    --brand--white: #e8f0ea;
+    --buttered-rum: #C76D41;
+    --chicago: #607A60;
+    --cloud: #4a6050;
+    --cultured-pearl: #1a2a22;
+    --fern-green: #2AF556;
+    --fuzzy-wuzzy-brown: #C76D41;
+    --madang: #a8f5b8;
+    --mirage: #050B14;
+    --neon-carrot: #C76D41;
+    --peach-schnapps: rgba(199, 109, 65, 0.15);
+    --sandy-beach: rgba(199, 109, 65, 0.2);
+
     --font-size-l: 24px;
     --font-size-m: 21.3px;
     --font-size-s: 18.7px;
     --font-size-xl: 32px;
     --font-size-xs: 13.3px;
-  
+
     --font-family-open_sans: "Open Sans", Helvetica;
     --font-family-poppins: "Poppins", Helvetica;
     --font-family-roboto: "Roboto", Helvetica;
-    
+
+    /* Header — Steel Slate → Deep Midnight gradient */
     --header-gradient: linear-gradient(180deg, var(--header-bg-start) 0%, var(--header-bg-end) 70%);
-    --header-bg-start: rgba(39, 75, 155, 1);
-    --header-bg-end: rgba(14, 26, 53, 1);
-    --header-text: #7283a8;
-    --header-active-text: #b8c6e5;
-    --header-logo-text: #9eb4eb;
+    --header-bg-start: rgba(44, 62, 74, 1);
+    --header-bg-end:   rgba(5, 11, 20, 1);
+    --header-text: #607A60;
+    --header-active-text: #c8e8cc;
+    --header-logo-text: #8fc89a;
 
     /* ── Unified Fleet Platform Design Tokens ── */
     /* Backgrounds */
-    --color-bg-primary: #0d1526;
-    --color-bg-surface: #15213d;
-    --color-bg-elevated: #1c2d4f;
-    --color-bg-overlay: rgba(13, 21, 38, 0.92);
+    --color-bg-primary: #050B14;
+    --color-bg-surface: #0E1C28;
+    --color-bg-elevated: #2C3E4A;
+    --color-bg-overlay: rgba(5, 11, 20, 0.92);
 
     /* Brand accents */
-    --color-accent-primary: #4270e0;
-    --color-accent-primary-hover: #5580f0;
-    --color-accent-tactical: #00c8ff;
-    --color-accent-tactical-glow: rgba(0, 200, 255, 0.35);
-    --color-accent-tactical-dim: rgba(0, 200, 255, 0.12);
+    --color-accent-primary: #2AF556;
+    --color-accent-primary-hover: #50f972;
+    --color-accent-tactical: #2AF556;
+    --color-accent-tactical-glow: rgba(42, 245, 86, 0.35);
+    --color-accent-tactical-dim: rgba(42, 245, 86, 0.12);
 
-    /* Status colours (shared across both apps) */
+    /* Status colours */
     --color-status-critical: #ff4757;
     --color-status-critical-bg: rgba(255, 71, 87, 0.12);
-    --color-status-warning: #ffa502;
-    --color-status-warning-bg: rgba(255, 165, 2, 0.12);
-    --color-status-good: #2ed573;
-    --color-status-good-bg: rgba(46, 213, 115, 0.12);
+    --color-status-warning: #C76D41;
+    --color-status-warning-bg: rgba(199, 109, 65, 0.15);
+    --color-status-good: #2AF556;
+    --color-status-good-bg: rgba(42, 245, 86, 0.12);
 
     /* Text */
-    --color-text-primary: #e8f0ff;
-    --color-text-secondary: #7283a8;
-    --color-text-muted: #4a5a7a;
-    --color-text-tactical: #00c8ff;
+    --color-text-primary: #e8f0ea;
+    --color-text-secondary: #607A60;
+    --color-text-muted: #3d5445;
+    --color-text-tactical: #2AF556;
 
     /* Borders */
-    --color-border-default: rgba(66, 112, 224, 0.2);
-    --color-border-tactical: rgba(0, 200, 255, 0.25);
+    --color-border-default: rgba(42, 245, 86, 0.18);
+    --color-border-tactical: rgba(42, 245, 86, 0.28);
     --color-border-subtle: rgba(255, 255, 255, 0.06);
 
     /* Typography */
@@ -99,15 +107,19 @@
     --font-mono: "Fira Code", "Courier New", monospace;
 
     /* Shadows & glows */
-    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-    --shadow-tactical: 0 0 20px rgba(0, 200, 255, 0.15);
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
+    --shadow-tactical: 0 0 20px rgba(42, 245, 86, 0.12);
     --glow-critical: 0 0 8px rgba(255, 71, 87, 0.6);
-    --glow-warning: 0 0 8px rgba(255, 165, 2, 0.6);
-    --glow-good: 0 0 8px rgba(46, 213, 115, 0.6);
+    --glow-warning: 0 0 8px rgba(199, 109, 65, 0.6);
+    --glow-good: 0 0 8px rgba(42, 245, 86, 0.6);
 
     /* Transitions */
     --transition-fast: 150ms ease;
     --transition-smooth: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Page background — ambient cockpit atmosphere */
+    --page-bg-image: url('/background.jpeg');
+    --page-bg-overlay: rgba(5, 11, 20, 0.88);
   }
 }
 
@@ -118,17 +130,37 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Ambient cockpit background helper — applied to page wrappers */
+.page-bg {
+  position: relative;
+  background-image: var(--page-bg-image);
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+}
+
+.page-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--page-bg-overlay);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+.text-shadow {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
 }
 
 .react-datepicker-popper {

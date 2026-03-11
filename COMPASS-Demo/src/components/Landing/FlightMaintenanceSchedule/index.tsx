@@ -617,26 +617,26 @@ export default function FlightMaintenanceSchedule(
     startTime: string,
     endTime: string
   ) => {
-    if (!startDate || !endDate || !startTime || !endTime) return "#314e96";
+    if (!startDate || !endDate || !startTime || !endTime) return "#2AF556";
     const now = new Date();
     const start = new Date(`${startDate}T${startTime}:00`);
     const end = new Date(`${endDate}T${endTime}:59`);
     if (now >= start && now <= end) {
-      return "#4371e0";
+      return "#2AF556";
     }
-    return "#314e96";
+    return "#2AF556";
   };
 
   const getMaintenanceColor = (type: string) => {
     if (type === "In-Depth") {
       return {
-        backgroundColor: "#8993aa",
-        borderColor: "#6b7589",
+        backgroundColor: "#607A60",
+        borderColor: "#3d5445",
       };
     } else {
       return {
-        backgroundColor: "#ac5555",
-        borderColor: "#773a3a",
+        backgroundColor: "#C76D41",
+        borderColor: "#C76D41",
       };
     }
   };
@@ -670,10 +670,10 @@ export default function FlightMaintenanceSchedule(
   return (
     <>
       <div className="w-full">
-        <div className="bg-white rounded-t-[11px] shadow-[0px_5px_45px_rgba(0,0,0,0.25)] py-2">
+        <div className="rounded-t-[11px] shadow-[0px_5px_45px_rgba(0,0,0,0.5)] py-2" style={{ background: 'var(--color-bg-elevated)', borderBottom: '1px solid var(--color-border-default)' }}>
           <div className="flex items-center justify-between px-6">
             <div className="flex items-center">
-              <h1 className="text-lg font-bold text-black">
+              <h1 className="text-lg font-bold" style={{ color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.7)' }}>
                 Smart scheduling
               </h1>
               <div className="flex items-center pl-8">
@@ -697,7 +697,7 @@ export default function FlightMaintenanceSchedule(
                       alt="Today"
                     />
                   </div>
-                  <span className="text-[13px] font-medium text-[#393939]">
+                  <span className="text-[13px] font-medium text-white text-shadow">
                     Today
                   </span>
                 </button>
@@ -745,7 +745,7 @@ export default function FlightMaintenanceSchedule(
                     </button>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-medium text-gray-700">
+                      <span className="text-[13px] font-medium text-white text-shadow">
                         {getWeekRangeText}
                       </span>
                     </div>
@@ -756,8 +756,8 @@ export default function FlightMaintenanceSchedule(
 
             <div className="flex items-center gap-4">
               <div
-                className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-[45px] w-64"
-                style={{ border: "1px solid #b8b8b8" }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-[45px] w-64"
+                style={{ border: "1px solid rgba(42,245,86,0.3)", background: 'var(--color-bg-elevated)' }}
               >
                 <img
                   className="w-5 h-5"
@@ -767,14 +767,14 @@ export default function FlightMaintenanceSchedule(
                 <input
                   type="text"
                   placeholder="Search flights"
-                  className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-500 text-sm"
+                  className="flex-1 bg-transparent border-none outline-none text-white placeholder-[rgba(255,255,255,0.45)] text-sm text-shadow"
                   value={searchQuery}
                   onChange={handleSearchChange}
                 />
               </div>
 
               <button
-                className="flex items-center justify-center gap-2 px-6 py-2 bg-gradient-to-b from-[rgba(52,156,230,1)] to-[rgba(41,116,169,1)] border border-[#1165a2] rounded-full"
+                className="flex items-center justify-center gap-2 px-6 py-2 bg-gradient-to-b from-[rgba(42,245,86,0.9)] to-[rgba(14,180,60,0.7)] border border-[rgba(42,245,86,0.5)] rounded-full"
                 onClick={() => {
                   resetToOriginalData();
                   setIsAddFlightModalOpen(true);
@@ -788,25 +788,25 @@ export default function FlightMaintenanceSchedule(
       </div>
 
       <div className="flex-1 p-3 min-h-0">
-        <div className="h-full bg-white rounded-lg shadow-lg border overflow-hidden">
+        <div className="h-full rounded-lg shadow-lg overflow-hidden" style={{ background: 'var(--color-bg-surface)', border: '1px solid var(--color-border-default)' }}>
           <div ref={scrollContainerRef} className="h-full overflow-auto">
             <div className="min-w-max">
               <div className="flex text-white border-b-2 sticky top-0 z-20 gap-1">
-                <div className="w-[180px] h-[44px] flex items-center justify-center bg-[#15213d] sticky left-0 z-30 text-[13px] text-white ">
+                <div className="w-[180px] h-[44px] flex items-center justify-center bg-[#0E1C28] sticky left-0 z-30 text-[13px] text-white ">
                   Aircraft tail numbers
                 </div>
 
                 {fullDateRange.map((date) => (
                   <div
                     key={date.fullDate.toISOString()}
-                    className={`w-[180px] h-[44px] flex items-center justify-between px-3 flex-shrink-0 text-white rounded-t-lg ${date.isToday ? "bg-[#4b67a7]" : "bg-[#52596a]"
+                    className={`w-[180px] h-[44px] flex items-center justify-between px-3 flex-shrink-0 text-white rounded-t-lg ${date.isToday ? "bg-[#2C3E4A]" : "bg-[#2C3E4A]"
                       }`}
                   >
                     <div className="flex gap-1 items-center">
                       <span className="text-lg font-bold">
                         {date.fullDate.getDate()}
                       </span>
-                      <span className="text-[12px] font-medium text-[#ffffff99]">
+                      <span className="text-[12px] font-medium text-[rgba(232,240,234,0.6)]">
                         {date.fullDate.toLocaleString("en-US", {
                           month: "short",
                         })}
@@ -837,7 +837,7 @@ export default function FlightMaintenanceSchedule(
                       className="mt-1 cursor-pointer w-[180px] h-[54px] flex gap-2 items-center justify-center sticky left-0 z-10"
                       style={{
                         background:
-                          "linear-gradient(270deg, rgba(21, 46, 102, 1) 0%, rgba(16, 27, 52, 1) 100%)",
+                          "linear-gradient(270deg, rgba(14,28,40,1) 0%, rgba(5,11,20,1) 100%)",
                       }}
                       onClick={() => handleTailNumberClick(aircraft.tailNumber)}
                       aria-label={`View maintenance overview for ${aircraft.tailNumber}`}
@@ -896,9 +896,9 @@ export default function FlightMaintenanceSchedule(
                                   fontSize: '9px',
                                   fontWeight: 700,
                                   letterSpacing: '0.5px',
-                                  border: `1px solid ${isCritical ? 'rgba(255,71,87,0.5)' : 'rgba(255,165,2,0.5)'}`,
-                                  background: isCritical ? 'rgba(255,71,87,0.12)' : 'rgba(255,165,2,0.12)',
-                                  color: isCritical ? '#ff4757' : '#ffa502',
+                                  border: `1px solid ${isCritical ? 'rgba(255,71,87,0.5)' : 'rgba(199,109,65,0.5)'}`,
+                                  background: isCritical ? 'rgba(255,71,87,0.12)' : 'rgba(199,109,65,0.12)',
+                                  color: isCritical ? '#ff4757' : '#C76D41',
                                   whiteSpace: 'nowrap',
                                 }}
                               >
@@ -907,7 +907,7 @@ export default function FlightMaintenanceSchedule(
                             );
                           })()}
                         </div>
-                        <div className="flex gap-1 items-center text-sm text-muted-foreground">
+                        <div className="flex gap-1 items-center text-sm text-white text-shadow">
                           <div className="text-wrapper-20">
                             {getDynamicStatusForAircraft(aircraft)}
                           </div>
@@ -925,10 +925,10 @@ export default function FlightMaintenanceSchedule(
                           cellRefs.current[colIndex] = el;
                         }}
                         className={`mt-1 w-[180px] h-[54px] relative flex-shrink-0 overflow-hidden ${date.isToday
-                          ? "bg-[#e9b7b575]"
+                          ? "bg-[rgba(199,109,65,0.2)]"
                           : colIndex % 2 !== 0
-                            ? "bg-[#e1e0e0]"
-                            : "bg-[#ebebeb]"
+                            ? "bg-[rgba(44,62,74,0.6)]"
+                            : "bg-[rgba(14,28,40,0.6)]"
                           }`}
                       >
                         <div className="absolute inset-0 flex">
@@ -947,7 +947,7 @@ export default function FlightMaintenanceSchedule(
                             style={{
                               left: `${timerLinePosition}px`,
                               width: "3px",
-                              backgroundColor: "#1e35b9",
+                              backgroundColor: "#2AF556",
                             }}
                           >
                             {aircraft === filteredAircraftData[0] && (
@@ -1045,7 +1045,7 @@ export default function FlightMaintenanceSchedule(
                                     src="/images/landing/airplane-take-off-8.png"
                                     alt="Takeoff"
                                   />
-                                  <span className="text-[#91c9ff] font-bold text-[11px] min-w-[36px] text-left">
+                                  <span className="text-[#8fc89a] font-bold text-[11px] min-w-[36px] text-left">
                                     {segment.routes[0].departureTime}
                                   </span>
                                 </div>
@@ -1058,7 +1058,7 @@ export default function FlightMaintenanceSchedule(
                                     src="/images/landing/airplane-landing-15.png"
                                     alt="Landing"
                                   />
-                                  <span className="text-[#91c9ff] font-bold text-[11px] min-w-[36px] text-right">
+                                  <span className="text-[#8fc89a] font-bold text-[11px] min-w-[36px] text-right">
                                     {
                                       segment.routes[segment.routes.length - 1]
                                         .arrivalTime
@@ -1311,9 +1311,9 @@ export default function FlightMaintenanceSchedule(
                      data-[state=open]:duration-500 data-[state=closed]:duration-300
                      data-[state=open]:ease-out data-[state=closed]:ease-in"
           style={{
-            backgroundColor: '#d1ffdc',
-            border: '1.33px solid #67a566',
-            boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(103, 165, 102, 0.1)'
+            backgroundColor: 'rgba(42,245,86,0.15)',
+            border: '1.33px solid rgba(42,245,86,0.5)',
+            boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(42,245,86,0.12)'
           }}
           open={showSuccessToast}
         >
@@ -1364,13 +1364,13 @@ export default function FlightMaintenanceSchedule(
                      data-[state=open]:duration-500 data-[state=closed]:duration-300
                      data-[state=open]:ease-out data-[state=closed]:ease-in"
           style={{
-            backgroundColor: '#ffeec3',
-            border: '1.33px solid #be6a2b',
-            boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(190, 106, 43, 0.1)'
+            backgroundColor: 'rgba(199,109,65,0.15)',
+            border: '1.33px solid rgba(199,109,65,0.5)',
+            boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(199,109,65,0.12)'
           }}
           open={showMaintenanceToast}
         >
-          <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-md relative" style={{ backgroundColor: '#ff8c00' }}>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-md relative" style={{ backgroundColor: '#C76D41' }}>
             <svg
               className="w-6 h-6 text-white"
               fill="currentColor"

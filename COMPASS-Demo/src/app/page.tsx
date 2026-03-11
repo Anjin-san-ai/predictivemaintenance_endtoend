@@ -10,7 +10,7 @@ import { flightScheduleData as initialFlightScheduleData } from "../utils/aircra
 export default function LandingPage() {
   const [flightScheduleData, setFlightScheduleData] = useState(() => JSON.parse(JSON.stringify(initialFlightScheduleData)));
   return (
-    <div className="h-screen overflow-hidden flex flex-col">
+    <div className="h-screen overflow-hidden flex flex-col page-bg">
       <Header />
       <FleetOverview flightScheduleData={flightScheduleData} />
       <FlightMaintenanceSchedule flightScheduleData={flightScheduleData} setFlightScheduleData={setFlightScheduleData} />

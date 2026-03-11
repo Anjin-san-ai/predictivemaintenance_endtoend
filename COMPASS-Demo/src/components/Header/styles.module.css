@@ -59,8 +59,8 @@
     width: 100%;
     margin: 0;
     padding: 0;
-    border-top: 1px solid rgba(114, 131, 168, 0.2);
-    border-bottom: 1px solid rgba(114, 131, 168, 0.2);
+    border-top: 1px solid rgba(42, 245, 86, 0.15);
+    border-bottom: 1px solid rgba(42, 245, 86, 0.15);
   }
 }
 
@@ -146,7 +146,7 @@
 
 .aiAssistantButton {
   background-color: transparent;
-  border: 1.33px solid #c473d0;
+  border: 1.33px solid var(--color-accent-primary);
   border-radius: 66.67px;
   display: flex;
   align-items: center;
@@ -209,7 +209,7 @@
 }
 
 .chatbotNavItem {
-  color: var(--color-accent-tactical, #00c8ff) !important;
+  color: var(--color-accent-tactical, #2AF556) !important;
   font-weight: 600 !important;
   letter-spacing: 0.02em;
 }

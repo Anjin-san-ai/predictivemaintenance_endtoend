@@ -2,25 +2,42 @@
 .maintenance-overview .section-divider {
   width: 100%;
   height: 1rem;
-  background: #e0e0e0;
-  box-shadow: 0 8px 48px 0 rgba(0,0,0,0.18), 0px 1px 4px rgba(0,0,0,0.06);
+  background: var(--color-bg-elevated);
+  box-shadow: 0 8px 48px 0 rgba(0,0,0,0.4), 0px 1px 4px rgba(0,0,0,0.2);
   margin: 2rem 0;
   border-radius: 4px;
 }
 .maintenance-overview table {
-  box-shadow: 0px 5px 15px rgba(0,0,0,0.08), 0px 1px 4px rgba(0,0,0,0.06);
+  box-shadow: var(--shadow-card);
   border-radius: 12px;
   overflow: hidden;
 }
 .maintenance-overview {
   align-items: center;
-  background-color: var(--brand--white);
+  background-color: var(--color-bg-primary);
+  background-image: var(--page-bg-image);
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100vw;
   overflow-x: auto;
   box-sizing: border-box;
+  position: relative;
+}
+.maintenance-overview::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--page-bg-overlay);
+  pointer-events: none;
+  z-index: 0;
+}
+.maintenance-overview > * {
+  position: relative;
+  z-index: 1;
 }
 
 .maintenance-overview table th,
@@ -31,7 +48,7 @@
 /* Responsive header */
 .maintenance-overview .frame-5051 {
   align-items: center;
-  background: linear-gradient(180deg, rgba(39, 75, 155, 1) 0%, rgba(14, 26, 53, 1) 70%);
+  background: linear-gradient(180deg, rgba(44, 62, 74, 1) 0%, rgba(5, 11, 20, 1) 70%);
   display: flex;
   min-height: 60px;
   justify-content: space-between;
@@ -62,7 +79,7 @@
 
 /* Responsive header text */
 .maintenance-overview .aircraft-intelligence-platform {
-  color: #9eb4eb;
+  color: #8fc89a;
   font-family: var(--font-family-poppins);
   font-size: clamp(1.2rem, 2vw, 2.2rem);
   font-style: italic;
@@ -96,7 +113,7 @@
 
 /* Responsive nav text */
 .maintenance-overview .smart-scheduling {
-  color: #b8c5e4;
+  color: #a0c0a0;
   font-family: var(--font-family-roboto);
   font-size: clamp(1rem, 1.5vw, 1.3rem);
   font-weight: 600;
@@ -558,7 +575,7 @@
 }
 
 .maintenance-overview .span2 {
-  color: #101b3480;
+  color: #050B1480;
 }
 
 .maintenance-overview .before-flight {

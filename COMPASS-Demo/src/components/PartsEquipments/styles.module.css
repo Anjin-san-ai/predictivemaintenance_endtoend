@@ -11,49 +11,49 @@
   text-align: center;
 }
 
-/* Part status colors */
+/* Part status colors — mapped to corporate palette */
 .inStock {
-  background-color: rgba(72, 187, 120, 0.2);
-  color: #48bb78;
+  background-color: rgba(42, 245, 86, 0.15);
+  color: #2AF556;
 }
 
 .lowStock {
-  background-color: rgba(237, 137, 54, 0.2);
-  color: #ed8936;
+  background-color: rgba(199, 109, 65, 0.18);
+  color: #C76D41;
 }
 
 .outOfStock {
-  background-color: rgba(245, 101, 101, 0.2);
-  color: #f56565;
+  background-color: rgba(255, 71, 87, 0.15);
+  color: #ff4757;
 }
 
 .onOrder {
-  background-color: rgba(66, 153, 225, 0.2);
-  color: #4299e1;
+  background-color: rgba(42, 245, 86, 0.1);
+  color: #50d878;
 }
 
 .discontinued {
-  background-color: rgba(160, 174, 192, 0.2);
-  color: #a0aec0;
+  background-color: rgba(96, 122, 96, 0.2);
+  color: #607A60;
 }
 
 /* Equipment status colors */
 .inStore {
-  background-color: rgba(72, 187, 120, 0.2);
-  color: #48bb78;
+  background-color: rgba(42, 245, 86, 0.15);
+  color: #2AF556;
 }
 
 .outForRepair {
-  background-color: rgba(237, 137, 54, 0.2);
-  color: #ed8936;
+  background-color: rgba(199, 109, 65, 0.18);
+  color: #C76D41;
 }
 
 .outForCalibration {
-  background-color: rgba(66, 153, 225, 0.2);
-  color: #4299e1;
+  background-color: rgba(42, 245, 86, 0.1);
+  color: #50d878;
 }
 
 .default {
-  background-color: rgba(160, 174, 192, 0.2);
-  color: #a0aec0;
+  background-color: rgba(96, 122, 96, 0.2);
+  color: #607A60;
 }

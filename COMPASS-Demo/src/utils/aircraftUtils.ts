@@ -198,7 +198,7 @@ export const calculateFleetData = (data: any[]): FleetData => {
 export const getStatusColor = (status: string): string => {
   switch (status) {
     case 'Serviceable': return '#49a02c';
-    case 'In-maintenance': return '#fe9f4d';
+    case 'In-maintenance': return '#C76D41';
     case 'Depth maintenance': return '#8a94ab';
     case 'Un-serviceable': return '#fe4d4d';
     case 'In flight': return '#769dff';

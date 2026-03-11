@@ -31,7 +31,14 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
     progressColor: string;
     total?: number;
   }) => (
-    <div className="w-full flex-1 h-[78px] bg-white rounded-[8px] border border-[#c7c7c7] shadow-[0px_3px_12px_-1px_rgba(0,0,0,0.1)] hover:shadow-[0px_5px_16px_-1px_rgba(0,0,0,0.15)] transition-shadow duration-200 p-3 flex items-center gap-3">
+    <div
+      className="w-full flex-1 h-[78px] rounded-[8px] p-3 flex items-center gap-3 transition-shadow duration-200"
+      style={{
+        background: 'var(--color-bg-elevated)',
+        border: '1px solid var(--color-border-default)',
+        boxShadow: 'var(--shadow-card)',
+      }}
+    >
       <div className="flex-shrink-0">
         <CircularProgress
           value={value}
@@ -42,7 +49,10 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
         />
       </div>
       <div className="flex-1 flex flex-col justify-center">
-        <h3 className="font-roboto font-bold text-[#101b34] text-[12px] lg:text-[13px] leading-tight pr-1">
+        <h3
+          className="font-roboto font-bold text-[12px] lg:text-[13px] leading-tight pr-1"
+          style={{ color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.7)' }}
+        >
           {label}
         </h3>
       </div>
@@ -50,12 +60,12 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
   );
 
   return (
-    <div className="w-full bg-gray-50 relative overflow-hidden">
+    <div className="w-full relative overflow-hidden" style={{ background: 'transparent' }}>
       <div
-        className={`absolute inset-0 opacity-60 transition-all duration-500 ease-in-out`}
+        className={`absolute inset-0 opacity-70 transition-all duration-500 ease-in-out`}
         style={{
           background:
-            "linear-gradient(0deg, rgba(236, 236, 236, 1) 0%, rgba(133, 137, 150, 1) 100%)",
+            "linear-gradient(0deg, rgba(14,28,40,0.98) 0%, rgba(44,62,74,0.75) 100%)",
           transform: "rotate(180deg)",
         }}
       />
@@ -63,8 +73,8 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
       <div className="relative z-10">
         <div className="flex justify-between items-center px-6 py-2">
           <h2 className="font-roboto font-bold text-[18px] leading-normal">
-            <span className="text-[#101b34]">Fleet overview</span>
-            <span className="text-[#575f72] text-[16px] ml-1">
+            <span style={{ color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.7)' }}>Fleet overview</span>
+            <span className="text-[16px] ml-1" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 4px rgba(0,0,0,0.7)' }}>
               ({totalAircraft} Aircraft)
             </span>
           </h2>
@@ -72,7 +82,8 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
           <div className="flex items-center gap-[10px]">
             <button
               type="button"
-              className="font-roboto font-medium text-[#4270e0] text-[14px] leading-normal cursor-pointer hover:text-[#3562d4] hover:underline transition-colors duration-150 select-none bg-transparent border-none p-0"
+              className="font-roboto font-medium text-[14px] leading-normal cursor-pointer hover:underline transition-colors duration-150 select-none bg-transparent border-none p-0"
+              style={{ color: 'var(--color-cockpit-emerald)' }}
               onClick={toggleCollapse}
             >
               {isCollapsed ? "Expand All" : "Collapse All"}
@@ -90,6 +101,7 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
                 alt=""
                 style={{
                   transform: isCollapsed ? "rotate(180deg)" : "rotate(0deg)",
+                  filter: 'invert(1) brightness(2)',
                 }}
                 aria-hidden="true"
               />
@@ -108,31 +120,31 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
             <StatCard
               value={fleetData.serviceable}
               label="Total serviceable aircraft"
-              progressColor="#49a02c"
+              progressColor="#2AF556"
             />
 
             <StatCard
               value={fleetData.inMaintenance}
               label="Total in-maintenance aircraft"
-              progressColor="#fe9f4d"
+              progressColor="#C76D41"
             />
 
             <StatCard
               value={fleetData.unServiceable}
               label="Total un-serviceable aircraft"
-              progressColor="#fe4d4d"
+              progressColor="#ff4757"
             />
 
             <StatCard
               value={fleetData.inFlight}
               label="Total in-flight aircraft"
-              progressColor="#769dff"
+              progressColor="#2AF556"
             />
 
             <StatCard
               value={fleetData.depthMaintenance}
               label="Total depth maintenance aircraft"
-              progressColor="#8a94ab"
+              progressColor="#607A60"
             />
           </div>
         </div>
