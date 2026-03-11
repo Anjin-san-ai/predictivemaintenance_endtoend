@@ -1,0 +1,1755 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aviation Agent Network — Predictive Maintenance</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --brand-blue: #1d70b8;
+            --brand-dark-blue: #003078;
+            --brand-light-blue: #5694ca;
+            --brand-black: #0b0c0c;
+            --brand-grey: #f3f2f1;
+            --brand-white: #ffffff;
+            --brand-green: #00e676;
+            --brand-red: #d4351c;
+            --brand-purple: #8C52FF;
+            --brand-yellow: #ffdd00;
+
+            --text-primary: #e8edf3;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-tertiary: #475569;
+
+            --bg-body: #0a1628;
+            --bg-surface: rgba(15, 25, 50, 0.55);
+            --bg-surface-hover: rgba(20, 35, 65, 0.7);
+
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-glow: rgba(255, 255, 255, 0.04);
+            --glass-blur: blur(20px) saturate(1.6);
+
+            --banner-height: 60px;
+
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===================== HEADER BANNER ===================== */
+        .header-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--banner-height);
+            background: #ffffff;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .banner-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .header-logo {
+            max-width: 100px;
+            max-height: 36px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .banner-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .btn-view-app {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #1d70b8, #003078);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            letter-spacing: 0.02em;
+        }
+
+        .btn-view-app:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(29, 112, 184, 0.4);
+        }
+
+        .btn-view-app:active {
+            transform: translateY(0);
+        }
+
+        .powered-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 500;
+            color: #475569;
+            letter-spacing: 0.02em;
+        }
+
+        .powered-badge i {
+            color: var(--brand-purple);
+            font-size: 12px;
+        }
+
+        /* ===================== MAIN CONTENT ===================== */
+        .main-content {
+            margin-top: var(--banner-height);
+            width: 100%;
+            height: calc(100vh - var(--banner-height));
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===================== VIEW TRANSITIONS ===================== */
+        .view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+                        transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .view.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.97);
+        }
+
+        .view.visible {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1);
+        }
+
+        /* ===================== NETWORK VIEW ===================== */
+        .network-view {
+            background: linear-gradient(160deg, #0a1628 0%, #0d2137 40%, #091a2a 100%);
+            overflow: hidden;
+        }
+
+        .network-view::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 600px 400px at 20% 50%, rgba(29, 112, 184, 0.06), transparent),
+                radial-gradient(ellipse 500px 350px at 80% 30%, rgba(140, 82, 255, 0.04), transparent),
+                radial-gradient(ellipse 400px 300px at 60% 80%, rgba(0, 164, 153, 0.04), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .network-view::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(100, 180, 255, 0.04) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Workflow Canvas */
+        .workflow-editor {
+            width: 100%;
+            height: 100%;
+            padding-top: 48px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: auto;
+            cursor: grab;
+            z-index: 1;
+        }
+
+        .workflow-editor:active {
+            cursor: grabbing;
+        }
+
+        .canvas-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 900px;
+            height: 100%;
+            transform-origin: 0 0;
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* SVG Connectors */
+        .connections-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .connection-path {
+            fill: none;
+            stroke: rgba(100, 180, 255, 0.15);
+            stroke-width: 2px;
+            transition: stroke 0.3s;
+        }
+
+        .connection-path.active {
+            stroke: rgba(140, 82, 255, 0.5);
+            stroke-width: 2.5px;
+            animation: dash 1s linear infinite;
+            stroke-dasharray: 10, 10;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -20; }
+        }
+
+        /* ===================== NODE CARDS (GLASS) ===================== */
+        .node {
+            position: absolute;
+            width: 220px;
+            background: var(--bg-surface);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: 16px;
+            box-shadow:
+                0 4px 24px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 var(--glass-glow);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            user-select: none;
+            transition: box-shadow 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+                        transform 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+                        border-color 0.3s;
+            z-index: 1;
+            cursor: grab;
+        }
+
+        .node:active { cursor: grabbing; }
+
+        .node:hover {
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(100, 180, 255, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            border-color: rgba(100, 180, 255, 0.2);
+            transform: translateY(-2px);
+            z-index: 10;
+        }
+
+        .node-header {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .node-content {
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .node-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+
+        .node-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .node-info h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 2px;
+            font-family: var(--font-body);
+        }
+
+        .node-info p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: 1.3;
+            font-family: var(--font-body);
+        }
+
+        /* Node Ports */
+        .port {
+            width: 10px;
+            height: 10px;
+            background: rgba(100, 180, 255, 0.3);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .port.in { left: -6px; }
+        .port.out { right: -6px; background: rgba(140, 82, 255, 0.5); border-color: rgba(140, 82, 255, 0.3); }
+
+        /* Node Type Themes */
+        .node.trigger .node-header { background: rgba(0, 94, 184, 0.25); color: #64b5f6; }
+        .node.trigger .node-icon { background: linear-gradient(135deg, rgba(0, 94, 184, 0.35), rgba(0, 94, 184, 0.1)); color: #64b5f6; }
+
+        .node.agent .node-header { background: rgba(140, 82, 255, 0.2); color: #d0bfff; }
+        .node.agent .node-icon { background: linear-gradient(135deg, rgba(140, 82, 255, 0.35), rgba(140, 82, 255, 0.1)); color: #d0bfff; }
+
+        .node.orch .node-header { background: rgba(255, 184, 28, 0.15); color: #ffd43b; }
+        .node.orch .node-icon { background: linear-gradient(135deg, rgba(255, 184, 28, 0.3), rgba(255, 184, 28, 0.1)); color: #ffd43b; }
+
+        .node.system .node-header { background: rgba(0, 164, 153, 0.2); color: #63e6be; }
+        .node.system .node-icon { background: linear-gradient(135deg, rgba(0, 164, 153, 0.35), rgba(0, 164, 153, 0.1)); color: #63e6be; }
+
+        .node.sequential .node-header { background: rgba(220, 38, 38, 0.2); color: #fca5a5; }
+        .node.sequential .node-icon { background: linear-gradient(135deg, rgba(220, 38, 38, 0.35), rgba(220, 38, 38, 0.1)); color: #fca5a5; }
+
+        .node.approval { width: 160px; }
+        .node.approval .node-header { background: rgba(29, 112, 184, 0.2); color: #5694ca; }
+        .node.approval .node-icon { background: linear-gradient(135deg, rgba(29, 112, 184, 0.3), rgba(29, 112, 184, 0.1)); color: #5694ca; }
+
+        .node.store .node-header { background: rgba(76, 44, 146, 0.2); color: #c4b5fd; }
+        .node.store .node-icon { background: linear-gradient(135deg, rgba(76, 44, 146, 0.35), rgba(76, 44, 146, 0.1)); color: #c4b5fd; }
+
+        .node.highlight-dark-blue {
+            background: rgba(0, 48, 120, 0.35);
+            border: 1.5px solid rgba(0, 94, 184, 0.4);
+            box-shadow:
+                0 4px 24px rgba(0, 48, 120, 0.3),
+                0 0 30px rgba(0, 94, 184, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .node.highlight-dark-blue .node-header { background: rgba(0, 48, 120, 0.5); color: #64b5f6; }
+        .node.highlight-dark-blue .node-icon { background: linear-gradient(135deg, rgba(0, 48, 120, 0.5), rgba(0, 48, 120, 0.2)); color: #64b5f6; }
+        .node.highlight-dark-blue .node-info h4 { color: #e8edf3; }
+        .node.highlight-dark-blue .node-info p { color: #94a3b8; }
+
+        .node-tags {
+            padding: 4px 10px;
+            font-size: 10px;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            letter-spacing: 0.08em;
+        }
+
+        /* Agent canvas overrides */
+        #agentCanvas .node { width: 180px; }
+        #agentCanvas .node-header { padding: 8px 12px; font-size: 10px; }
+        #agentCanvas .node-content { padding: 10px 12px; gap: 10px; }
+        #agentCanvas .node-icon { width: 32px; height: 32px; border-radius: 8px; }
+        #agentCanvas .node-icon svg { width: 18px; height: 18px; }
+        #agentCanvas .node-info h4 { font-size: 12px; }
+        #agentCanvas .node-info p { font-size: 11px; }
+        #agentCanvas .node-tags { padding: 4px 10px; font-size: 9px; }
+        #agentCanvas .node.approval { width: 150px; }
+
+        /* Upload action */
+        .node-action {
+            padding: 8px 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .upload-form-btn {
+            width: 100%;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #64b5f6;
+            background: rgba(29, 112, 184, 0.15);
+            border: 1px solid rgba(29, 112, 184, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .upload-form-btn:hover {
+            background: rgba(29, 112, 184, 0.25);
+            border-color: rgba(29, 112, 184, 0.5);
+        }
+
+        .upload-status {
+            display: block;
+            font-size: 10px;
+            margin-top: 4px;
+            text-align: center;
+            min-height: 14px;
+            color: var(--text-muted);
+        }
+
+        .upload-status.success {
+            color: var(--brand-green);
+            font-weight: 600;
+        }
+
+        /* Status Dot Animation */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--brand-green);
+            box-shadow: 0 0 6px rgba(0, 230, 118, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ===================== CHAT VIEW ===================== */
+        .chat-view {
+            background: linear-gradient(160deg, #0a1628 0%, #0d2137 40%, #091a2a 100%);
+        }
+
+        .chat-view::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 600px 500px at 50% 30%, rgba(140, 82, 255, 0.06), transparent),
+                radial-gradient(ellipse 500px 400px at 20% 70%, rgba(29, 112, 184, 0.05), transparent),
+                radial-gradient(ellipse 400px 300px at 80% 60%, rgba(0, 164, 153, 0.04), transparent);
+            pointer-events: none;
+        }
+
+        /* ---- CARD THUMBNAIL GRID ---- */
+        .cards-landing {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            z-index: 2;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .cards-landing.out {
+            opacity: 0;
+            transform: scale(0.92);
+            pointer-events: none;
+        }
+
+        .cards-landing-title {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .cards-landing-title h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .cards-landing-title p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .card-grid {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+        }
+
+        .card-grid-item {
+            width: 180px;
+            height: 240px;
+            border-radius: 18px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            padding-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-grid-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .card-grid-item:hover {
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .card-grid-item[data-topic="onboarding"],
+        .card-grid-item[data-topic="flight_scheduling"],
+        .card-grid-item[data-topic="typhoon"],
+        .card-grid-item[data-topic="a400m"],
+        .card-grid-item[data-topic="f35"],
+        .card-grid-item[data-topic="rc135"] { background: url('assets/card-bg-1.png') center/cover no-repeat; }
+        .card-grid-item[data-topic="leaver"],
+        .card-grid-item[data-topic="aircraft_repairs"],
+        .card-grid-item[data-topic="c17"],
+        .card-grid-item[data-topic="shadow"] { background: url('assets/card-bg-2.png') center/cover no-repeat; }
+        .card-grid-item[data-topic="policy"] { background: url('assets/card-bg-3.png') center/cover no-repeat; }
+
+        .card-grid-item .grid-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            padding: 0 12px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        .card-grid-item .grid-hint {
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ---- 3D TILT CARD MODAL ---- */
+        .tilt-modal {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            visibility: hidden;
+            z-index: 50;
+        }
+
+        .tilt-modal .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(10, 22, 40, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--text-primary);
+            font-size: 22px;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            z-index: 999;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .tilt-modal .close-modal:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.25);
+        }
+
+        .card-wrapper {
+            width: 380px;
+            height: 540px;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 3000px;
+            --riser: 25px;
+        }
+
+        .tilt-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 22px;
+            visibility: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
+            background: rgba(12, 22, 45, 0.85);
+            backdrop-filter: blur(30px) saturate(1.5);
+            -webkit-backdrop-filter: blur(30px) saturate(1.5);
+            padding: 0;
+            overflow: visible;
+        }
+
+        .tilt-card .ghoul {
+            position: relative;
+            display: block;
+            width: calc(100% - 44px);
+            padding-bottom: calc(100% - 44px);
+            margin: 22px auto 0;
+            transform-style: preserve-3d;
+            z-index: 5;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .tilt-card .riser {
+            position: absolute;
+            backface-visibility: hidden;
+            width: 100%;
+            height: var(--riser);
+            --riser-bg: rgba(30, 50, 80, 0.8);
+            background: var(--riser-bg);
+        }
+
+        .tilt-card .riser--1 {
+            left: 0; top: 0;
+            transform-origin: top center;
+            transform: rotateX(90deg);
+        }
+        .tilt-card .riser--2 {
+            right: 0; top: 0;
+            transform-origin: top right;
+            transform: translateZ(var(--riser)) rotate(-90deg) rotateX(-90deg);
+        }
+        .tilt-card .riser--3 {
+            left: 0; bottom: 0;
+            transform-origin: bottom center;
+            transform: rotateX(-90deg);
+        }
+        .tilt-card .riser--4 {
+            left: 0; top: 0;
+            transform-origin: top left;
+            transform: translateZ(var(--riser)) rotate(90deg) rotateX(-90deg);
+        }
+
+        .tilt-card .riser.shadow {
+            height: 100%;
+            background: #000;
+            opacity: 0.4;
+            bottom: -35px;
+            left: 0;
+            filter: blur(18px);
+            top: auto;
+        }
+
+        .tilt-card .card-face {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            transform: translateZ(var(--riser));
+            backface-visibility: hidden;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 24px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .tilt-card .card-face::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .tilt-card .card-face-title {
+            position: relative;
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            text-align: center;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .tilt-card .card-face-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            line-height: 1.5;
+            max-width: 260px;
+            position: relative;
+        }
+
+        .tilt-card .card-bottom {
+            position: absolute;
+            bottom: 22px;
+            left: 22px;
+            right: 22px;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .tilt-card { cursor: pointer; }
+
+        .btn-start-chat {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.02em;
+        }
+
+        .btn-start-chat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(140, 82, 255, 0.4);
+        }
+
+        .tilt-card .card-back {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 22px;
+            transform: translateZ(-2px) rotateY(180deg);
+            background: linear-gradient(135deg, #0d2137, #0a1628);
+            display: grid;
+            place-content: center;
+        }
+
+        .tilt-card .card-back i {
+            font-size: 48px;
+            color: rgba(140, 82, 255, 0.3);
+        }
+
+        /* ---- FULL CHAT INTERFACE ---- */
+        .chat-full {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .chat-full.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+            background: rgba(10, 18, 35, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .chat-back-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .chat-back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .chat-header-info {
+            flex: 1;
+        }
+
+        .chat-header-info h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .chat-header-info span {
+            font-size: 11px;
+            color: var(--brand-green);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chat-header-info span::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--brand-green);
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(140, 82, 255, 0.3), rgba(29, 112, 184, 0.3));
+            border: 1px solid rgba(140, 82, 255, 0.2);
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+
+        .msg {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 13px;
+            line-height: 1.55;
+            animation: msgFade 0.3s ease-out;
+        }
+
+        @keyframes msgFade {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg.agent {
+            align-self: flex-start;
+            background: rgba(30, 45, 75, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            border-bottom-left-radius: 6px;
+        }
+
+        .msg.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, rgba(29, 112, 184, 0.5), rgba(140, 82, 255, 0.4));
+            border: 1px solid rgba(140, 82, 255, 0.2);
+            color: #ffffff;
+            border-bottom-right-radius: 6px;
+        }
+
+        .msg-time {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .msg.user .msg-time {
+            color: rgba(255, 255, 255, 0.5);
+            text-align: right;
+        }
+
+        .msg-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 4px;
+            color: var(--brand-purple);
+        }
+
+        .msg.user .msg-label {
+            color: rgba(255, 255, 255, 0.6);
+            text-align: right;
+        }
+
+        .chat-input-bar {
+            padding: 14px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            background: rgba(10, 18, 35, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: var(--font-body);
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .chat-input::placeholder { color: var(--text-muted); }
+
+        .chat-input:focus {
+            border-color: rgba(140, 82, 255, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .chat-send-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+            border: none;
+            color: white;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(140, 82, 255, 0.4);
+        }
+
+        /* ===================== AIRCRAFT TAB BAR ===================== */
+        .aircraft-tab-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 20px;
+            background: rgba(10, 22, 40, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            z-index: 10;
+        }
+
+        .aircraft-tab {
+            padding: 8px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-body);
+        }
+
+        .aircraft-tab:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .aircraft-tab.active {
+            color: #64b5f6;
+            background: rgba(29, 112, 184, 0.2);
+            border-color: rgba(29, 112, 184, 0.3);
+        }
+
+        .node.dimmed {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .connection-path.dimmed {
+            opacity: 0.2;
+        }
+
+        /* Card grid 2-row layout */
+        .card-grid {
+            flex-wrap: wrap;
+            max-width: 800px;
+        }
+
+        .card-grid-item {
+            width: 160px;
+            height: 200px;
+        }
+
+        .card-grid-item .grid-title {
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Banner -->
+    <header class="header-banner">
+        <div class="banner-left">
+            <img class="header-logo" src="/images/Cognizant_logo_2022.svg.png" alt="Cognizant" />
+        </div>
+        <div class="banner-right">
+            <button class="btn-view-app" id="btnViewApp" onclick="showChat()">
+                <i class="fa-solid fa-comments"></i>
+                Click to View App
+            </button>
+            <div class="powered-badge">
+                <i class="fa-solid fa-brain"></i>
+                Powered by Neuro San
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+
+        <!-- Network View -->
+        <div class="view network-view visible" id="networkView">
+            <div class="aircraft-tab-bar" id="aircraftTabBar">
+                <button class="aircraft-tab active" data-aircraft="all">All Agents</button>
+                <button class="aircraft-tab" data-aircraft="typhoon_agent">Typhoon FGR4</button>
+                <button class="aircraft-tab" data-aircraft="f35_agent">F-35B Lightning</button>
+                <button class="aircraft-tab" data-aircraft="a400m_agent">A400M Atlas</button>
+                <button class="aircraft-tab" data-aircraft="c17_agent">C-17 Globemaster</button>
+                <button class="aircraft-tab" data-aircraft="rc135_agent">RC-135W Rivet Joint</button>
+                <button class="aircraft-tab" data-aircraft="shadow_agent">Shadow R1</button>
+            </div>
+            <div class="workflow-editor" id="agentCanvas">
+                <div class="canvas-layer" id="agentLayer">
+                    <svg class="connections-layer" id="agentSvg"></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat View -->
+        <div class="view chat-view hidden" id="chatView">
+            <!-- Card Thumbnail Grid -->
+            <div class="cards-landing" id="cardsLanding">
+                <div class="cards-landing-title">
+                    <h2>How can we help you?</h2>
+                    <p>Select an agent to start a conversation about flight operations and maintenance</p>
+                </div>
+
+                <div class="card-grid" id="cardGrid">
+                    <div class="card-grid-item" data-topic="flight_scheduling" data-title="Flight Scheduling" data-desc="Routes, crew assignment, slot requests, and schedule changes" data-bg="rgba(29, 112, 184, 0.25)" data-riser="rgba(20, 70, 130, 0.8)" data-face-img="assets/card-bg-1.png">
+                        <span class="grid-title">Flight Scheduling</span>
+                        <span class="grid-hint">Click to explore</span>
+                    </div>
+                    <div class="card-grid-item" data-topic="aircraft_repairs" data-title="Aircraft Repairs" data-desc="Maintenance status, parts availability, repair timelines, work orders" data-bg="rgba(220, 38, 38, 0.2)" data-riser="rgba(150, 30, 30, 0.8)" data-face-img="assets/card-bg-2.png">
+                        <span class="grid-title">Aircraft Repairs</span>
+                        <span class="grid-hint">Click to explore</span>
+                    </div>
+                    <div class="card-grid-item" data-topic="typhoon" data-title="Typhoon FGR4" data-desc="Fighter aircraft — black box data, telemetry, mission readiness" data-bg="rgba(0, 164, 153, 0.25)" data-riser="rgba(0, 100, 90, 0.8)" data-face-img="assets/card-bg-3.png">
+                        <span class="grid-title">Typhoon FGR4</span>
+                        <span class="grid-hint">Click to explore</span>
+                    </div>
+                    <div class="card-grid-item" data-topic="f35" data-title="F-35B Lightning" data-desc="STOVL fighter — telemetry, FDR data, maintenance history" data-bg="rgba(140, 82, 255, 0.25)" data-riser="rgba(90, 50, 160, 0.8)" data-face-img="assets/card-bg-1.png">
+                        <span class="grid-title">F-35B Lightning</span>
+                        <span class="grid-hint">Click to explore</span>
+                    </div>
+                    <div class="card-grid-item" data-topic="a400m" data-title="A400M Atlas" data-desc="Transport aircraft — flight data, maintenance, logistics" data-bg="rgba(29, 112, 184, 0.25)" data-riser="rgba(20, 70, 130, 0.8)" data-face-img="assets/card-bg-2.png">
+                        <span class="grid-title">A400M Atlas</span>
+                        <span class="grid-hint">Click to explore</span>
+                    </div>
+                    <div class="card-grid-item" data-topic="c17" data-title="C-17 Globemaster" data-desc="Heavy lift — black box, telemetry, mission status" data-bg="rgba(0, 164, 153, 0.25)" data-riser="rgba(0, 100, 90, 0.8)" data-face-img="assets/card-bg-3.png">
+                        <span class="grid-title">C-17 Globemaster</span>
+                        <span class="grid-hint">Click to explore</span>
+                    </div>
+                    <div class="card-grid-item" data-topic="rc135" data-title="RC-135W Rivet Joint" data-desc="ISR aircraft — signals intelligence, FDR, maintenance" data-bg="rgba(140, 82, 255, 0.25)" data-riser="rgba(90, 50, 160, 0.8)" data-face-img="assets/card-bg-1.png">
+                        <span class="grid-title">RC-135W Rivet Joint</span>
+                        <span class="grid-hint">Click to explore</span>
+                    </div>
+                    <div class="card-grid-item" data-topic="shadow" data-title="Shadow R1" data-desc="UAV — telemetry, black box data, mission readiness" data-bg="rgba(220, 38, 38, 0.2)" data-riser="rgba(150, 30, 30, 0.8)" data-face-img="assets/card-bg-2.png">
+                        <span class="grid-title">Shadow R1</span>
+                        <span class="grid-hint">Click to explore</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3D Tilt Card Modal -->
+            <div class="tilt-modal" id="tiltModal">
+                <div class="close-modal" id="closeModalBtn">&times;</div>
+                <div class="card-wrapper">
+                    <div class="tilt-card front" id="tiltCard">
+                        <div class="ghoul">
+                            <div class="riser riser--1"></div>
+                            <div class="riser riser--2"></div>
+                            <div class="riser riser--3"></div>
+                            <div class="riser riser--4"></div>
+                            <div class="riser shadow"></div>
+                            <div class="card-face" id="cardFace">
+                                <div class="card-face-title" id="cardFaceTitle">Onboarding</div>
+                                <div class="card-face-desc" id="cardFaceDesc">New joiner setup, IT provisioning, payroll, and compliance checks</div>
+                            </div>
+                        </div>
+                        <div class="card-bottom">
+                            <button class="btn-start-chat" id="btnStartChat">
+                                <i class="fa-solid fa-comments"></i>
+                                Start Chat
+                            </button>
+                        </div>
+                        <div class="card-back">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Chat Interface -->
+            <div class="chat-full" id="chatFull">
+                <div class="chat-header">
+                    <button class="chat-back-btn" onclick="backToCards()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="chat-header-info">
+                        <h3 id="chatTopicTitle">Aviation Assistant</h3>
+                        <span>Online</span>
+                    </div>
+                    <div class="chat-avatar">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-bar">
+                    <input class="chat-input" id="chatInput" type="text" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendUserMsg()" />
+                    <button class="chat-send-btn" onclick="sendUserMsg()">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===================== AGENT NETWORK LOGIC =====================
+        let agentNodes = [];
+        let agentConnections = [];
+        let activeAircraftTab = 'all';
+
+        function initAgentWorkflow() {
+            const container = document.getElementById('agentCanvas');
+            const layer = document.getElementById('agentLayer');
+            const svg = document.getElementById('agentSvg');
+
+            agentNodes = [
+                { id: "flight_hub", type: "trigger", title: "Flight Operations Hub", desc: "Mission planning, alerts, events", x: 30, y: 400, icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2", tags: ["Missions", "Alerts"] },
+                { id: "orch", type: "orch", title: "Maintenance Orchestrator", desc: "Case State \u2022 Retries \u2022 Approvals", x: 220, y: 360, icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" },
+                { id: "case_store", type: "store", title: "Case Store", desc: "State + timeline", x: 220, y: 640, icon: "M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" },
+                { id: "flight_scheduling", type: "agent", title: "Flight Scheduling Agent", desc: "Routes, crew, slots", x: 460, y: 40, icon: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8", aircraft: null },
+                { id: "aircraft_repairs", type: "agent", title: "Aircraft Repairs Agent", desc: "Maintenance, parts, repairs", x: 460, y: 140, icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z", aircraft: null },
+                { id: "typhoon_agent", type: "agent", title: "Typhoon FGR4 Agent", desc: "Fighter \u2022 Telemetry, FDR", x: 460, y: 240, icon: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8", aircraft: "typhoon_agent" },
+                { id: "f35_agent", type: "agent", title: "F-35B Lightning Agent", desc: "STOVL \u2022 Telemetry, FDR", x: 460, y: 340, icon: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8", aircraft: "f35_agent" },
+                { id: "a400m_agent", type: "agent", title: "A400M Atlas Agent", desc: "Transport \u2022 Telemetry, FDR", x: 460, y: 440, icon: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8", aircraft: "a400m_agent" },
+                { id: "c17_agent", type: "agent", title: "C-17 Globemaster Agent", desc: "Heavy lift \u2022 Telemetry, FDR", x: 460, y: 540, icon: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8", aircraft: "c17_agent" },
+                { id: "rc135_agent", type: "agent", title: "RC-135W Rivet Joint Agent", desc: "ISR \u2022 Telemetry, FDR", x: 460, y: 640, icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z", aircraft: "rc135_agent" },
+                { id: "shadow_agent", type: "agent", title: "Shadow R1 Agent", desc: "UAV \u2022 Telemetry, FDR", x: 460, y: 740, icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z", aircraft: "shadow_agent" },
+                { id: "blackbox_fdr", type: "system", title: "Black Box / FDR", desc: "Flight data recorder", x: 820, y: 60, icon: "M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18 0h-2M5 15H3m8 2v-2m0-4v-2m-4 4v-2m8 0v-2m-4 4v-2" },
+                { id: "cvr", type: "system", title: "CVR", desc: "Cockpit voice recorder", x: 820, y: 170, icon: "M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0V8m0 0a7 7 0 0114 0z" },
+                { id: "mms", type: "system", title: "Maintenance Management System", desc: "Work orders, history", x: 820, y: 280, icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
+                { id: "flight_planning", type: "system", title: "Flight Planning System", desc: "Routes, weather", x: 820, y: 400, icon: "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" },
+                { id: "parts_inventory", type: "system", title: "Parts Inventory", desc: "Spares, logistics", x: 820, y: 520, icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" },
+                { id: "telemetry", type: "system", title: "Telemetry System", desc: "Real-time data", x: 820, y: 640, icon: "M13 10V3L4 14h7v7l9-11h-7z" }
+            ];
+
+            agentConnections = [
+                { source: "flight_hub", target: "orch", active: true, dotted: false },
+                { source: "orch", target: "flight_scheduling", active: true, dotted: true },
+                { source: "orch", target: "aircraft_repairs", active: true, dotted: true },
+                { source: "orch", target: "typhoon_agent", active: true, dotted: true },
+                { source: "orch", target: "f35_agent", active: true, dotted: true },
+                { source: "orch", target: "a400m_agent", active: true, dotted: true },
+                { source: "orch", target: "c17_agent", active: true, dotted: true },
+                { source: "orch", target: "rc135_agent", active: true, dotted: true },
+                { source: "orch", target: "shadow_agent", active: true, dotted: true },
+                { source: "orch", target: "case_store", active: true, dotted: false },
+                { source: "flight_scheduling", target: "flight_planning", active: true, dotted: false },
+                { source: "aircraft_repairs", target: "mms", active: true, dotted: false },
+                { source: "aircraft_repairs", target: "parts_inventory", active: true, dotted: false },
+                { source: "typhoon_agent", target: "blackbox_fdr", active: true, dotted: false },
+                { source: "typhoon_agent", target: "mms", active: true, dotted: false },
+                { source: "typhoon_agent", target: "telemetry", active: true, dotted: false },
+                { source: "f35_agent", target: "blackbox_fdr", active: true, dotted: false },
+                { source: "f35_agent", target: "mms", active: true, dotted: false },
+                { source: "f35_agent", target: "telemetry", active: true, dotted: false },
+                { source: "a400m_agent", target: "blackbox_fdr", active: true, dotted: false },
+                { source: "a400m_agent", target: "mms", active: true, dotted: false },
+                { source: "a400m_agent", target: "telemetry", active: true, dotted: false },
+                { source: "c17_agent", target: "blackbox_fdr", active: true, dotted: false },
+                { source: "c17_agent", target: "mms", active: true, dotted: false },
+                { source: "c17_agent", target: "telemetry", active: true, dotted: false },
+                { source: "rc135_agent", target: "blackbox_fdr", active: true, dotted: false },
+                { source: "rc135_agent", target: "mms", active: true, dotted: false },
+                { source: "rc135_agent", target: "telemetry", active: true, dotted: false },
+                { source: "shadow_agent", target: "blackbox_fdr", active: true, dotted: false },
+                { source: "shadow_agent", target: "mms", active: true, dotted: false },
+                { source: "shadow_agent", target: "telemetry", active: true, dotted: false }
+            ];
+
+            renderNodes(layer, agentNodes);
+            drawAgentConnections();
+            fitAgentNetworkToViewport();
+            setupAircraftTabs();
+        }
+
+        function setupAircraftTabs() {
+            document.querySelectorAll('.aircraft-tab').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeAircraftTab = btn.dataset.aircraft;
+                    document.querySelectorAll('.aircraft-tab').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    applyTabFilter();
+                    drawAgentConnections();
+                });
+            });
+        }
+
+        function fitAgentNetworkToViewport() {
+            const container = document.getElementById('agentCanvas');
+            const layer = document.getElementById('agentLayer');
+            if (!container || !layer) return;
+
+            const cw = container.clientWidth;
+            const ch = container.clientHeight;
+            const contentWidth = 1100;
+            const contentHeight = 900;
+
+            const scale = Math.min(cw / contentWidth, ch / contentHeight, 1.2);
+            const translateX = (cw - contentWidth * scale) / 2;
+            const translateY = (ch - contentHeight * scale) / 2;
+
+            layer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            layer.style.transformOrigin = '0 0';
+        }
+
+        function renderNodes(layer, nodes) {
+            nodes.forEach(node => {
+                const el = document.createElement("div");
+                el.className = `node ${node.type}${node.highlight === "dark-blue" ? " highlight-dark-blue" : ""}`;
+                el.id = node.id;
+                el.style.left = node.x + "px";
+                el.style.top = node.y + "px";
+                if (node.width) el.style.width = node.width + "px";
+                if (node.aircraft) el.dataset.aircraft = node.aircraft;
+
+                const tagsHtml = node.tags ? `<div class="node-tags">${node.tags.join(" \u2022 ")}</div>` : "";
+
+                el.innerHTML = `
+                    <div class="node-header">
+                        <span class="node-type">${node.type.toUpperCase()}</span>
+                        <span class="status-dot"></span>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-icon">
+                            <svg viewBox="0 0 24 24"><path d="${node.icon}" stroke="none" fill="currentColor"></path></svg>
+                        </div>
+                        <div class="node-info">
+                            <h4>${node.title}</h4>
+                            <p>${node.desc}</p>
+                        </div>
+                    </div>
+                    ${tagsHtml}
+                    <div class="port in"></div>
+                    <div class="port out"></div>
+                `;
+
+                layer.appendChild(el);
+            });
+            applyTabFilter();
+        }
+
+        function applyTabFilter() {
+            const nodes = document.querySelectorAll('#agentLayer .node');
+            nodes.forEach(el => {
+                const nodeId = el.id;
+                const node = agentNodes.find(n => n.id === nodeId);
+                if (!node) return;
+                const shouldDim = activeAircraftTab !== 'all' && (
+                    (node.aircraft && node.aircraft !== activeAircraftTab) ||
+                    (node.id === 'flight_scheduling' || node.id === 'aircraft_repairs') ||
+                    (node.type === 'system' && !agentConnections.some(c => c.source === activeAircraftTab && c.target === nodeId))
+                );
+                el.classList.toggle('dimmed', shouldDim);
+            });
+        }
+
+        function drawAgentConnections() {
+            const svg = document.getElementById('agentSvg');
+            svg.innerHTML = "";
+            svg.setAttribute('width', '100%');
+            svg.setAttribute('height', '100%');
+
+            const getNodeWidth = (n) => n.width || 180;
+            const isConnRelevant = (conn) => {
+                if (activeAircraftTab === 'all') return true;
+                return conn.source === 'flight_hub' ||
+                    (conn.source === 'orch' && (conn.target === activeAircraftTab || conn.target === 'case_store')) ||
+                    conn.source === activeAircraftTab;
+            };
+
+            agentConnections.forEach(conn => {
+                const sourceNode = agentNodes.find(n => n.id === conn.source);
+                const targetNode = agentNodes.find(n => n.id === conn.target);
+                if (!sourceNode || !targetNode) return;
+
+                const relevant = isConnRelevant(conn);
+                if (activeAircraftTab !== 'all' && !relevant) return;
+
+                const sX = sourceNode.x + getNodeWidth(sourceNode);
+                const sY = sourceNode.y + 40;
+                const tX = targetNode.x;
+                const tY = targetNode.y + 40;
+
+                const dist = Math.abs(tX - sX) * 0.5;
+                const d = `M ${sX} ${sY} C ${sX + dist} ${sY}, ${tX - dist} ${tY}, ${tX} ${tY}`;
+
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                path.setAttribute("d", d);
+                path.setAttribute("class", `connection-path ${conn.active ? 'active' : ''} ${conn.dotted ? 'dotted' : 'solid'} ${!relevant && activeAircraftTab !== 'all' ? 'dimmed' : ''}`);
+                if (conn.dotted) {
+                    path.style.strokeDasharray = "6,6";
+                    path.style.animation = "none";
+                } else {
+                    path.style.strokeDasharray = "none";
+                    path.style.animation = "none";
+                }
+                svg.appendChild(path);
+
+                if (conn.active && relevant) {
+                    const packet = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    packet.setAttribute("r", "4");
+                    packet.setAttribute("fill", "#8C52FF");
+                    packet.style.filter = "drop-shadow(0 0 6px #8C52FF)";
+                    packet.innerHTML = `
+                        <animateMotion
+                            dur="${1.5 + Math.random()}s"
+                            repeatCount="indefinite"
+                            path="${d}"
+                        />
+                    `;
+                    svg.appendChild(packet);
+                }
+            });
+        }
+
+        // ===================== GSAP 3D TILT CARD MODAL =====================
+        const tiltCard = document.getElementById('tiltCard');
+        const tiltModal = document.getElementById('tiltModal');
+        const cardWrapper = document.querySelector('.card-wrapper');
+
+        const wW = window.innerWidth;
+        const wH = window.innerHeight;
+        const pos = { x: wW / 2, y: wH / 2 };
+        const mouse = { x: pos.x, y: pos.y };
+        const tiltSpeed = 0.125;
+        let currentModalTopic = '';
+
+        const topicTitles = {
+            flight_scheduling: 'Flight Scheduling Assistant',
+            aircraft_repairs: 'Aircraft Repairs Assistant',
+            typhoon: 'Typhoon FGR4 Assistant',
+            f35: 'F-35B Lightning Assistant',
+            a400m: 'A400M Atlas Assistant',
+            c17: 'C-17 Globemaster Assistant',
+            rc135: 'RC-135W Rivet Joint Assistant',
+            shadow: 'Shadow R1 Assistant'
+        };
+
+        const moveMouse = (e) => { mouse.x = e.x; mouse.y = e.y; };
+
+        const tiltSetter = () => {
+            const dt = 1.0 - Math.pow(1.0 - tiltSpeed, gsap.ticker.deltaRatio());
+            pos.x += (mouse.x - pos.x) * dt;
+            pos.y += (mouse.y - pos.y) * dt;
+            const rY = (gsap.utils.normalize(0, wW, pos.x) - 0.5) * 40;
+            const rX = (gsap.utils.normalize(0, wH, pos.y) - 0.5) * -40;
+            gsap.set(tiltCard, { rotateY: rY, rotateX: rX });
+        };
+
+        function startTilt() {
+            window.addEventListener('mousemove', moveMouse);
+            gsap.ticker.add(tiltSetter);
+        }
+
+        function stopTilt() {
+            gsap.ticker.remove(tiltSetter);
+            window.removeEventListener('mousemove', moveMouse);
+        }
+
+        function populateCard(item) {
+            const face = document.getElementById('cardFace');
+            document.getElementById('cardFaceTitle').textContent = item.dataset.title;
+            document.getElementById('cardFaceDesc').textContent = item.dataset.desc;
+            face.style.backgroundImage = `url('${item.dataset.faceImg}')`;
+            gsap.set(tiltCard, { background: item.dataset.bg });
+            tiltCard.querySelectorAll('.riser:not(.shadow)').forEach(r => {
+                gsap.set(r, { '--riser-bg': item.dataset.riser });
+            });
+            currentModalTopic = item.dataset.topic;
+        }
+
+        function openModal(index) {
+            const items = document.querySelectorAll('.card-grid-item');
+            const item = items[index];
+            if (!item) return;
+            populateCard(item);
+            modalAnimating = true;
+
+            gsap.set(tiltModal, { autoAlpha: 1 });
+            gsap.fromTo(tiltModal,
+                { backgroundColor: 'rgba(10, 22, 40, 0)' },
+                { backgroundColor: 'rgba(10, 22, 40, 0.85)', duration: 0.4 }
+            );
+
+            gsap.set(tiltCard, { autoAlpha: 1 });
+
+            gsap.timeline({ onComplete: () => { modalAnimating = false; startTilt(); } })
+                .set(tiltCard, { rotationY: 180 })
+                .fromTo(tiltCard,
+                    { y: '50vh', yPercent: 50, rotateX: -130 },
+                    { y: 0, yPercent: 0, rotateX: 0, ease: 'back', duration: 1 }
+                )
+                .to(tiltCard,
+                    { rotationY: 740, duration: 1.25, ease: 'sine.inOut' },
+                    '-=0.5'
+                )
+                .set(tiltCard, { rotationY: 20 })
+                .to(tiltCard, { rotationY: 0, duration: 0.5, ease: 'sine.inOut' });
+        }
+
+        function closeModal(cb) {
+            stopTilt();
+            document.getElementById('closeModalBtn').removeEventListener('click', closeModalHandler);
+
+            gsap.timeline({ onComplete: () => {
+                gsap.set(tiltCard, { rotationY: 0, autoAlpha: 0 });
+                if (cb) cb();
+            }})
+                .to(tiltCard, { y: '50vh', yPercent: 50, ease: 'back.in', duration: 0.6 })
+                .to(tiltModal, { autoAlpha: 0, duration: 0.3 }, '-=0.2');
+        }
+
+        function closeModalHandler() { closeModal(); }
+
+        document.getElementById('closeModalBtn').addEventListener('click', closeModalHandler);
+
+        let modalAnimating = false;
+
+        function goToChat() {
+            if (modalAnimating) return;
+            const topic = currentModalTopic;
+            closeModal(() => {
+                openChatFromCard(topic);
+            });
+        }
+
+        document.getElementById('btnStartChat').addEventListener('click', (e) => {
+            e.stopPropagation();
+            goToChat();
+        });
+
+        tiltCard.addEventListener('click', () => {
+            goToChat();
+        });
+
+        document.getElementById('cardGrid').addEventListener('click', (e) => {
+            const item = e.target.closest('.card-grid-item');
+            if (!item) return;
+            const items = document.querySelectorAll('.card-grid-item');
+            const index = Array.from(items).indexOf(item);
+            document.getElementById('closeModalBtn').addEventListener('click', closeModalHandler);
+            openModal(index);
+        });
+
+        // ===================== VIEW SWITCHING =====================
+        function showChat() {
+            document.getElementById('networkView').classList.remove('visible');
+            document.getElementById('networkView').classList.add('hidden');
+            document.getElementById('chatView').classList.remove('hidden');
+            document.getElementById('chatView').classList.add('visible');
+            document.getElementById('btnViewApp').innerHTML = '<i class="fa-solid fa-diagram-project"></i> View Network';
+            document.getElementById('btnViewApp').setAttribute('onclick', 'showNetwork()');
+
+            document.getElementById('cardsLanding').classList.remove('out');
+            document.getElementById('chatFull').classList.remove('active');
+        }
+
+        function showNetwork() {
+            stopTilt();
+            gsap.set(tiltModal, { autoAlpha: 0 });
+            gsap.set(tiltCard, { autoAlpha: 0, rotationY: 0 });
+
+            document.getElementById('chatView').classList.remove('visible');
+            document.getElementById('chatView').classList.add('hidden');
+            document.getElementById('networkView').classList.remove('hidden');
+            document.getElementById('networkView').classList.add('visible');
+            document.getElementById('btnViewApp').innerHTML = '<i class="fa-solid fa-comments"></i> Click to View App';
+            document.getElementById('btnViewApp').setAttribute('onclick', 'showChat()');
+
+            document.getElementById('chatMessages').innerHTML = '';
+
+            requestAnimationFrame(() => {
+                drawAgentConnections();
+                fitAgentNetworkToViewport();
+            });
+        }
+
+        function openChatFromCard(topic) {
+            document.getElementById('cardsLanding').classList.add('out');
+            const chatFull = document.getElementById('chatFull');
+            document.getElementById('chatTopicTitle').textContent = topicTitles[topic] || 'Aviation Assistant';
+
+            setTimeout(() => {
+                chatFull.classList.add('active');
+                startChat(topic);
+            }, 300);
+        }
+
+        function backToCards() {
+            document.getElementById('chatFull').classList.remove('active');
+            document.getElementById('chatMessages').innerHTML = '';
+
+            setTimeout(() => {
+                document.getElementById('cardsLanding').classList.remove('out');
+            }, 250);
+        }
+
+        // ===================== CHAT LOGIC =====================
+        const chatScenarios = {
+            flight_scheduling: [
+                { role: 'agent', text: "Welcome! I'm the Flight Scheduling Assistant. I can help with routes, crew assignment, slot requests, and schedule changes. What do you need?" },
+                { role: 'user', text: "I need to reschedule the Typhoon sortie for tomorrow." },
+                { role: 'agent', text: "I've connected to the Flight Planning System. The Typhoon FGR4 Agent reports availability. I can offer:\n\n\u2022 Slot 08:00–10:00 (clear weather)\n\u2022 Slot 14:00–16:00 (moderate winds)\n\nCrew availability: 2 pilots confirmed. Which slot would you prefer?" },
+                { role: 'user', text: "The morning slot please." },
+                { role: 'agent', text: "Done! The sortie is rescheduled for 08:00–10:00 tomorrow. The Maintenance Orchestrator has been notified. The Typhoon agent will confirm black box and telemetry readiness before takeoff." }
+            ],
+            aircraft_repairs: [
+                { role: 'agent', text: "Hi! I'm the Aircraft Repairs Assistant. I can help with maintenance status, parts availability, repair timelines, and work orders. What do you need?" },
+                { role: 'user', text: "What's the status of the F-35B engine inspection?" },
+                { role: 'agent', text: "I've queried the Maintenance Management System. F-35B ZM135: engine inspection completed.\n\n\u2022 Work order #M-2024-0847: closed\n\u2022 Parts used: 2x filter assemblies (from Parts Inventory)\n\u2022 Next scheduled: 500 flight hours\n\nAircraft is cleared for operations." },
+                { role: 'user', text: "Any parts needed for the A400M next week?" },
+                { role: 'agent', text: "Checking Parts Inventory... A400M scheduled maintenance: 3 items on order. Hydraulic seal kit due in 4 days. Landing gear bushing backordered — ETA 14 days. I've alerted the Aircraft Repairs Agent to prioritise." }
+            ],
+            typhoon: [
+                { role: 'agent', text: "Hello! I'm the Typhoon FGR4 Assistant. I can help with black box data, telemetry, maintenance history, and mission readiness. What do you need?" },
+                { role: 'user', text: "What's the mission readiness status for ZK310?" },
+                { role: 'agent', text: "I've pulled data from Black Box/FDR, MMS, and Telemetry:\n\n\u2022 ZK310: 92% mission ready\n\u2022 Last flight: 2 days ago\n\u2022 FDR: no anomalies\n\u2022 MMS: next scheduled maintenance in 120 hours\n\nAll systems operational." },
+                { role: 'user', text: "Any telemetry alerts from the last sortie?" },
+                { role: 'agent', text: "Telemetry review complete. Minor fluctuation in port engine EGT during climb — within normal range. No action required. Full report logged in Case Store." }
+            ],
+            f35: [
+                { role: 'agent', text: "Hi! I'm the F-35B Lightning Assistant. I can help with STOVL-specific telemetry, FDR data, and maintenance. What do you need?" },
+                { role: 'user', text: "Is ZM135 ready for vertical lift operations?" },
+                { role: 'agent', text: "Checking F-35B systems... ZM135 STOVL status:\n\n\u2022 Lift fan: nominal\n\u2022 Engine nozzle: 90° rotation tested\n\u2022 Black box: no fault codes\n\u2022 MMS: no open work orders\n\nCleared for vertical lift operations." },
+                { role: 'user', text: "Thanks." },
+                { role: 'agent', text: "You're welcome! The F-35B agent will continue monitoring telemetry during the mission." }
+            ],
+            a400m: [
+                { role: 'agent', text: "Hello! I'm the A400M Atlas Assistant. I can help with transport aircraft flight data, maintenance, and logistics. What do you need?" },
+                { role: 'user', text: "What's the cargo capacity status for the Atlas fleet?" },
+                { role: 'agent', text: "A400M fleet status from MMS and Telemetry:\n\n\u2022 3 aircraft available (max payload 37 tonnes)\n\u2022 2 in maintenance (expected return: 48–72 hrs)\n\u2022 Black box data: all recent flights nominal\n\nFDR and CVR logs available for any tail number." },
+                { role: 'user', text: "Any maintenance due on ZM400?" },
+                { role: 'agent', text: "ZM400: next scheduled inspection in 45 flight hours. No parts on backorder. The Aircraft Repairs Agent has pre-ordered consumables." }
+            ],
+            c17: [
+                { role: 'agent', text: "Hi! I'm the C-17 Globemaster Assistant. I can help with heavy lift black box data, telemetry, and mission status. What do you need?" },
+                { role: 'user', text: "Mission readiness for the C-17 fleet?" },
+                { role: 'agent', text: "C-17 fleet status:\n\n\u2022 4 available for heavy lift\n\u2022 1 in scheduled maintenance (engine module)\n\u2022 FDR: no critical incidents in last 30 days\n\u2022 Telemetry: all systems green\n\nAll connected to Black Box, MMS, and Telemetry. Ready for mission planning." },
+                { role: 'user', text: "Any parts needed?" },
+                { role: 'agent', text: "Parts Inventory check: 4 items on order for C-17 fleet. Engine seals and brake pads due this week. No mission impact." }
+            ],
+            rc135: [
+                { role: 'agent', text: "Hello! I'm the RC-135W Rivet Joint Assistant. I can help with ISR aircraft signals intelligence, FDR data, and maintenance. What do you need?" },
+                { role: 'user', text: "Is the Rivet Joint fleet mission ready?" },
+                { role: 'agent', text: "RC-135W Rivet Joint status:\n\n\u2022 2 aircraft available for ISR missions\n\u2022 1 in sensor calibration (24–48 hrs)\n\u2022 Black box/FDR: all recent sorties logged\n\u2022 MMS: no critical work orders\n\nTelemetry and SIGINT systems operational." },
+                { role: 'user', text: "Any FDR anomalies?" },
+                { role: 'agent', text: "FDR review complete. No anomalies detected. All mission data archived in Case Store." }
+            ],
+            shadow: [
+                { role: 'agent', text: "Hi! I'm the Shadow R1 Assistant. I can help with UAV telemetry, black box data, and mission readiness. What do you need?" },
+                { role: 'user', text: "Shadow R1 fleet status?" },
+                { role: 'agent', text: "Shadow R1 UAV status:\n\n\u2022 4 airframes available\n\u2022 Telemetry: all systems nominal\n\u2022 Black box: no fault codes\n\u2022 MMS: routine maintenance scheduled next week\n\nAll connected to FDR, MMS, and Telemetry. Ready for ISR missions." },
+                { role: 'user', text: "Any sensor issues?" },
+                { role: 'agent', text: "Sensor health check: all payloads nominal. EO/IR and comms systems green. No action required." }
+            ]
+        };
+
+        let currentScenarioIndex = 0;
+        let currentScenario = [];
+        let currentChatTopic = 'Aviation Assistant';
+
+        function startChat(topic) {
+            currentScenario = chatScenarios[topic] || chatScenarios.flight_scheduling;
+            currentChatTopic = topicTitles[topic] || 'Aviation Assistant';
+            currentScenarioIndex = 0;
+            document.getElementById('chatMessages').innerHTML = '';
+            displayNextMessages();
+        }
+
+        function displayNextMessages() {
+            const container = document.getElementById('chatMessages');
+            if (currentScenarioIndex >= currentScenario.length) return;
+
+            const msg = currentScenario[currentScenarioIndex];
+            appendMessage(msg.role, msg.text);
+            currentScenarioIndex++;
+
+            if (currentScenarioIndex < currentScenario.length && currentScenario[currentScenarioIndex].role === 'agent') {
+                setTimeout(() => {
+                    const agentMsg = currentScenario[currentScenarioIndex];
+                    appendMessage(agentMsg.role, agentMsg.text);
+                    currentScenarioIndex++;
+                }, 800);
+            }
+        }
+
+        function appendMessage(role, text) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `msg ${role}`;
+
+            const label = role === 'agent' ? currentChatTopic : 'You';
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            div.innerHTML = `
+                <div class="msg-label">${label}</div>
+                <div>${text.replace(/\n/g, '<br>')}</div>
+                <div class="msg-time">${time}</div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendUserMsg() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            if (currentScenarioIndex < currentScenario.length) {
+                displayNextMessages();
+            } else {
+                appendMessage('user', text);
+                setTimeout(() => {
+                    appendMessage('agent', "Thanks for your message! The relevant agents are processing your request. You'll receive an update shortly.");
+                }, 600);
+            }
+            input.value = '';
+        }
+
+        // ===================== INIT =====================
+        document.addEventListener('DOMContentLoaded', () => {
+            initAgentWorkflow();
+
+            window.addEventListener('resize', () => {
+                drawAgentConnections();
+                fitAgentNetworkToViewport();
+            });
+        });
+    </script>
+</body>
+
+</html>

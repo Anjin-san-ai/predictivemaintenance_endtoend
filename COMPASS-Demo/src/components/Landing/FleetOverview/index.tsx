@@ -120,7 +120,7 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
             <StatCard
               value={fleetData.serviceable}
               label="Total serviceable aircraft"
-              progressColor="#2AF556"
+              progressColor="#045234"
             />
 
             <StatCard
@@ -138,7 +138,7 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
             <StatCard
               value={fleetData.inFlight}
               label="Total in-flight aircraft"
-              progressColor="#2AF556"
+              progressColor="#045234"
             />
 
             <StatCard

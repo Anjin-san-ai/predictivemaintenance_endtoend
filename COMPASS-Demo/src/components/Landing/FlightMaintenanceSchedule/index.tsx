@@ -617,14 +617,14 @@ export default function FlightMaintenanceSchedule(
     startTime: string,
     endTime: string
   ) => {
-    if (!startDate || !endDate || !startTime || !endTime) return "#2AF556";
+    if (!startDate || !endDate || !startTime || !endTime) return "#045234";
     const now = new Date();
     const start = new Date(`${startDate}T${startTime}:00`);
     const end = new Date(`${endDate}T${endTime}:59`);
     if (now >= start && now <= end) {
-      return "#2AF556";
+      return "#045234";
     }
-    return "#2AF556";
+    return "#045234";
   };
 
   const getMaintenanceColor = (type: string) => {
@@ -947,7 +947,7 @@ export default function FlightMaintenanceSchedule(
                             style={{
                               left: `${timerLinePosition}px`,
                               width: "3px",
-                              backgroundColor: "#2AF556",
+                              backgroundColor: "#045234",
                             }}
                           >
                             {aircraft === filteredAircraftData[0] && (
