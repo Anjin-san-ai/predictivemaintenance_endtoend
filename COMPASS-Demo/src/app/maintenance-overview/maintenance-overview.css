@@ -2,42 +2,25 @@
 .maintenance-overview .section-divider {
   width: 100%;
   height: 1rem;
-  background: var(--color-bg-elevated);
-  box-shadow: 0 8px 48px 0 rgba(0,0,0,0.4), 0px 1px 4px rgba(0,0,0,0.2);
+  background: #e0e0e0;
+  box-shadow: 0 8px 48px 0 rgba(0,0,0,0.18), 0px 1px 4px rgba(0,0,0,0.06);
   margin: 2rem 0;
   border-radius: 4px;
 }
 .maintenance-overview table {
-  box-shadow: var(--shadow-card);
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.08), 0px 1px 4px rgba(0,0,0,0.06);
   border-radius: 12px;
   overflow: hidden;
 }
 .maintenance-overview {
   align-items: center;
-  background-color: var(--color-bg-primary);
-  background-image: var(--page-bg-image);
-  background-size: cover;
-  background-position: center top;
-  background-attachment: fixed;
+  background-color: var(--brand--white);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100vw;
   overflow-x: auto;
   box-sizing: border-box;
-  position: relative;
-}
-.maintenance-overview::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: var(--page-bg-overlay);
-  pointer-events: none;
-  z-index: 0;
-}
-.maintenance-overview > * {
-  position: relative;
-  z-index: 1;
 }
 
 .maintenance-overview table th,
@@ -48,7 +31,7 @@
 /* Responsive header */
 .maintenance-overview .frame-5051 {
   align-items: center;
-  background: linear-gradient(180deg, rgba(44, 62, 74, 1) 0%, rgba(5, 11, 20, 1) 70%);
+  background: linear-gradient(180deg, rgba(39, 75, 155, 1) 0%, rgba(14, 26, 53, 1) 70%);
   display: flex;
   min-height: 60px;
   justify-content: space-between;
@@ -2303,4 +2286,19 @@
   display: flex;
   flex-direction: flex-row;
   width: 100%;
+}
+
+/* Override green text to blue on Aircraft Details page */
+.maintenance-overview .roboto-semi-bold-blueberry-21-3px,
+.maintenance-overview .roboto-bold-sapphire-24px,
+.maintenance-overview .roboto-bold-neon-carrot-18-7px {
+  color: #2563eb !important;
+}
+
+.maintenance-overview .airbus-a400-m-atlas {
+  color: #2563eb;
+}
+
+.maintenance-overview .title.roboto-bold-mirage-21-3px {
+  color: #2563eb;
 }
