@@ -19,6 +19,7 @@ import {
   getDynamicStatusForAircraft,
   getStatusColor,
 } from "../../../utils/aircraftUtils";
+import { getA400IndexForTail } from "../../../utils/a400Bridge";
 import type {
   GanttAircraft,
   GanttRouteLeg,
@@ -98,6 +99,24 @@ export default function FlightMaintenanceSchedule(
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [lastAddedFlight, setLastAddedFlight] = useState<string | null>(null);
   const [autoScrollTarget, setAutoScrollTarget] = useState<string | null>(null);
+  const [healthWarnings, setHealthWarnings] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    fetch('/api/fleet-health')
+      .then(r => r.json())
+      .then(data => {
+        if (data.error || !data.aircraft) return;
+        const map: Record<string, string> = {};
+        flightScheduleData.forEach(ac => {
+          const idx = getA400IndexForTail(ac.tailNumber) % data.aircraft.length;
+          const acHealth = data.aircraft[idx];
+          if (acHealth) map[ac.tailNumber] = acHealth.worstStatus || 'Good';
+        });
+        setHealthWarnings(map);
+      })
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [scheduleImpact, setScheduleImpact] = useState<ScheduleImpact | null>(null);
 
   // Accumulates raw legs for every interactively-added flight that has been
@@ -835,6 +854,17 @@ export default function FlightMaintenanceSchedule(
                               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                               <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
                             </div>
+                          )}
+                          {healthWarnings[aircraft.tailNumber] && healthWarnings[aircraft.tailNumber] !== 'Good' && (
+                            <span style={{
+                              fontSize: '10px', fontWeight: 700, padding: '2px 5px', borderRadius: '3px',
+                              backgroundColor: 'transparent',
+                              border: `1px solid ${healthWarnings[aircraft.tailNumber] === 'Critical' ? '#c0222f' : '#a06800'}`,
+                              color: healthWarnings[aircraft.tailNumber] === 'Critical' ? '#c0222f' : '#a06800',
+                              letterSpacing: '0.05em', lineHeight: 1.2,
+                            }}>
+                              {healthWarnings[aircraft.tailNumber] === 'Critical' ? 'CRIT' : 'WARN'}
+                            </span>
                           )}
                         </div>
                         <div className="flex gap-1 items-center text-sm text-muted-foreground">

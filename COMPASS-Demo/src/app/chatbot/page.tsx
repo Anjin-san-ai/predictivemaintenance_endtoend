@@ -14,7 +14,6 @@ import {
   FlaskConical,
   Calendar,
   Boxes,
-  ExternalLink,
 } from 'lucide-react';
 
 interface Message {
@@ -57,17 +56,17 @@ function formatMarkdown(text: string): React.ReactNode {
   while (i < lines.length) {
     const line = lines[i];
     if (line.startsWith('**') && line.endsWith('**') && line.length > 4) {
-      elements.push(<strong key={i} style={{ display: 'block', color: '#c8e8cc', marginTop: '8px', marginBottom: '2px' }}>{line.slice(2, -2)}</strong>);
+      elements.push(<strong key={i} style={{ display: 'block', color: '#274b9b', marginTop: '8px', marginBottom: '2px' }}>{line.slice(2, -2)}</strong>);
     } else if (line.startsWith('• ') || line.startsWith('- ') || line.startsWith('* ')) {
-      elements.push(<div key={i} style={{ display: 'flex', gap: '8px', marginLeft: '8px', marginBottom: '2px' }}><span style={{ color: '#2AF556', flexShrink: 0 }}>•</span><span>{line.slice(2)}</span></div>);
+      elements.push(<div key={i} style={{ display: 'flex', gap: '8px', marginLeft: '8px', marginBottom: '2px' }}><span style={{ color: '#4371e0', flexShrink: 0 }}>•</span><span>{line.slice(2)}</span></div>);
     } else if (/^\d+\.\s/.test(line)) {
-      elements.push(<div key={i} style={{ display: 'flex', gap: '8px', marginLeft: '8px', marginBottom: '2px' }}><span style={{ color: '#2AF556', flexShrink: 0, minWidth: '16px' }}>{line.match(/^\d+/)?.[0]}.</span><span>{line.replace(/^\d+\.\s/, '')}</span></div>);
+      elements.push(<div key={i} style={{ display: 'flex', gap: '8px', marginLeft: '8px', marginBottom: '2px' }}><span style={{ color: '#4371e0', flexShrink: 0, minWidth: '16px' }}>{line.match(/^\d+/)?.[0]}.</span><span>{line.replace(/^\d+\.\s/, '')}</span></div>);
     } else if (line.startsWith('# ')) {
-      elements.push(<div key={i} style={{ fontWeight: 700, fontSize: '15px', color: '#2AF556', marginTop: '12px', marginBottom: '4px' }}>{line.slice(2)}</div>);
+      elements.push(<div key={i} style={{ fontWeight: 700, fontSize: '15px', color: '#274b9b', marginTop: '12px', marginBottom: '4px' }}>{line.slice(2)}</div>);
     } else if (line.startsWith('## ')) {
-      elements.push(<div key={i} style={{ fontWeight: 600, fontSize: '14px', color: '#c8e8cc', marginTop: '10px', marginBottom: '4px' }}>{line.slice(3)}</div>);
+      elements.push(<div key={i} style={{ fontWeight: 600, fontSize: '14px', color: '#4371e0', marginTop: '10px', marginBottom: '4px' }}>{line.slice(3)}</div>);
     } else if (line === '---') {
-      elements.push(<hr key={i} style={{ border: 'none', borderTop: '1px solid rgba(42,245,86,0.15)', margin: '8px 0' }} />);
+      elements.push(<hr key={i} style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '8px 0' }} />);
     } else if (line.trim() === '') {
       elements.push(<div key={i} style={{ height: '6px' }} />);
     } else {
@@ -77,7 +76,7 @@ function formatMarkdown(text: string): React.ReactNode {
         <div key={i} style={{ marginBottom: '2px' }}>
           {parts.map((part, j) =>
             part.startsWith('**') && part.endsWith('**')
-              ? <strong key={j} style={{ color: '#e8f0ea' }}>{part.slice(2, -2)}</strong>
+              ? <strong key={j} style={{ color: '#1a202c' }}>{part.slice(2, -2)}</strong>
               : part
           )}
         </div>
@@ -210,12 +209,10 @@ Ask me anything, or use the quick-action buttons below to get started.`,
   };
 
   const statusColor = (s: string) =>
-    s === 'Critical' ? '#ff4757' : s === 'Warning' ? '#C76D41' : '#2AF556';
+    s === 'Critical' ? '#ff4757' : s === 'Warning' ? '#C76D41' : '#4371e0';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundImage: 'url(/background.jpeg)', backgroundSize: 'cover', backgroundPosition: 'center top', backgroundAttachment: 'fixed', color: 'var(--color-text-primary, #e8f0ea)', fontFamily: 'var(--font-primary, Inter, sans-serif)', position: 'relative' }}>
-      <div style={{ position: 'fixed', inset: 0, background: 'rgba(5,11,20,0.88)', pointerEvents: 'none', zIndex: 0 }} />
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#ffffff', color: '#1a202c', fontFamily: 'var(--font-primary, Inter, sans-serif)' }}>
       <Header />
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', minHeight: 0 }}>
@@ -224,18 +221,18 @@ Ask me anything, or use the quick-action buttons below to get started.`,
         <aside style={{
           width: '280px',
           flexShrink: 0,
-          background: 'var(--color-bg-surface, #0E1C28)',
-          borderRight: '1px solid var(--color-border-default, rgba(42,245,86,0.2))',
+          background: 'linear-gradient(180deg, rgba(21,46,102,1) 0%, rgba(14,26,53,1) 100%)',
+          borderRight: '1px solid rgba(255,255,255,0.08)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
         }}>
-          <div style={{ padding: '16px', borderBottom: '1px solid rgba(42,245,86,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#c8e8cc', letterSpacing: '0.5px' }}>LIVE FLEET STATUS</span>
+          <div style={{ padding: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#9eb4eb', letterSpacing: '0.5px' }}>LIVE FLEET STATUS</span>
             <button
               onClick={fetchFleetHealth}
               disabled={healthLoading}
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#3d5445', padding: '2px' }}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#9eb4eb', padding: '2px' }}
               title="Refresh fleet status"
             >
               <RefreshCw size={13} style={{ animation: healthLoading ? 'spin 1s linear infinite' : 'none' }} />
@@ -244,43 +241,43 @@ Ask me anything, or use the quick-action buttons below to get started.`,
 
           <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
             {healthError ? (
-              <div style={{ padding: '12px', background: 'rgba(255,71,87,0.08)', borderRadius: '8px', border: '1px solid rgba(255,71,87,0.2)', fontSize: '12px', color: '#ff6b7a' }}>
+              <div style={{ padding: '12px', background: 'rgba(255,71,87,0.12)', borderRadius: '8px', border: '1px solid rgba(255,71,87,0.3)', fontSize: '12px', color: '#ff8a94' }}>
                 Fleet Monitor offline. Maintenance manual and parts data still available.
               </div>
             ) : healthLoading && !fleetHealth ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', fontSize: '12px', color: '#3d5445' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', fontSize: '12px', color: '#9eb4eb' }}>
                 <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> Loading fleet data...
               </div>
             ) : fleetHealth ? (
               <>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '16px' }}>
                   {[
-                    { label: 'Total', value: fleetHealth.totalFlights, color: '#c8e8cc' },
-                    { label: 'Deployable', value: `${fleetHealth.deployablePct}%`, color: '#2AF556' },
-                    { label: 'Warnings', value: fleetHealth.flightsWithWarnings, color: '#C76D41' },
-                    { label: 'Critical', value: fleetHealth.flightsWithCritical, color: '#ff4757' },
+                    { label: 'Total', value: fleetHealth.totalFlights, color: '#ffffff' },
+                    { label: 'Deployable', value: `${fleetHealth.deployablePct}%`, color: '#9eb4eb' },
+                    { label: 'Warnings', value: fleetHealth.flightsWithWarnings, color: '#f6ad55' },
+                    { label: 'Critical', value: fleetHealth.flightsWithCritical, color: '#ff8a94' },
                   ].map(stat => (
-                    <div key={stat.label} style={{ padding: '10px', background: 'rgba(5,11,20,0.6)', borderRadius: '8px', border: '1px solid rgba(42,245,86,0.15)', textAlign: 'center' }}>
-                      <div style={{ fontSize: '18px', fontWeight: 700, color: stat.color, fontFamily: 'var(--font-mono)' }}>{stat.value}</div>
-                      <div style={{ fontSize: '10px', color: '#3d5445', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{stat.label}</div>
+                    <div key={stat.label} style={{ padding: '10px', background: 'rgba(255,255,255,0.07)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center' }}>
+                      <div style={{ fontSize: '18px', fontWeight: 700, color: stat.color }}>{stat.value}</div>
+                      <div style={{ fontSize: '10px', color: '#b8ccf0', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{stat.label}</div>
                     </div>
                   ))}
                 </div>
 
                 {criticalComponents.length > 0 && (
                   <>
-                    <div style={{ fontSize: '11px', fontWeight: 600, color: '#3d5445', marginBottom: '8px', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 600, color: '#b8ccf0', marginBottom: '8px', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
                       Active Alerts
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       {criticalComponents.slice(0, 6).map((c, i) => (
-                        <div key={i} style={{ padding: '8px', background: 'rgba(5,11,20,0.6)', borderRadius: '6px', border: `1px solid ${c.status === 'Critical' ? 'rgba(255,71,87,0.25)' : 'rgba(255,165,2,0.25)'}` }}>
+                        <div key={i} style={{ padding: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px', border: `1px solid ${c.status === 'Critical' ? 'rgba(255,71,87,0.35)' : 'rgba(246,173,85,0.35)'}` }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
                             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: statusColor(c.status), flexShrink: 0 }} />
-                            <span style={{ fontSize: '11px', fontWeight: 600, color: '#c8e8cc' }}>{c.aircraftId}</span>
+                            <span style={{ fontSize: '11px', fontWeight: 600, color: '#ffffff' }}>{c.aircraftId}</span>
                           </div>
-                          <div style={{ fontSize: '11px', color: '#607A60' }}>{c.componentName}</div>
-                          <div style={{ fontSize: '10px', color: c.status === 'Critical' ? '#ff4757' : '#C76D41', marginTop: '2px' }}>
+                          <div style={{ fontSize: '11px', color: '#9eb4eb' }}>{c.componentName}</div>
+                          <div style={{ fontSize: '10px', color: c.status === 'Critical' ? '#ff8a94' : '#f6ad55', marginTop: '2px' }}>
                             {c.status} · Due: {c.maintenanceDue}
                           </div>
                         </div>
@@ -289,43 +286,29 @@ Ask me anything, or use the quick-action buttons below to get started.`,
                   </>
                 )}
 
-                <div style={{ marginTop: '16px', padding: '10px', background: 'rgba(5,11,20,0.4)', borderRadius: '8px', border: '1px solid rgba(42,245,86,0.1)' }}>
-                  <div style={{ fontSize: '10px', color: '#3d5445', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Quick Links</div>
-                  {[
-                    { label: 'Fleet Monitor (3D)', href: 'http://localhost:3001/fleet-monitor' },
-                    { label: 'Parts Repository', href: 'http://localhost:3001/parts-and-equipment' },
-                    { label: 'Smart Scheduling', href: 'http://localhost:3001' },
-                  ].map(link => (
-                    <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer"
-                      style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#2AF556', textDecoration: 'none', marginBottom: '4px', padding: '3px 0' }}
-                    >
-                      <ExternalLink size={10} /> {link.label}
-                    </a>
-                  ))}
-                </div>
               </>
             ) : null}
           </div>
         </aside>
 
         {/* Main chat area */}
-        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, background: '#ffffff' }}>
 
           {/* Chat header */}
-          <div style={{ padding: '14px 24px', borderBottom: '1px solid rgba(42,245,86,0.2)', background: 'var(--color-bg-surface, #0E1C28)', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'radial-gradient(circle at 30% 30%, rgba(42,245,86,0.9), rgba(96,122,96,0.5))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, color: '#2AF556', boxShadow: '0 0 14px -2px rgba(42,245,86,0.4)', fontFamily: 'var(--font-mono)' }}>
+          <div style={{ padding: '14px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'linear-gradient(180deg, rgba(39,75,155,1) 0%, rgba(14,26,53,1) 100%)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>
               AI
             </div>
             <div>
-              <div style={{ fontWeight: 700, fontSize: '16px', color: '#e8f0ea' }}>COMPASS AI Assistant</div>
-              <div style={{ fontSize: '11px', color: '#3d5445' }}>
+              <div style={{ fontWeight: 700, fontSize: '16px', color: '#ffffff' }}>COMPASS AI Assistant</div>
+              <div style={{ fontSize: '11px', color: '#c8d8f8' }}>
                 Powered by Fleet Monitor · Parts Repository · 737-300 Maintenance Manual
               </div>
             </div>
           </div>
 
           {/* Messages */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '16px', background: '#f8faff' }}>
             {messages.map(msg => (
               <div
                 key={msg.id}
@@ -337,7 +320,7 @@ Ask me anything, or use the quick-action buttons below to get started.`,
                 }}
               >
                 {msg.role === 'assistant' && (
-                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'radial-gradient(circle at 30% 30%, rgba(42,245,86,0.8), rgba(96,122,96,0.4))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#2AF556', flexShrink: 0, marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'linear-gradient(135deg, #274b9b, #4371e0)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#ffffff', flexShrink: 0, marginTop: '2px' }}>
                     AI
                   </div>
                 )}
@@ -347,19 +330,19 @@ Ask me anything, or use the quick-action buttons below to get started.`,
                     padding: '12px 16px',
                     borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
                     background: msg.role === 'user'
-                      ? 'linear-gradient(135deg, rgba(42,245,86,0.35), rgba(42,245,86,0.15))'
-                      : 'rgba(14,28,40,0.85)',
+                      ? 'linear-gradient(270deg, rgba(21,46,102,1) 0%, rgba(16,27,52,1) 100%)'
+                      : '#ffffff',
                     border: msg.role === 'user'
-                      ? '1px solid rgba(42,245,86,0.4)'
-                      : '1px solid rgba(42,245,86,0.15)',
+                      ? 'none'
+                      : '1px solid #e2e8f0',
                     fontSize: '14px',
                     lineHeight: 1.6,
-                    color: '#e8f0ea',
-                    boxShadow: '0 2px 12px rgba(0,0,0,0.2)',
+                    color: msg.role === 'user' ? '#ffffff' : '#1a202c',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
                   }}
                 >
                   {msg.role === 'assistant' ? formatMarkdown(msg.content) : msg.content}
-                  <div style={{ fontSize: '10px', color: '#3d5445', marginTop: '6px', textAlign: 'right' }}>
+                  <div style={{ fontSize: '10px', color: msg.role === 'user' ? 'rgba(255,255,255,0.85)' : '#4a5568', marginTop: '6px', textAlign: 'right' }}>
                     {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </div>
                 </div>
@@ -368,19 +351,18 @@ Ask me anything, or use the quick-action buttons below to get started.`,
 
             {isLoading && (
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'radial-gradient(circle at 30% 30%, rgba(42,245,86,0.8), rgba(96,122,96,0.4))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#2AF556', flexShrink: 0, fontFamily: 'var(--font-mono)' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'linear-gradient(135deg, #274b9b, #4371e0)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, color: '#ffffff', flexShrink: 0 }}>
                   AI
                 </div>
-                <div style={{ padding: '12px 16px', borderRadius: '18px 18px 18px 4px', background: 'rgba(14,28,40,0.85)', border: '1px solid rgba(42,245,86,0.15)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ padding: '12px 16px', borderRadius: '18px 18px 18px 4px', background: '#ffffff', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
                   {[0, 1, 2].map(i => (
                     <span
                       key={i}
                       style={{
-                        width: '7px', height: '7px', borderRadius: '50%', background: '#2AF556',
+                        width: '7px', height: '7px', borderRadius: '50%', background: '#4371e0',
                         animation: 'chatPulse 1s ease-in-out infinite',
                         animationDelay: `${i * 0.18}s`,
                         display: 'inline-block',
-                        boxShadow: '0 0 6px rgba(42,245,86,0.6)',
                       }}
                     />
                   ))}
@@ -391,7 +373,7 @@ Ask me anything, or use the quick-action buttons below to get started.`,
           </div>
 
           {/* Quick action chips */}
-          <div style={{ padding: '10px 24px 0', display: 'flex', flexWrap: 'wrap', gap: '6px', borderTop: '1px solid rgba(42,245,86,0.1)' }}>
+          <div style={{ padding: '10px 24px 0', display: 'flex', flexWrap: 'wrap', gap: '6px', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
             {QUICK_ACTIONS.map(action => {
               const Icon = action.icon;
               return (
@@ -405,15 +387,15 @@ Ask me anything, or use the quick-action buttons below to get started.`,
                     borderRadius: '16px',
                     fontSize: '12px',
                     fontWeight: 500,
-                    border: '1px solid rgba(42,245,86,0.25)',
-                    background: 'rgba(42,245,86,0.08)',
-                    color: '#607A60',
+                    border: '1px solid #c3d0f5',
+                    background: '#eef1fd',
+                    color: '#4371e0',
                     cursor: isLoading ? 'not-allowed' : 'pointer',
                     transition: 'all 150ms ease',
                     opacity: isLoading ? 0.5 : 1,
                   }}
-                  onMouseOver={e => { if (!isLoading) { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(42,245,86,0.18)'; (e.currentTarget as HTMLButtonElement).style.color = '#c8e8cc'; } }}
-                  onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(42,245,86,0.08)'; (e.currentTarget as HTMLButtonElement).style.color = '#607A60'; }}
+                  onMouseOver={e => { if (!isLoading) { (e.currentTarget as HTMLButtonElement).style.background = '#dae3ff'; (e.currentTarget as HTMLButtonElement).style.color = '#274b9b'; } }}
+                  onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = '#eef1fd'; (e.currentTarget as HTMLButtonElement).style.color = '#4371e0'; }}
                 >
                   <Icon size={11} /> {action.label}
                 </button>
@@ -422,7 +404,7 @@ Ask me anything, or use the quick-action buttons below to get started.`,
           </div>
 
           {/* Input bar */}
-          <div style={{ padding: '12px 24px 16px', display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+          <div style={{ padding: '12px 24px 16px', display: 'flex', gap: '10px', alignItems: 'flex-end', background: '#ffffff' }}>
             <div style={{ flex: 1, position: 'relative' }}>
               <textarea
                 ref={inputRef}
@@ -435,10 +417,10 @@ Ask me anything, or use the quick-action buttons below to get started.`,
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: 'rgba(14,28,40,0.85)',
-                  border: '1px solid rgba(42,245,86,0.3)',
+                  background: '#f8faff',
+                  border: '1px solid #e2e8f0',
                   borderRadius: '12px',
-                  color: '#e8f0ea',
+                  color: '#1a202c',
                   fontSize: '14px',
                   resize: 'none',
                   outline: 'none',
@@ -463,9 +445,9 @@ Ask me anything, or use the quick-action buttons below to get started.`,
                 borderRadius: '12px',
                 border: 'none',
                 background: input.trim() && !isLoading
-                  ? 'linear-gradient(135deg, #2AF556, #50f972)'
-                  : 'rgba(42,245,86,0.2)',
-                color: input.trim() && !isLoading ? '#fff' : '#3d5445',
+                  ? 'linear-gradient(135deg, #274b9b, #4371e0)'
+                  : '#e2e8f0',
+                color: input.trim() && !isLoading ? '#fff' : '#a0aec0',
                 cursor: input.trim() && !isLoading ? 'pointer' : 'not-allowed',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 200ms ease',
@@ -486,13 +468,12 @@ Ask me anything, or use the quick-action buttons below to get started.`,
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
-        textarea::placeholder { color: #3d5445; }
-        textarea:focus { border-color: rgba(42,245,86,0.6) !important; box-shadow: 0 0 0 2px rgba(42,245,86,0.15); }
+        textarea::placeholder { color: #a0aec0; }
+        textarea:focus { border-color: #4371e0 !important; box-shadow: 0 0 0 2px rgba(67,113,224,0.15); }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
-        ::-webkit-scrollbar-thumb { background: rgba(42,245,86,0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: #f4f6fb; }
+        ::-webkit-scrollbar-thumb { background: #c3d0f5; border-radius: 3px; }
       `}</style>
-      </div>
     </div>
   );
 }

@@ -63,7 +63,7 @@ const Header = () => {
           <span>Fleet Monitor</span>
         </Link>
         <Link href="/chatbot" className={`${styles.navItem} ${isActive('/chatbot') ? styles.active : ''}`}>
-          <span className={styles.chatbotNavItem}>AI Assistant</span>
+          <span>AI Assistant</span>
         </Link>
         <Link href="/agent-network" className={`${styles.navItem} ${pathname === '/agent-network' ? styles.active : ''}`}>
           <span>Agent Network</span>

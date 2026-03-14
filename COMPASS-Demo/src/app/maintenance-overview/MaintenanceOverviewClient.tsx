@@ -226,6 +226,7 @@ export default function MaintenanceOverviewClient({ aircraft }: Props) {
   return (
     <>
       <Header />
+      <div style={{ zoom: 0.8, width: 'calc(100vw / 0.8)' }}>
       <div className="flex w-full h-full">
         <div className="maintenance-overview screen">
 
@@ -401,12 +402,7 @@ export default function MaintenanceOverviewClient({ aircraft }: Props) {
             {aircraftHealth.length > 0 && (
               <div style={{ width: '100%', marginTop: '1.5rem', background: '#fdfdfd', borderRadius: '0.7rem', boxShadow: '0px 10px 21px #00000014, 0px 0px 5px #0000000a', padding: '1.2rem 1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem' }}>
-                  <span className="roboto-bold-mirage-21-3px">Component Health</span>
-                  <span style={{
-                    padding: '3px 10px', borderRadius: '5px', fontFamily: 'var(--font-family-roboto)', fontSize: 'var(--font-size-s)', fontWeight: 700,
-                    background: worstStatus === 'Critical' ? 'var(--peach-schnapps)' : worstStatus === 'Warning' ? 'var(--sandy-beach)' : 'var(--madang)',
-                    color: worstStatus === 'Critical' ? 'var(--fuzzy-wuzzy-brown)' : worstStatus === 'Warning' ? 'var(--buttered-rum)' : 'var(--fern-green)',
-                  }}>{worstStatus}</span>
+                  <span className="roboto-bold-black-32px">Component Health</span>
                 </div>
                 <div className="overflow-x-auto">
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -424,7 +420,7 @@ export default function MaintenanceOverviewClient({ aircraft }: Props) {
                           <td className="roboto-normal-mirage-21-3px" style={{ padding: '10px 12px', fontWeight: 500 }}>{c.componentName}</td>
                           <td style={{ padding: '10px 12px' }}>
                             <span style={{
-                              padding: '3px 10px', borderRadius: '5px', fontFamily: 'var(--font-family-roboto)', fontSize: 'var(--font-size-s)', fontWeight: 600,
+                              padding: '6px 14px', borderRadius: '5px', fontFamily: 'var(--font-family-roboto)', fontSize: 'var(--font-size-xxl)', fontWeight: 600,
                               background: c.status === 'Critical' ? 'var(--peach-schnapps)' : c.status === 'Warning' ? 'var(--sandy-beach)' : 'var(--madang)',
                               color: c.status === 'Critical' ? 'var(--fuzzy-wuzzy-brown)' : c.status === 'Warning' ? 'var(--buttered-rum)' : 'var(--fern-green)',
                             }}>{c.status}</span>
@@ -749,6 +745,7 @@ export default function MaintenanceOverviewClient({ aircraft }: Props) {
           </div>
 
         </div>
+      </div>
       </div>
     </>
   );
