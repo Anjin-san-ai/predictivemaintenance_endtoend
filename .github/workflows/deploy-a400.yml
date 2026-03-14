@@ -48,8 +48,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    # Skip when publish-profile secret is not configured
-    if: "${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A400 != '' }}"
+
 
     steps:
       - name: Download artifact from build job
