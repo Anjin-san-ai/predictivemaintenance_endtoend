@@ -1,6 +1,6 @@
 {
-  "id": "A400-20",
-  "displayName": "A400 - Flight 20",
+  "id": "ZZ240",
+  "displayName": "ZZ240",
   "components": [
     {
       "id": "engine",
@@ -8,9 +8,9 @@
       "displayName": "Port Outer Engine",
       "status": "Warning",
       "componentName": "Turboprop Engine #4",
-      "maintenanceDue": "25 days",
+      "maintenanceDue": "14 days",
       "priorityLevel": "MEDIUM",
-      "descriptionText": "Vibration sensors report minor resonance at cruise RPM. Recommend inspection.",
+      "descriptionText": "Minor fuel trim adjustment needed.",
       "markerOffset": [
         -3000,
         500,
@@ -20,7 +20,8 @@
         -8000,
         1000,
         2000
-      ]
+      ],
+      "faultCode": "ER001"
     },
     {
       "id": "tail",
@@ -28,9 +29,9 @@
       "displayName": "Vertical Stabilizer",
       "status": "Good",
       "componentName": "Rudder Actuator",
-      "maintenanceDue": "180 days",
+      "maintenanceDue": "88 days",
       "priorityLevel": "LOW",
-      "descriptionText": "All hydraulic pressures and response times are nominal.",
+      "descriptionText": "Nominal.",
       "markerOffset": [
         2000,
         3000,
@@ -40,17 +41,18 @@
         5000,
         4000,
         -12000
-      ]
+      ],
+      "faultCode": "ER002"
     },
     {
-      "id": "canopy",
+      "id": "throttle",
       "attachTo": "Object_11",
-      "displayName": "Cockpit Canopy",
-      "status": "Critical",
-      "componentName": "Canopy Seal",
-      "maintenanceDue": "Immediate",
-      "priorityLevel": "HIGH",
-      "descriptionText": "Pressure sensor indicates a potential micro-leak in the primary seal. Aircraft is non-mission capable.",
+      "displayName": "Throttle Control",
+      "status": "Warning",
+      "componentName": "Throttle Control Unit",
+      "maintenanceDue": "4 days",
+      "priorityLevel": "MEDIUM",
+      "descriptionText": "Throttle friction adjustment mechanism showing wear. Recommend inspection within next scheduled servicing.",
       "markerOffset": [
         0,
         200,
@@ -60,7 +62,8 @@
         0,
         2000,
         8000
-      ]
+      ],
+      "faultCode": "ER003"
     },
     {
       "id": "nose",
@@ -68,9 +71,9 @@
       "displayName": "Nose Avionics",
       "status": "Good",
       "componentName": "Avionics Suite",
-      "maintenanceDue": "90 days",
+      "maintenanceDue": "33 days",
       "priorityLevel": "LOW",
-      "descriptionText": "Health nominal. Telemetry frequency nominal.",
+      "descriptionText": "OK.",
       "markerOffset": [
         1200,
         300,
@@ -80,17 +83,18 @@
         0,
         800,
         6000
-      ]
+      ],
+      "faultCode": "ER004"
     },
     {
       "id": "left-wing",
       "attachTo": "Object_9",
       "displayName": "Left Wing",
-      "status": "Warning",
+      "status": "Good",
       "componentName": "Aileron Actuator",
-      "maintenanceDue": "30 days",
-      "priorityLevel": "MEDIUM",
-      "descriptionText": "Minor play detected in aileron linkage.",
+      "maintenanceDue": "210 days",
+      "priorityLevel": "LOW",
+      "descriptionText": "Servos in good order.",
       "markerOffset": [
         -5200,
         200,
@@ -100,17 +104,18 @@
         -9000,
         1000,
         0
-      ]
+      ],
+      "faultCode": "ER005"
     },
     {
       "id": "right-gear",
       "attachTo": "Object_11",
       "displayName": "Right Landing Gear",
-      "status": "Good",
+      "status": "Critical",
       "componentName": "Gear Hydraulics",
-      "maintenanceDue": "120 days",
-      "priorityLevel": "LOW",
-      "descriptionText": "Hydraulics at nominal pressure.",
+      "maintenanceDue": "Immediate",
+      "priorityLevel": "HIGH",
+      "descriptionText": "Hydraulic leak suspected.",
       "markerOffset": [
         2000,
         -1800,
@@ -120,7 +125,8 @@
         2000,
         -1000,
         -5000
-      ]
+      ],
+      "faultCode": "ER006"
     }
   ]
 }
