@@ -1,6 +1,6 @@
 {
-  "id": "A400-04",
-  "displayName": "A400 - Flight 04",
+  "id": "ZZ145",
+  "displayName": "ZZ145",
   "components": [
     {
       "id": "engine",
@@ -20,7 +20,8 @@
         -8000,
         1000,
         2000
-      ]
+      ],
+      "faultCode": "ER001"
     },
     {
       "id": "tail",
@@ -40,17 +41,18 @@
         5000,
         4000,
         -12000
-      ]
+      ],
+      "faultCode": "ER002"
     },
     {
-      "id": "canopy",
+      "id": "throttle",
       "attachTo": "Object_11",
-      "displayName": "Cockpit Canopy",
+      "displayName": "Throttle Control",
       "status": "Critical",
-      "componentName": "Canopy Seal",
+      "componentName": "Throttle Control Unit",
       "maintenanceDue": "Immediate",
       "priorityLevel": "HIGH",
-      "descriptionText": "Pressure sensor indicates a potential micro-leak in the primary seal. Aircraft is non-mission capable.",
+      "descriptionText": "Thrust lever position sensor failure detected on engine 3 channel. Aircraft grounded pending FADEC unit replacement.",
       "markerOffset": [
         0,
         200,
@@ -60,7 +62,8 @@
         0,
         2000,
         8000
-      ]
+      ],
+      "faultCode": "ER003"
     },
     {
       "id": "nose",
@@ -80,7 +83,8 @@
         0,
         800,
         6000
-      ]
+      ],
+      "faultCode": "ER004"
     },
     {
       "id": "left-wing",
@@ -100,7 +104,8 @@
         -9000,
         1000,
         0
-      ]
+      ],
+      "faultCode": "ER005"
     },
     {
       "id": "right-gear",
@@ -120,7 +125,8 @@
         2000,
         -1000,
         -5000
-      ]
+      ],
+      "faultCode": "ER006"
     }
   ]
 }

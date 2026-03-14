@@ -10,37 +10,17 @@
     <link rel="stylesheet" href="app.css">
 </head>
 <body>
-    <!-- Unified Fleet Platform Navigation Bar -->
-    <nav id="unified-nav" style="position:fixed;top:0;left:0;right:0;height:56px;background:linear-gradient(90deg,rgba(39,75,155,0.97),rgba(14,26,53,0.97));backdrop-filter:blur(12px) saturate(160%);-webkit-backdrop-filter:blur(12px) saturate(160%);border-bottom:1px solid rgba(0,200,255,0.15);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:400;font-family:var(--font-primary);">
-        <div style="display:flex;align-items:center;gap:12px;">
-            <span style="color:#9eb4eb;font-size:18px;font-weight:700;font-style:italic;letter-spacing:0.5px;">COMPASS</span>
-            <span style="color:#4a5a7a;font-size:13px;">Fleet Platform</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:4px;">
-            <a id="nav-scheduling" href="#" style="padding:6px 14px;border-radius:6px;color:#7283a8;font-size:14px;font-weight:500;text-decoration:none;transition:all 150ms ease;" onmouseover="this.style.color='#b8c6e5';this.style.background='rgba(66,112,224,0.12)'" onmouseout="this.style.color='#7283a8';this.style.background='transparent'">Smart Scheduling</a>
-            <a id="nav-repository" href="#" style="padding:6px 14px;border-radius:6px;color:#7283a8;font-size:14px;font-weight:500;text-decoration:none;transition:all 150ms ease;" onmouseover="this.style.color='#b8c6e5';this.style.background='rgba(66,112,224,0.12)'" onmouseout="this.style.color='#7283a8';this.style.background='transparent'">Repository</a>
-            <span style="padding:6px 14px;border-radius:6px;color:#00c8ff;font-size:14px;font-weight:600;background:rgba(0,200,255,0.08);border:1px solid rgba(0,200,255,0.2);">Fleet Monitor</span>
-            <a id="nav-chatbot" href="#" style="padding:6px 14px;border-radius:6px;color:#7283a8;font-size:14px;font-weight:500;text-decoration:none;transition:all 150ms ease;" onmouseover="this.style.color='#b8c6e5';this.style.background='rgba(66,112,224,0.12)'" onmouseout="this.style.color='#7283a8';this.style.background='transparent'">AI Assistant</a>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-            <span id="nav-fleet-status" style="font-size:12px;color:#4a5a7a;">Loading fleet status...</span>
-        </div>
-    </nav>
     <script>
         (function() {
-            var compassBase = window.location.hostname === 'localhost'
+            window.COMPASS_BASE_URL = window.location.hostname === 'localhost'
                 ? 'http://localhost:3001'
                 : 'https://mango-mushroom-033be7b03.6.azurestaticapps.net';
-            var s = document.getElementById('nav-scheduling'); if (s) s.href = compassBase + '/';
-            var r = document.getElementById('nav-repository'); if (r) r.href = compassBase + '/parts-and-equipment';
-            var c = document.getElementById('nav-chatbot'); if (c) c.href = compassBase + '/chatbot';
-            window.COMPASS_BASE_URL = compassBase;
         })();
     </script>
     <div id="component-list-panel"><h3>Components & Health</h3><div id="component-list"></div></div>
     <!-- Flight selector -->
     <div id="flight-selector" style="position:fixed;left:50%;top:18px;transform:translateX(-50%);width:360px;background:rgba(2,6,12,0.9);padding:12px;border-radius:8px;z-index:130;display:none;border:1px solid rgba(0,255,255,0.06);">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;color:var(--sci-fi-cyan)"><strong>Flight Selector</strong><button id="close-flight-selector" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--sci-fi-cyan);padding:4px 8px;border-radius:6px;cursor:pointer">Close</button></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;color:var(--sci-fi-cyan)"><strong>Aircraft Selector</strong><button id="close-flight-selector" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--sci-fi-cyan);padding:4px 8px;border-radius:6px;cursor:pointer">Close</button></div>
         <select id="flight-dropdown" style="width:100%;padding:8px;border-radius:6px;background:#041018;color:#dff;border:1px solid rgba(0,255,255,0.06);">
         </select>
         <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end;"><button id="load-flight" class="tutorial-btn primary">Load</button></div>
@@ -605,13 +585,16 @@ STYLE: Punchy, analytic, no fluff. Avoid repeating raw numbers without interpret
 
        // helper to load selected flight on startup (synchronous-ish before markers creation)
        async function loadSelectedFlightOnStartup() {
-           const selected = localStorage.getItem('selectedFlight');
+           const urlParam = new URLSearchParams(window.location.search).get('aircraft');
+           const selected = urlParam || localStorage.getItem('selectedFlight');
            if (!selected) return;
            try {
                const res = await fetch(`/api/flights/${encodeURIComponent(selected)}`);
                if (!res.ok) return;
                const payload = await res.json();
                componentData = payload.components || [];
+               // keep dropdown in sync
+               try { const dd = document.getElementById('flight-dropdown'); if (dd) dd.value = selected; } catch(e){}
            } catch (e) { console.warn('failed to load selected flight', e); }
        }
 
@@ -706,7 +689,7 @@ STYLE: Punchy, analytic, no fluff. Avoid repeating raw numbers without interpret
            if (!dropdown) return;
            dropdown.innerHTML = '';
            flights.forEach(f => {
-               const opt = document.createElement('option'); opt.value = f.id; opt.innerText = `${f.displayName} (${f.id})`;
+               const opt = document.createElement('option'); opt.value = f.id; opt.innerText = f.displayName;
                dropdown.appendChild(opt);
            });
            const saved = localStorage.getItem('selectedFlight');
@@ -2506,19 +2489,6 @@ STYLE: Punchy, analytic, no fluff. Avoid repeating raw numbers without interpret
             });
         }
 
-        // Update fleet status in unified nav bar
-        (function updateNavFleetStatus() {
-            const el = document.getElementById('nav-fleet-status');
-            if (!el) return;
-            fetch('/api/squadron-summary').then(r => r.json()).then(data => {
-                const critical = data.flightsWithCritical || 0;
-                const warning = data.flightsWithWarnings || 0;
-                const total = data.totalFlights || 0;
-                const critColor = critical > 0 ? 'var(--color-status-critical)' : 'var(--color-text-muted)';
-                const warnColor = warning > 0 ? 'var(--color-status-warning)' : 'var(--color-text-muted)';
-                el.innerHTML = `<span style="color:var(--color-text-muted)">Fleet:</span> <span style="color:var(--color-status-good)">${total - critical - warning} OK</span> · <span style="color:${warnColor}">${warning} Warn</span> · <span style="color:${critColor}">${critical} Crit</span>`;
-            }).catch(() => { el.textContent = 'Fleet status unavailable'; });
-        })();
         
     </script>
 </body>

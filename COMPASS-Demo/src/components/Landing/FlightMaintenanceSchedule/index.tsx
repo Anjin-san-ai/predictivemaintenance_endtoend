@@ -19,7 +19,6 @@ import {
   getDynamicStatusForAircraft,
   getStatusColor,
 } from "../../../utils/aircraftUtils";
-import { getA400IndexForTail } from "../../../utils/a400Bridge";
 import type {
   GanttAircraft,
   GanttRouteLeg,
@@ -108,8 +107,7 @@ export default function FlightMaintenanceSchedule(
         if (data.error || !data.aircraft) return;
         const map: Record<string, string> = {};
         flightScheduleData.forEach(ac => {
-          const idx = getA400IndexForTail(ac.tailNumber) % data.aircraft.length;
-          const acHealth = data.aircraft[idx];
+          const acHealth = data.aircraft.find((a: { id: string }) => a.id === ac.tailNumber);
           if (acHealth) map[ac.tailNumber] = acHealth.worstStatus || 'Good';
         });
         setHealthWarnings(map);

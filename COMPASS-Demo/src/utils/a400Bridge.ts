@@ -7,23 +7,6 @@
 
 const A400_API_URL = process.env.A400_API_URL || 'http://localhost:3000';
 
-/**
- * Formal mapping between COMPASS ZZ tail numbers and A400 fleet positions.
- * The A400 backend has 20 aircraft (A400-01 through A400-20).
- * COMPASS has 16 ZZ tail numbers. We map by fleet position index.
- */
-export const TAIL_NUMBER_MAP: Record<string, number> = {
-  'ZZ132': 0, 'ZZ153': 1, 'ZZ165': 2, 'ZZ190': 3,
-  'ZZ175': 4, 'ZZ145': 5, 'ZZ198': 6, 'ZZ199': 7,
-  'ZZ210': 8, 'ZZ134': 9, 'ZZ220': 10, 'ZZ240': 11,
-  'ZZ230': 12, 'ZZ250': 13, 'ZZ156': 14, 'ZZ160': 15,
-};
-
-export function getA400IndexForTail(tailNumber: string): number {
-  if (tailNumber in TAIL_NUMBER_MAP) return TAIL_NUMBER_MAP[tailNumber];
-  const digits = tailNumber.replace(/\D/g, '');
-  return (parseInt(digits, 10) || 0) % 20;
-}
 
 export interface A400Component {
   id: string;
