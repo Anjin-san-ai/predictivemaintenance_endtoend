@@ -178,10 +178,10 @@ export default function PartsAndEquipment() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div style={{ color: 'var(--color-cockpit-emerald)', fontSize: '1.25rem', marginBottom: '1rem' }}>Loading...</div>
-          <div style={{ width: '2rem', height: '2rem', border: '2px solid var(--color-cockpit-emerald)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto' }}></div>
+          <div className="text-blue-600 text-xl mb-4">Loading...</div>
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
         </div>
       </div>
     )
@@ -190,14 +190,14 @@ export default function PartsAndEquipment() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div style={{ color: 'var(--color-status-critical)', fontSize: '2rem', marginBottom: '1rem' }}>⚠️</div>
-          <div style={{ color: 'var(--color-status-critical)', fontSize: '1.25rem', marginBottom: '1rem' }}>Error loading data</div>
-          <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            style={{ padding: '0.75rem 1.5rem', background: 'var(--color-cockpit-emerald)', color: 'var(--color-bg-primary)', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 700 }}
+          <div className="text-red-600 text-2xl mb-4">⚠️</div>
+          <div className="text-red-600 text-xl mb-4">Error loading data</div>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
             Retry
           </button>
