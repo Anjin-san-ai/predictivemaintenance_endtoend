@@ -402,6 +402,7 @@ export default function PartsAndEquipment() {
   return (
     <React.Fragment>
       <Header />
+      <div style={{ zoom: 0.8 }}>
       {/* Predictive Demand Banner — driven by Fleet Monitor health data */}
       {maintenanceParts && !maintenanceParts.error && (maintenanceParts.criticalCount > 0 || maintenanceParts.warningCount > 0) && showDemandPanel && (
         <div style={{
@@ -837,6 +838,7 @@ export default function PartsAndEquipment() {
               renderTableContent()
             )}
         </div>
+      </div>
       </div>
     </React.Fragment>
   );
