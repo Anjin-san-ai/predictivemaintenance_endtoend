@@ -14,22 +14,18 @@
 .tab {
   cursor: pointer;
   font-family: var(--font-family-roboto, 'Roboto', sans-serif);
-  font-size: 15px;
+  font-size: 32px;
   white-space: nowrap;
   transition: all 0.2s ease;
 }
 
 .tab:not(.activeTab) {
-  color: var(--color-muted-sage, #607A60);
+  color: #0e1a35;
   font-weight: 400;
 }
 
-.tab:not(.activeTab):hover {
-  color: var(--color-text-primary, #e8f0ea);
-}
-
 .activeTab {
-  color: var(--color-cockpit-emerald, #2AF556);
+  color: #4371e0;
   font-weight: 700;
 }
 
@@ -51,8 +47,7 @@
 .tabsActiveLine {
   position: absolute;
   height: 5px;
-  background-color: var(--color-cockpit-emerald, #2AF556);
-  box-shadow: 0 0 10px rgba(42, 245, 86, 0.5);
+  background-color: #4371e0;
   transition: all 0.3s ease;
   width: var(--active-tab-width);
   left: var(--active-tab-left);
@@ -65,7 +60,7 @@
   }
   
   .tab {
-    font-size: 15px;
+    font-size: 24px;
   }
 }
 
@@ -79,7 +74,7 @@
   }
   
   .tab {
-    font-size: 15px;
+    font-size: 18px;
   }
 }
 
