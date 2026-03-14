@@ -5,8 +5,6 @@ import { Header } from '@/components';
 import {
   Send,
   AlertCircle,
-  AlertTriangle,
-  CheckCircle,
   Loader2,
   RefreshCw,
   BookOpen,
