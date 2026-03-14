@@ -408,30 +408,30 @@ export default function PartsAndEquipment() {
           margin: 0,
           padding: '10px 20px',
           background: maintenanceParts.criticalCount > 0
-            ? 'linear-gradient(90deg, rgba(255,71,87,0.08), transparent)'
-            : 'linear-gradient(90deg, rgba(199,109,65,0.1), transparent)',
-          borderLeft: `4px solid ${maintenanceParts.criticalCount > 0 ? '#ff4757' : '#C76D41'}`,
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
+            ? 'linear-gradient(90deg, rgba(192,34,47,0.10), transparent)'
+            : 'linear-gradient(90deg, rgba(143,75,30,0.10), transparent)',
+          borderLeft: `4px solid ${maintenanceParts.criticalCount > 0 ? '#c0222f' : '#8f4b1e'}`,
+          borderBottom: '1px solid rgba(0,0,0,0.12)',
           display: 'flex',
           alignItems: 'flex-start',
           gap: '12px',
         }}>
           <div style={{ flexShrink: 0, paddingTop: '2px' }}>
             {maintenanceParts.criticalCount > 0
-              ? <AlertCircle size={18} color="#ff4757" />
-              : <AlertTriangle size={18} color="#C76D41" />
+              ? <AlertCircle size={18} color="#c0222f" />
+              : <AlertTriangle size={18} color="#8f4b1e" />
             }
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, fontSize: '15px', color: maintenanceParts.criticalCount > 0 ? '#ff4757' : '#C76D41', marginBottom: '3px' }}>
+            <div style={{ fontWeight: 600, fontSize: '15px', color: maintenanceParts.criticalCount > 0 ? '#c0222f' : '#8f4b1e', marginBottom: '3px' }}>
               Fleet Monitor — Predictive Demand Alert
             </div>
-            <div style={{ fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
+            <div style={{ fontSize: '15px', color: '#4A5568', lineHeight: 1.5 }}>
               {maintenanceParts.criticalCount > 0 && (
-                <span><strong style={{ color: '#ff4757' }}>{maintenanceParts.criticalCount} Critical</strong> component{maintenanceParts.criticalCount !== 1 ? 's' : ''}{' '}</span>
+                <span><strong style={{ color: '#c0222f' }}>{maintenanceParts.criticalCount} Critical</strong> component{maintenanceParts.criticalCount !== 1 ? 's' : ''}{' '}</span>
               )}
               {maintenanceParts.warningCount > 0 && (
-                <span><strong style={{ color: '#C76D41' }}>{maintenanceParts.warningCount} Warning</strong> component{maintenanceParts.warningCount !== 1 ? 's' : ''}{' '}</span>
+                <span><strong style={{ color: '#8f4b1e' }}>{maintenanceParts.warningCount} Warning</strong> component{maintenanceParts.warningCount !== 1 ? 's' : ''}{' '}</span>
               )}
               across <strong>{maintenanceParts.affectedAircraftCount} aircraft</strong> — parts highlighted below may be required.
             </div>
@@ -445,9 +445,9 @@ export default function PartsAndEquipment() {
                     borderRadius: '10px',
                     fontSize: '15px',
                     fontWeight: 600,
-                    border: `1px solid ${d.severity === 'critical' ? 'rgba(255,71,87,0.4)' : 'rgba(199,109,65,0.4)'}`,
-                    background: d.severity === 'critical' ? 'rgba(255,71,87,0.1)' : 'rgba(199,109,65,0.1)',
-                    color: d.severity === 'critical' ? '#ff4757' : '#C76D41',
+                    border: `1px solid ${d.severity === 'critical' ? 'rgba(192,34,47,0.5)' : 'rgba(143,75,30,0.5)'}`,
+                    background: d.severity === 'critical' ? 'rgba(192,34,47,0.08)' : 'rgba(143,75,30,0.08)',
+                    color: d.severity === 'critical' ? '#c0222f' : '#8f4b1e',
                     cursor: 'pointer',
                   }}
                   title={d.reason}
@@ -456,20 +456,20 @@ export default function PartsAndEquipment() {
                 </button>
               ))}
               {maintenanceParts.predictedDemand.length > 6 && (
-                <span style={{ fontSize: '15px', color: 'var(--color-text-muted)', padding: '2px 8px' }}>+{maintenanceParts.predictedDemand.length - 6} more</span>
+                <span style={{ fontSize: '15px', color: '#4A5568', padding: '2px 8px' }}>+{maintenanceParts.predictedDemand.length - 6} more</span>
               )}
             </div>
             {selectedDemandItem && (
-              <div style={{ marginTop: '6px', padding: '6px 10px', background: 'var(--color-bg-elevated)', borderRadius: '6px', fontSize: '15px', color: 'var(--color-text-primary)', border: '1px solid var(--color-border-default)' }}>
+              <div style={{ marginTop: '6px', padding: '6px 10px', background: '#f8f8f8', borderRadius: '6px', fontSize: '15px', color: '#2D3748', border: '1px solid #e2e8f0' }}>
                 <strong>{selectedDemandItem.aircraftName} — {selectedDemandItem.componentName}</strong><br />
                 {selectedDemandItem.reason}<br />
-                <span style={{ opacity: 0.75 }}>Look for parts matching: {selectedDemandItem.partKeywords.slice(0, 5).join(', ')}</span>
+                <span style={{ color: '#4A5568' }}>Look for parts matching: {selectedDemandItem.partKeywords.slice(0, 5).join(', ')}</span>
               </div>
             )}
           </div>
           <button
             onClick={() => setShowDemandPanel(false)}
-            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: '2px', flexShrink: 0 }}
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#4A5568', padding: '2px', flexShrink: 0 }}
             title="Dismiss"
           >
             <X size={16} />
