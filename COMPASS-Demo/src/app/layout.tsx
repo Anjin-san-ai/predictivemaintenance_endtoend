@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en" className='dark'>
       <body className='min-h-screen bg-white'>
-          <main>
+          <main style={{ zoom: 0.8 }}>
             {children}
           </main>
       </body>
