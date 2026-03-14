@@ -400,9 +400,8 @@ export default function PartsAndEquipment() {
   
 
   return (
-    <div className="page-bg" style={{ minHeight: '100vh' }}>
+    <React.Fragment>
       <Header />
-      <div style={{ zoom: 0.8 }}>
       {/* Predictive Demand Banner — driven by Fleet Monitor health data */}
       {maintenanceParts && !maintenanceParts.error && (maintenanceParts.criticalCount > 0 || maintenanceParts.warningCount > 0) && showDemandPanel && (
         <div style={{
@@ -427,7 +426,7 @@ export default function PartsAndEquipment() {
             <div style={{ fontWeight: 600, fontSize: '15px', color: maintenanceParts.criticalCount > 0 ? '#ff4757' : '#C76D41', marginBottom: '3px' }}>
               Fleet Monitor — Predictive Demand Alert
             </div>
-            <div style={{ fontSize: '15px', color: '#c8e8cc', lineHeight: 1.5 }}>
+            <div style={{ fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
               {maintenanceParts.criticalCount > 0 && (
                 <span><strong style={{ color: '#ff4757' }}>{maintenanceParts.criticalCount} Critical</strong> component{maintenanceParts.criticalCount !== 1 ? 's' : ''}{' '}</span>
               )}
@@ -457,7 +456,7 @@ export default function PartsAndEquipment() {
                 </button>
               ))}
               {maintenanceParts.predictedDemand.length > 6 && (
-                <span style={{ fontSize: '15px', color: '#607A60', padding: '2px 8px' }}>+{maintenanceParts.predictedDemand.length - 6} more</span>
+                <span style={{ fontSize: '15px', color: 'var(--color-text-muted)', padding: '2px 8px' }}>+{maintenanceParts.predictedDemand.length - 6} more</span>
               )}
             </div>
             {selectedDemandItem && (
@@ -470,7 +469,7 @@ export default function PartsAndEquipment() {
           </div>
           <button
             onClick={() => setShowDemandPanel(false)}
-            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#607A60', padding: '2px', flexShrink: 0 }}
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: '2px', flexShrink: 0 }}
             title="Dismiss"
           >
             <X size={16} />
@@ -839,7 +838,6 @@ export default function PartsAndEquipment() {
             )}
         </div>
       </div>
-      </div>
-    </div>
+    </React.Fragment>
   );
 }
