@@ -7,49 +7,49 @@
 
 @layer base {
   :root {
-    /* ── Corporate Cockpit Palette ── */
-    --color-deep-midnight:   #050B14;
-    --color-cockpit-emerald: #2AF556;
-    --color-dusk-horizon:    #C76D41;
-    --color-steel-slate:     #2C3E4A;
-    --color-muted-sage:      #607A60;
+    /* ── AirWise Command Center Palette ── */
+    --color-deep-midnight:   #1A202C;
+    --color-cockpit-emerald: #00FFFF;
+    --color-dusk-horizon:    #a0700e;
+    --color-steel-slate:     #2D3748;
+    --color-muted-sage:      #718096;
 
-    /* Base Tailwind/Radix HSL tokens — mapped to cockpit palette */
-    --background: 214 62% 4%;          /* Deep Midnight */
-    --foreground: 210 40% 92%;
-    --card: 205 25% 16%;               /* Steel Slate region */
-    --card-foreground: 210 40% 92%;
-    --popover: 205 25% 16%;
-    --popover-foreground: 210 40% 92%;
-    --primary: 137 90% 56%;            /* Cockpit Emerald */
-    --primary-foreground: 214 62% 4%;
-    --secondary: 205 25% 24%;
-    --secondary-foreground: 210 40% 92%;
-    --muted: 205 25% 24%;
-    --muted-foreground: 126 13% 44%;   /* Muted Sage */
-    --accent: 205 25% 24%;
-    --accent-foreground: 210 40% 92%;
+    /* Base Tailwind/Radix HSL tokens */
+    --background: 210 40% 11%;
+    --foreground: 210 40% 98%;
+    --card: 210 40% 12%;
+    --card-foreground: 210 40% 98%;
+    --popover: 210 40% 12%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 180 100% 50%;
+    --primary-foreground: 210 40% 11%;
+    --secondary: 210 40% 16%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 210 40% 16%;
+    --muted-foreground: 210 40% 65%;
+    --accent: 210 40% 16%;
+    --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 205 25% 22%;
-    --input: 205 25% 22%;
-    --ring: 137 90% 56%;               /* Cockpit Emerald */
+    --border: 210 40% 18%;
+    --input: 210 40% 18%;
+    --ring: 180 100% 50%;
     --radius: 0.5rem;
 
-    /* Legacy named tokens (kept for backwards compat — mapped to new palette) */
+    /* Legacy named tokens */
     --black: #000000;
-    --brand--white: #e8f0ea;
-    --buttered-rum: #C76D41;
-    --chicago: #607A60;
-    --cloud: #4a6050;
-    --cultured-pearl: #1a2a22;
-    --fern-green: #2AF556;
-    --fuzzy-wuzzy-brown: #C76D41;
-    --madang: #a8f5b8;
-    --mirage: #050B14;
-    --neon-carrot: #C76D41;
-    --peach-schnapps: rgba(199, 109, 65, 0.15);
-    --sandy-beach: rgba(199, 109, 65, 0.2);
+    --brand--white: #ffffff;
+    --buttered-rum: #a0700e;
+    --chicago: #595a5c;
+    --cloud: #c7c7c7;
+    --cultured-pearl: #f5f5f5;
+    --fern-green: #48802b;
+    --fuzzy-wuzzy-brown: #c35c56;
+    --madang: #bffbc6;
+    --mirage: #101b34;
+    --neon-carrot: #fe9f4d;
+    --peach-schnapps: #ffdddb;
+    --sandy-beach: #ffecc8;
 
     --font-size-l: 24px;
     --font-size-m: 21.3px;
@@ -61,45 +61,45 @@
     --font-family-poppins: "Poppins", Helvetica;
     --font-family-roboto: "Roboto", Helvetica;
 
-    /* Header — Steel Slate → Deep Midnight gradient */
+    /* Header */
     --header-gradient: linear-gradient(180deg, var(--header-bg-start) 0%, var(--header-bg-end) 70%);
-    --header-bg-start: rgba(44, 62, 74, 1);
-    --header-bg-end:   rgba(5, 11, 20, 1);
-    --header-text: #607A60;
-    --header-active-text: #c8e8cc;
-    --header-logo-text: #8fc89a;
+    --header-bg-start: rgba(39, 75, 155, 1);
+    --header-bg-end: rgba(14, 26, 53, 1);
+    --header-text: #7283a8;
+    --header-active-text: #b8c6e5;
+    --header-logo-text: #9eb4eb;
 
     /* ── Unified Fleet Platform Design Tokens ── */
     /* Backgrounds */
-    --color-bg-primary: #050B14;
-    --color-bg-surface: #0E1C28;
-    --color-bg-elevated: #2C3E4A;
-    --color-bg-overlay: rgba(5, 11, 20, 0.92);
+    --color-bg-primary: #1A202C;
+    --color-bg-surface: #2D3748;
+    --color-bg-elevated: #394556;
+    --color-bg-overlay: rgba(26, 32, 44, 0.92);
 
     /* Brand accents */
-    --color-accent-primary: #2AF556;
-    --color-accent-primary-hover: #50f972;
-    --color-accent-tactical: #2AF556;
-    --color-accent-tactical-glow: rgba(42, 245, 86, 0.35);
-    --color-accent-tactical-dim: rgba(42, 245, 86, 0.12);
+    --color-accent-primary: #00FFFF;
+    --color-accent-primary-hover: #00E5E5;
+    --color-accent-tactical: #00FFFF;
+    --color-accent-tactical-glow: rgba(0, 255, 255, 0.35);
+    --color-accent-tactical-dim: rgba(0, 255, 255, 0.12);
 
     /* Status colours */
-    --color-status-critical: #ff4757;
-    --color-status-critical-bg: rgba(255, 71, 87, 0.12);
-    --color-status-warning: #C76D41;
-    --color-status-warning-bg: rgba(199, 109, 65, 0.15);
-    --color-status-good: #2AF556;
-    --color-status-good-bg: rgba(42, 245, 86, 0.12);
+    --color-status-critical: #F56565;
+    --color-status-critical-bg: rgba(245, 101, 101, 0.12);
+    --color-status-warning: #F6E05E;
+    --color-status-warning-bg: rgba(246, 224, 94, 0.15);
+    --color-status-good: #48BB78;
+    --color-status-good-bg: rgba(72, 187, 120, 0.12);
 
     /* Text */
-    --color-text-primary: #e8f0ea;
-    --color-text-secondary: #607A60;
-    --color-text-muted: #3d5445;
-    --color-text-tactical: #2AF556;
+    --color-text-primary: #f5f5f5;
+    --color-text-secondary: #718096;
+    --color-text-muted: #4A5568;
+    --color-text-tactical: #00FFFF;
 
     /* Borders */
-    --color-border-default: rgba(42, 245, 86, 0.18);
-    --color-border-tactical: rgba(42, 245, 86, 0.28);
+    --color-border-default: rgba(0, 255, 255, 0.18);
+    --color-border-tactical: rgba(0, 255, 255, 0.28);
     --color-border-subtle: rgba(255, 255, 255, 0.06);
 
     /* Typography */
@@ -108,18 +108,18 @@
 
     /* Shadows & glows */
     --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
-    --shadow-tactical: 0 0 20px rgba(42, 245, 86, 0.12);
-    --glow-critical: 0 0 8px rgba(255, 71, 87, 0.6);
-    --glow-warning: 0 0 8px rgba(199, 109, 65, 0.6);
-    --glow-good: 0 0 8px rgba(42, 245, 86, 0.6);
+    --shadow-tactical: 0 0 20px rgba(0, 255, 255, 0.12);
+    --glow-critical: 0 0 8px rgba(245, 101, 101, 0.6);
+    --glow-warning: 0 0 8px rgba(246, 224, 94, 0.6);
+    --glow-good: 0 0 8px rgba(72, 187, 120, 0.6);
 
     /* Transitions */
     --transition-fast: 150ms ease;
     --transition-smooth: 300ms cubic-bezier(0.16, 1, 0.3, 1);
 
-    /* Page background — ambient cockpit atmosphere */
+    /* Page background */
     --page-bg-image: url('/background.jpeg');
-    --page-bg-overlay: rgba(5, 11, 20, 0.88);
+    --page-bg-overlay: rgba(26, 32, 44, 0.88);
   }
 }
 
@@ -131,8 +131,8 @@
 }
 
 body {
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background: var(--background);
+  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 

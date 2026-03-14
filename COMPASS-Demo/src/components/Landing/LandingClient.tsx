@@ -53,12 +53,12 @@ export default function LandingClient({
         <FleetOverview flightScheduleData={flightScheduleData} />
         <div className="flex-1 min-h-0 flex flex-col">
           <FlightMaintenanceSchedule
-        flightScheduleData={flightScheduleData}
-        setFlightScheduleData={handleSetFlightScheduleData}
-        initialFlightScheduleData={initialData}
-        unscheduledFlights={unscheduledFlights}
-        setUnscheduledFlights={setUnscheduledFlights}
-        rawData={rawDataRef.current}
+            flightScheduleData={flightScheduleData}
+            setFlightScheduleData={handleSetFlightScheduleData}
+            initialFlightScheduleData={initialData}
+            unscheduledFlights={unscheduledFlights}
+            setUnscheduledFlights={setUnscheduledFlights}
+            rawData={rawDataRef.current}
           />
         </div>
       </div>

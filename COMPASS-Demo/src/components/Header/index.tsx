@@ -44,8 +44,8 @@ const Header = () => {
         <Image 
           src="/images/header/Airplane.png" 
           alt="COMPASS - COgnitive Maintenance, Parts, And Scheduling System Logo" 
-          width={36} 
-          height={37} 
+          width={54}
+          height={55}
           priority
         />
         <div className={styles.platformName}><span className="font-extrabold">COMPASS</span> - <span className="font-extrabold">CO</span>gnitive <span className="font-extrabold">M</span>aintenance, <span className="font-extrabold">P</span>arts, <span className="font-extrabold">A</span>nd <span className="font-extrabold">S</span>cheduling <span className="font-extrabold">S</span>ystem</div>

@@ -42,7 +42,7 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
         />
       </div>
       <div className="flex-1 flex flex-col justify-center">
-        <h3 className="font-roboto font-bold text-[#101b34] text-[15px] leading-tight mb-3 pr-2">
+        <h3 className="font-roboto font-bold text-[#101b34] text-[18px] lg:text-[21px] leading-tight mb-3 pr-2">
           {label}
         </h3>
       </div>
@@ -62,10 +62,10 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
 
       <div className="relative z-10">
         <div className="flex justify-between items-center px-8 py-5">
-          <h2 className="font-roboto font-bold text-[15px] leading-normal">
+          <h2 className="font-roboto font-bold text-[29px] leading-normal">
             <span className="text-[#101b34]">Fleet overview</span>
-            <span className="text-[#101b34]">&nbsp;</span>
-            <span className="text-[#575f72]">
+            <span className="text-[#101b34] text-[32px]">&nbsp;</span>
+            <span className="text-[#575f72] text-[27px]">
               ({totalAircraft} Aircraft)
             </span>
           </h2>
@@ -73,7 +73,7 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
           <div className="flex items-center gap-[13px]">
             <button
               type="button"
-              className="font-roboto font-medium text-[#4270e0] text-[15px] leading-normal cursor-pointer hover:text-[#3562d4] hover:underline transition-colors duration-150 select-none bg-transparent border-none p-0"
+              className="font-roboto font-medium text-[#4270e0] text-[21px] leading-normal cursor-pointer hover:text-[#3562d4] hover:underline transition-colors duration-150 select-none bg-transparent border-none p-0"
               onClick={toggleCollapse}
             >
               {isCollapsed ? "Expand All" : "Collapse All"}

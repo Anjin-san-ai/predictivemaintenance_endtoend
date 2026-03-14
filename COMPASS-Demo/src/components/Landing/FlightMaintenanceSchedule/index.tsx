@@ -639,11 +639,11 @@ export default function FlightMaintenanceSchedule(
 
   return (
     <>
-      <div className="w-full flex-shrink-0">
+      <div className="w-full">
         <div className="bg-white rounded-t-[11px] shadow-[0px_5px_45px_rgba(0,0,0,0.25)] py-4">
           <div className="flex items-center justify-between px-8">
             <div className="flex items-center">
-              <h1 className="text-[15px] font-bold text-black">
+              <h1 className="text-3xl font-bold text-black">
                 Smart scheduling
               </h1>
               <div className="flex items-center pl-16">
@@ -667,7 +667,7 @@ export default function FlightMaintenanceSchedule(
                       alt="Today"
                     />
                   </div>
-                  <span className="text-[15px] font-medium text-[#393939]">
+                  <span className="text-[18px] font-medium text-[#393939]">
                     Today
                   </span>
                 </button>
@@ -715,7 +715,7 @@ export default function FlightMaintenanceSchedule(
                     </button>
 
                     <div className="flex items-center gap-3">
-                      <span className="text-[15px] font-medium text-gray-700">
+                      <span className="text-xl font-medium text-gray-700">
                         {getWeekRangeText}
                       </span>
                     </div>
@@ -737,7 +737,7 @@ export default function FlightMaintenanceSchedule(
                 <input
                   type="text"
                   placeholder="Search flights"
-                  className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-500 text-[15px]"
+                  className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-500 text-lg"
                   value={searchQuery}
                   onChange={handleSearchChange}
                 />
@@ -749,19 +749,19 @@ export default function FlightMaintenanceSchedule(
                   setIsAddFlightModalOpen(true);
                 }}
               >
-                <span className="text-[15px] font-bold text-white">Add flight</span>
+                <span className="text-lg font-bold text-white">Add flight</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 flex flex-col gap-2 pt-0 px-4 pb-4">
+      <div className="flex-1 p-4 min-h-0 flex flex-col gap-2">
         <div className="flex-1 min-h-0 bg-white rounded-lg shadow-lg border overflow-hidden">
           <div ref={scrollContainerRef} className="h-full overflow-auto">
             <div className="min-w-max">
               <div className="flex text-white border-b-2 sticky top-0 z-20 gap-1">
-                <div className="w-[240px] h-[65px] flex items-center justify-center bg-[#15213d] sticky left-0 z-30 text-[15px] text-white ">
+                <div className="w-[240px] h-[65px] flex items-center justify-center bg-[#15213d] sticky left-0 z-30 text-[21.3px] text-white ">
                   Aircraft tail numbers
                 </div>
 
@@ -772,16 +772,16 @@ export default function FlightMaintenanceSchedule(
                       }`}
                   >
                     <div className="flex gap-2 items-center">
-                      <span className="text-[15px] font-bold">
+                      <span className="text-3xl font-bold">
                         {date.fullDate.getDate()}
                       </span>
-                      <span className="text-[15px] font-medium text-[#ffffff99]">
+                      <span className="text-[21px] font-medium text-[#ffffff99]">
                         {date.fullDate.toLocaleString("en-US", {
                           month: "short",
                         })}
                       </span>
                     </div>
-                    <div className="text-[15px]">
+                    <div className="text-[21px]">
                       {date.fullDate
                         .toLocaleDateString("en-US", { weekday: "short" })
                         .toUpperCase()}
@@ -827,7 +827,7 @@ export default function FlightMaintenanceSchedule(
                       </div>
                       <div className="flex flex-col flex-1 items-start justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="font-bold text-white text-[15px]">
+                          <div className="font-bold text-white text-[24px]">
                             {aircraft.tailNumber}
                           </div>
                           {lastAddedFlight !== null && aircraft.tailNumber === lastAddedFlight && (
@@ -837,8 +837,8 @@ export default function FlightMaintenanceSchedule(
                             </div>
                           )}
                         </div>
-                        <div className="flex gap-1 items-center text-[15px] text-muted-foreground">
-                          <div className="text-[15px]">
+                        <div className="flex gap-1 items-center text-sm text-muted-foreground">
+                          <div className="text-wrapper-20">
                             {getDynamicStatusForAircraft(aircraft)}
                           </div>
                           <div className="w-[13.3px] h-[13.3px]">
