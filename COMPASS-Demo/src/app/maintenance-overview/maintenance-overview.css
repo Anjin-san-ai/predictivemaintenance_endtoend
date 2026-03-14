@@ -18,7 +18,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   overflow-x: auto;
   box-sizing: border-box;
 }
@@ -62,7 +62,7 @@
 
 /* Responsive header text */
 .maintenance-overview .aircraft-intelligence-platform {
-  color: #8fc89a;
+  color: #9eb4eb;
   font-family: var(--font-family-poppins);
   font-size: clamp(1.2rem, 2vw, 2.2rem);
   font-style: italic;
@@ -96,7 +96,7 @@
 
 /* Responsive nav text */
 .maintenance-overview .smart-scheduling {
-  color: #a0c0a0;
+  color: #b8c5e4;
   font-family: var(--font-family-roboto);
   font-size: clamp(1rem, 1.5vw, 1.3rem);
   font-weight: 600;
@@ -257,7 +257,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 100vw;
+  max-width: 100%;
   min-height: 180px;
   margin: 20px 0 0 0;
   box-sizing: border-box;
@@ -558,7 +558,7 @@
 }
 
 .maintenance-overview .span2 {
-  color: #050B1480;
+  color: #101b3480;
 }
 
 .maintenance-overview .before-flight {
@@ -586,7 +586,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 100vw;
+  max-width: 100%;
   margin: 1rem 0 0 0;
   box-sizing: border-box;
 }
@@ -1029,7 +1029,7 @@
   gap: 2vw;
   width: 100%;
   min-height: 200px;
-  max-width: 100vw;
+  max-width: 100%;
   box-sizing: border-box;
   position: relative;
 }
@@ -1043,7 +1043,7 @@
   width: 100%;
   min-width: 0;
   min-height: 200px;
-  max-width: 100vw;
+  max-width: 100%;
   box-sizing: border-box;
 }
 
@@ -1054,7 +1054,7 @@
   justify-content: flex-end;
   align-items: stretch;
   width: 100%;
-  max-width: 100vw;
+  max-width: 100%;
   min-height: 200px;
   box-sizing: border-box;
 }
@@ -1063,8 +1063,8 @@
   background: linear-gradient(137deg, rgba(173, 181, 181, 1) 0%, rgba(101, 114, 118, 1) 100%);
   border-radius: 1.5rem;
   width: 100%;
-  min-height: 40rem;
-  max-width: 100vw;
+  min-height: 52rem;
+  max-width: 100%;
   box-sizing: border-box;
   position: relative;
 }
@@ -1382,18 +1382,19 @@
 
 .maintenance-overview .frame-5105-1 {
   align-items: center;
-  background: linear-gradient(180deg, rgba(52, 156, 230, 1) 0%, rgba(41, 116, 169, 1) 100%);
+  background: linear-gradient(180deg, rgba(140, 140, 140, 1) 0%, rgba(100, 100, 100, 1) 100%);
   border: 1.33px solid;
-  border-color: #1165a2;
+  border-color: #888888;
   border-radius: 5rem;
   display: flex;
   justify-content: center;
   margin-left: auto;
   margin-right: 0;
-  padding: 0.5rem 4rem;
+  padding: 0.15rem 2rem;
   position: relative;
   flex-direction: row;
-
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .maintenance-overview .add-task {
@@ -1417,6 +1418,8 @@
   min-height: 50px;
   position: relative;
   width: 100%;
+  padding: 0 1rem;
+  overflow: hidden;
 }
 
 .maintenance-overview .format_line_spacing {
@@ -1436,7 +1439,10 @@
   position: relative;
   text-align: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   width: fit-content;
+  max-width: 100%;
 }
 
 .maintenance-overview .span0-1 {
@@ -1497,7 +1503,6 @@
   border-radius: 5.33px;
   display: flex;
   height: 2.5rem;
-  margin-top: 1rem;
   padding: 0.4vw 1vw;
   position: relative;
   width: 10rem;
@@ -2288,17 +2293,3 @@
   width: 100%;
 }
 
-/* Override green text to blue on Aircraft Details page */
-.maintenance-overview .roboto-semi-bold-blueberry-21-3px,
-.maintenance-overview .roboto-bold-sapphire-24px,
-.maintenance-overview .roboto-bold-neon-carrot-18-7px {
-  color: #2563eb !important;
-}
-
-.maintenance-overview .airbus-a400-m-atlas {
-  color: #2563eb;
-}
-
-.maintenance-overview .title.roboto-bold-mirage-21-3px {
-  color: #2563eb;
-}

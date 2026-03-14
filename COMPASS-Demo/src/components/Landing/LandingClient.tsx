@@ -49,18 +49,16 @@ export default function LandingClient({
   return (
     <div className="h-screen overflow-hidden flex flex-col">
       <Header />
-      <div style={{ zoom: 0.8, flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }} className="min-h-0">
+      <div style={{ zoom: 0.8, flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         <FleetOverview flightScheduleData={flightScheduleData} />
-        <div className="flex-1 min-h-0 flex flex-col">
-          <FlightMaintenanceSchedule
-        flightScheduleData={flightScheduleData}
-        setFlightScheduleData={handleSetFlightScheduleData}
-        initialFlightScheduleData={initialData}
-        unscheduledFlights={unscheduledFlights}
-        setUnscheduledFlights={setUnscheduledFlights}
-        rawData={rawDataRef.current}
-          />
-        </div>
+        <FlightMaintenanceSchedule
+          flightScheduleData={flightScheduleData}
+          setFlightScheduleData={handleSetFlightScheduleData}
+          initialFlightScheduleData={initialData}
+          unscheduledFlights={unscheduledFlights}
+          setUnscheduledFlights={setUnscheduledFlights}
+          rawData={rawDataRef.current}
+        />
       </div>
     </div>
   );

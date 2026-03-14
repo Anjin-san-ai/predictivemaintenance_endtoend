@@ -49,26 +49,30 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Corporate Cockpit Palette
+        // AirWise Command Center Colors
         'cockpit': {
-          'midnight': '#050B14',
-          'emerald': '#2AF556',
-          'horizon': '#C76D41',
-          'slate': '#2C3E4A',
-          'sage': '#607A60',
+          'midnight': '#1A202C',
+          'emerald': '#00FFFF',
+          'horizon': '#a0700e',
+          'slate': '#2D3748',
+          'sage': '#718096',
         },
-        // Legacy navy kept for backwards compat — mapped to new slate palette
         'navy': {
-          900: '#050B14',
-          800: '#0E1C28',
-          750: '#2C3E4A',
-          700: '#3a5040',
-          600: '#607A60',
+          900: '#1A202C',
+          800: '#2D3748',
+          750: '#394556',
+          700: '#4A5568',
+          600: '#718096',
+        },
+        'cyan': {
+          400: '#00FFFF',
+          500: '#00E5E5',
+          600: '#00CCCC',
         },
         'status': {
-          'good': '#2AF556',
-          'warning': '#C76D41',
-          'critical': '#ff4757',
+          'good': '#48BB78',
+          'warning': '#F6E05E',
+          'critical': '#F56565',
         }
       },
       borderRadius: {
@@ -90,8 +94,8 @@ module.exports = {
           "50%": { opacity: 0.6 },
         },
         "glow": {
-          "0%, 100%": { boxShadow: "0 0 5px #2AF556" },
-          "50%": { boxShadow: "0 0 20px #2AF556, 0 0 30px #2AF556" },
+          "0%, 100%": { boxShadow: "0 0 5px #00FFFF" },
+          "50%": { boxShadow: "0 0 20px #00FFFF, 0 0 30px #00FFFF" },
         },
       },
       animation: {

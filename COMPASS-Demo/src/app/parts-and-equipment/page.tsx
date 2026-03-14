@@ -178,10 +178,10 @@ export default function PartsAndEquipment() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div style={{ color: 'var(--color-cockpit-emerald)', fontSize: '1.25rem', marginBottom: '1rem' }}>Loading...</div>
-          <div style={{ width: '2rem', height: '2rem', border: '2px solid var(--color-cockpit-emerald)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto' }}></div>
+          <div className="text-blue-600 text-xl mb-4">Loading...</div>
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
         </div>
       </div>
     )
@@ -190,14 +190,14 @@ export default function PartsAndEquipment() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-bg-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div style={{ color: 'var(--color-status-critical)', fontSize: '2rem', marginBottom: '1rem' }}>⚠️</div>
-          <div style={{ color: 'var(--color-status-critical)', fontSize: '1.25rem', marginBottom: '1rem' }}>Error loading data</div>
-          <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            style={{ padding: '0.75rem 1.5rem', background: 'var(--color-cockpit-emerald)', color: 'var(--color-bg-primary)', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 700 }}
+          <div className="text-red-600 text-2xl mb-4">⚠️</div>
+          <div className="text-red-600 text-xl mb-4">Error loading data</div>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
             Retry
           </button>
@@ -400,7 +400,7 @@ export default function PartsAndEquipment() {
   
 
   return (
-    <div className="page-bg" style={{ minHeight: '100vh' }}>
+    <React.Fragment>
       <Header />
       <div style={{ zoom: 0.8 }}>
       {/* Predictive Demand Banner — driven by Fleet Monitor health data */}
@@ -409,30 +409,30 @@ export default function PartsAndEquipment() {
           margin: 0,
           padding: '10px 20px',
           background: maintenanceParts.criticalCount > 0
-            ? 'linear-gradient(90deg, rgba(255,71,87,0.08), transparent)'
-            : 'linear-gradient(90deg, rgba(199,109,65,0.1), transparent)',
-          borderLeft: `4px solid ${maintenanceParts.criticalCount > 0 ? '#ff4757' : '#C76D41'}`,
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
+            ? 'linear-gradient(90deg, rgba(192,34,47,0.10), transparent)'
+            : 'linear-gradient(90deg, rgba(143,75,30,0.10), transparent)',
+          borderLeft: `4px solid ${maintenanceParts.criticalCount > 0 ? '#c0222f' : '#8f4b1e'}`,
+          borderBottom: '1px solid rgba(0,0,0,0.12)',
           display: 'flex',
           alignItems: 'flex-start',
           gap: '12px',
         }}>
           <div style={{ flexShrink: 0, paddingTop: '2px' }}>
             {maintenanceParts.criticalCount > 0
-              ? <AlertCircle size={18} color="#ff4757" />
-              : <AlertTriangle size={18} color="#C76D41" />
+              ? <AlertCircle size={18} color="#c0222f" />
+              : <AlertTriangle size={18} color="#8f4b1e" />
             }
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, fontSize: '15px', color: maintenanceParts.criticalCount > 0 ? '#ff4757' : '#C76D41', marginBottom: '3px' }}>
+            <div style={{ fontWeight: 600, fontSize: '15px', color: maintenanceParts.criticalCount > 0 ? '#c0222f' : '#8f4b1e', marginBottom: '3px' }}>
               Fleet Monitor — Predictive Demand Alert
             </div>
-            <div style={{ fontSize: '15px', color: '#c8e8cc', lineHeight: 1.5 }}>
+            <div style={{ fontSize: '15px', color: '#4A5568', lineHeight: 1.5 }}>
               {maintenanceParts.criticalCount > 0 && (
-                <span><strong style={{ color: '#ff4757' }}>{maintenanceParts.criticalCount} Critical</strong> component{maintenanceParts.criticalCount !== 1 ? 's' : ''}{' '}</span>
+                <span><strong style={{ color: '#c0222f' }}>{maintenanceParts.criticalCount} Critical</strong> component{maintenanceParts.criticalCount !== 1 ? 's' : ''}{' '}</span>
               )}
               {maintenanceParts.warningCount > 0 && (
-                <span><strong style={{ color: '#C76D41' }}>{maintenanceParts.warningCount} Warning</strong> component{maintenanceParts.warningCount !== 1 ? 's' : ''}{' '}</span>
+                <span><strong style={{ color: '#8f4b1e' }}>{maintenanceParts.warningCount} Warning</strong> component{maintenanceParts.warningCount !== 1 ? 's' : ''}{' '}</span>
               )}
               across <strong>{maintenanceParts.affectedAircraftCount} aircraft</strong> — parts highlighted below may be required.
             </div>
@@ -446,9 +446,9 @@ export default function PartsAndEquipment() {
                     borderRadius: '10px',
                     fontSize: '15px',
                     fontWeight: 600,
-                    border: `1px solid ${d.severity === 'critical' ? 'rgba(255,71,87,0.4)' : 'rgba(199,109,65,0.4)'}`,
-                    background: d.severity === 'critical' ? 'rgba(255,71,87,0.1)' : 'rgba(199,109,65,0.1)',
-                    color: d.severity === 'critical' ? '#ff4757' : '#C76D41',
+                    border: `1px solid ${d.severity === 'critical' ? 'rgba(192,34,47,0.5)' : 'rgba(143,75,30,0.5)'}`,
+                    background: d.severity === 'critical' ? 'rgba(192,34,47,0.08)' : 'rgba(143,75,30,0.08)',
+                    color: d.severity === 'critical' ? '#c0222f' : '#8f4b1e',
                     cursor: 'pointer',
                   }}
                   title={d.reason}
@@ -457,20 +457,20 @@ export default function PartsAndEquipment() {
                 </button>
               ))}
               {maintenanceParts.predictedDemand.length > 6 && (
-                <span style={{ fontSize: '15px', color: '#607A60', padding: '2px 8px' }}>+{maintenanceParts.predictedDemand.length - 6} more</span>
+                <span style={{ fontSize: '15px', color: '#4A5568', padding: '2px 8px' }}>+{maintenanceParts.predictedDemand.length - 6} more</span>
               )}
             </div>
             {selectedDemandItem && (
-              <div style={{ marginTop: '6px', padding: '6px 10px', background: 'var(--color-bg-elevated)', borderRadius: '6px', fontSize: '15px', color: 'var(--color-text-primary)', border: '1px solid var(--color-border-default)' }}>
+              <div style={{ marginTop: '6px', padding: '6px 10px', background: '#f8f8f8', borderRadius: '6px', fontSize: '15px', color: '#2D3748', border: '1px solid #e2e8f0' }}>
                 <strong>{selectedDemandItem.aircraftName} — {selectedDemandItem.componentName}</strong><br />
                 {selectedDemandItem.reason}<br />
-                <span style={{ opacity: 0.75 }}>Look for parts matching: {selectedDemandItem.partKeywords.slice(0, 5).join(', ')}</span>
+                <span style={{ color: '#4A5568' }}>Look for parts matching: {selectedDemandItem.partKeywords.slice(0, 5).join(', ')}</span>
               </div>
             )}
           </div>
           <button
             onClick={() => setShowDemandPanel(false)}
-            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#607A60', padding: '2px', flexShrink: 0 }}
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#4A5568', padding: '2px', flexShrink: 0 }}
             title="Dismiss"
           >
             <X size={16} />
@@ -840,6 +840,6 @@ export default function PartsAndEquipment() {
         </div>
       </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }

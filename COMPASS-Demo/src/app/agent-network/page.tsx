@@ -1,9 +1,12 @@
+import { Header } from "@/components";
+
 export default function AgentNetworkPage() {
   return (
-    <div className="fixed inset-0 w-full h-full" style={{ margin: 0, padding: 0 }}>
+    <div className="flex flex-col h-screen">
+      <Header />
       <iframe
         src="/api/agent-network-html"
-        className="w-full h-full border-0"
+        className="flex-1 w-full border-0"
         title="Agent Network"
       />
     </div>
