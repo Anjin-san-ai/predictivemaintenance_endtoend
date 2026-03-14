@@ -31,18 +31,18 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
     progressColor: string;
     total?: number;
   }) => (
-    <div className="w-full flex-1 h-[78px] bg-white rounded-[8px] border border-[#c7c7c7] shadow-[0px_3px_12px_-1px_rgba(0,0,0,0.1)] hover:shadow-[0px_5px_16px_-1px_rgba(0,0,0,0.15)] transition-shadow duration-200 p-3 flex items-center gap-3">
+    <div className="w-full flex-1 h-[121px] bg-white rounded-[11px] border border-[#c7c7c7] shadow-[0px_5px_20px_-1px_rgba(0,0,0,0.13)] hover:shadow-[0px_8px_25px_-1px_rgba(0,0,0,0.18)] transition-shadow duration-200 p-5 flex items-center gap-4">
       <div className="flex-shrink-0">
         <CircularProgress
           value={value}
           total={total}
           color={progressColor}
-          size={50}
-          strokeWidth={6}
+          size={75}
+          strokeWidth={8}
         />
       </div>
       <div className="flex-1 flex flex-col justify-center">
-        <h3 className="font-roboto font-bold text-[#101b34] text-[12px] lg:text-[13px] leading-tight pr-1">
+        <h3 className="font-roboto font-bold text-[#101b34] text-[15px] leading-tight mb-3 pr-2">
           {label}
         </h3>
       </div>
@@ -61,18 +61,19 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
       />
 
       <div className="relative z-10">
-        <div className="flex justify-between items-center px-6 py-2">
-          <h2 className="font-roboto font-bold text-[18px] leading-normal">
+        <div className="flex justify-between items-center px-8 py-5">
+          <h2 className="font-roboto font-bold text-[15px] leading-normal">
             <span className="text-[#101b34]">Fleet overview</span>
-            <span className="text-[#575f72] text-[16px] ml-1">
+            <span className="text-[#101b34]">&nbsp;</span>
+            <span className="text-[#575f72]">
               ({totalAircraft} Aircraft)
             </span>
           </h2>
 
-          <div className="flex items-center gap-[10px]">
+          <div className="flex items-center gap-[13px]">
             <button
               type="button"
-              className="font-roboto font-medium text-[#4270e0] text-[14px] leading-normal cursor-pointer hover:text-[#3562d4] hover:underline transition-colors duration-150 select-none bg-transparent border-none p-0"
+              className="font-roboto font-medium text-[#4270e0] text-[15px] leading-normal cursor-pointer hover:text-[#3562d4] hover:underline transition-colors duration-150 select-none bg-transparent border-none p-0"
               onClick={toggleCollapse}
             >
               {isCollapsed ? "Expand All" : "Collapse All"}
@@ -101,10 +102,10 @@ export default function FleetOverview({ flightScheduleData }: { readonly flightS
           className={`px-4 md:px-6 lg:px-8 transition-all duration-700 ease-in-out ${
             isCollapsed
               ? "max-h-0 opacity-0 overflow-hidden pb-0 transform scale-y-0 origin-top"
-              : "max-h-[300px] opacity-100 pb-3 transform scale-y-100 origin-top"
+              : "max-h-[600px] opacity-100 pb-8 transform scale-y-100 origin-top"
           }`}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6">
             <StatCard
               value={fleetData.serviceable}
               label="Total serviceable aircraft"

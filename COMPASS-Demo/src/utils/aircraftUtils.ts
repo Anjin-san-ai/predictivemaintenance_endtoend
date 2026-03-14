@@ -1,5 +1,3 @@
-import flightScheduleData from '../mock/flightSchedule.data.mock';
-
 export interface FleetData {
   serviceable: number;
   inMaintenance: number;
@@ -38,15 +36,21 @@ export const getDynamicStatusForAircraft = (aircraft: any): string => {
           inFlight = true;
         } else if (journeyStartDate === todayString || journeyEndDate === todayString) {
           const currentMinutes = timeToMinutes(currentTime);
-          
-          if (journeyStartDate === todayString) {
+
+          // Only apply the journey-level departure check for multi-day journeys
+          // (journeyEndDate is a future date). Same-day journeys where both start
+          // and end are TODAY are handled precisely by the per-segment loop below,
+          // which checks the full departure-to-arrival window.
+          if (journeyStartDate === todayString && journeyEndDate !== todayString) {
             const departureMinutes = timeToMinutes(journeyStartTime);
             if (currentMinutes >= departureMinutes) {
               inFlight = true;
             }
           }
-          
-          if (journeyEndDate === todayString && !inFlight) {
+
+          // Only apply the journey-level arrival check for multi-day journeys
+          // (journeyStartDate was a past date).
+          if (journeyEndDate === todayString && journeyStartDate !== todayString && !inFlight) {
             const arrivalMinutes = timeToMinutes(journeyEndTime);
             if (currentMinutes <= arrivalMinutes) {
               inFlight = true;
@@ -198,12 +202,10 @@ export const calculateFleetData = (data: any[]): FleetData => {
 export const getStatusColor = (status: string): string => {
   switch (status) {
     case 'Serviceable': return '#49a02c';
-    case 'In-maintenance': return '#C76D41';
+    case 'In-maintenance': return '#fe9f4d';
     case 'Depth maintenance': return '#8a94ab';
     case 'Un-serviceable': return '#fe4d4d';
     case 'In flight': return '#769dff';
     default: return '#49a02c';
   }
 };
-
-export { flightScheduleData };

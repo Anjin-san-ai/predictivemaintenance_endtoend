@@ -14,7 +14,7 @@
 .tab {
   cursor: pointer;
   font-family: var(--font-family-roboto, 'Roboto', sans-serif);
-  font-size: 32px;
+  font-size: 15px;
   white-space: nowrap;
   transition: all 0.2s ease;
 }
@@ -65,7 +65,7 @@
   }
   
   .tab {
-    font-size: 24px;
+    font-size: 15px;
   }
 }
 
@@ -79,7 +79,7 @@
   }
   
   .tab {
-    font-size: 18px;
+    font-size: 15px;
   }
 }
 

@@ -14,41 +14,71 @@ import PartsMaintenanceTaskList from "../PartsMaintenanceTaskListPopup";
 import FlightDetailsPopup from "../FlightDetailsTootlip";
 import AddFlightPopup from "../AddFlightPopup";
 import AddFlightDetailsConfirmationPopup from "../AddFlightDetailsConfirmationPopup";
+import ScheduleImpactPopup from "../ScheduleImpactPopup";
 import {
   getDynamicStatusForAircraft,
   getStatusColor,
-  flightScheduleData as initialFlightScheduleData,
 } from "../../../utils/aircraftUtils";
-import { processNewFlight } from "../../../utils/schedulingEngine";
-import { getA400IndexForTail } from "../../../utils/a400Bridge";
+import type {
+  GanttAircraft,
+  GanttRouteLeg,
+  GanttMaintenanceItem,
+  GanttMaintenanceTask,
+  GanttUnscheduledFlight,
+  SerializedRawScheduleData,
+  RawFlightLeg,
+} from "../../../lib/scheduler/types";
+import { deserializeRawScheduleData } from "../../../lib/scheduler/types";
+import { InMemoryDataProvider, nextFlightNumber } from "../../../lib/scheduler/inMemoryDataProvider";
+import { runScheduler, toGanttFormat, toUnscheduledFormat, extractExistingMaintBlocks } from "../../../lib/scheduler/scheduleOrchestrator";
+import { diffSchedule } from "../../../lib/scheduler/scheduleDiff";
+import type { ScheduleImpact } from "../../../lib/scheduler/scheduleDiff";
 
-interface Aircraft {
-  tailNumber: string;
-  status: string;
-  routes: RouteLeg[][];
-  maintenance: MaintenanceItem[];
+/** Result of a scheduler pre-run, stored until the user confirms. */
+interface PendingSchedulerResult {
+  ganttData: GanttAircraft[];
+  unscheduledFlights: GanttUnscheduledFlight[];
+  /** The tail assigned to the new flight, or null if it was unschedulable. */
+  assignedTailNumber: string | null;
+  flightNumber: number;
+  /** Raw legs for the new flight — appended to addedFlightLegsRef on confirm. */
+  newLegs: RawFlightLeg[];
 }
 
-interface RouteLeg {
-  from: string;
-  to: string;
-  departureDate: string;
-  arrivalDate: string;
-  departureTime: string;
-  arrivalTime: string;
-}
-
-interface MaintenanceItem {
+interface SelectedMaintenance {
   id: string;
-  type: string;
+  maintenanceType: GanttMaintenanceItem['type'];
+  maintenanceIndex: number;
   scheduleStartDate: string;
   scheduleEndDate: string;
   scheduleStartTime: string;
   scheduleEndTime: string;
+  durationHours: number;
+  tasks: GanttMaintenanceTask[];
+  aircraftTailNumber: string;
+  aircraftStatus: string;
+  currentHours: number;
+}
+
+/** Condense the engine's verbose reason string into a short UI-friendly label. */
+function parseShortReason(reason: string): string {
+  if (reason.includes('between legs')) return 'Maintenance between legs';
+  if (reason.includes('overlaps maintenance')) return 'Conflicts with maintenance';
+  if (reason.includes('gap after maintenance')) return 'Insufficient post-maintenance gap';
+  if (reason.includes('gap before trip')) return 'Insufficient turnaround';
+  if (reason.includes('overlaps existing flight')) return 'Conflicts with scheduled flight';
+  return 'No available tail';
 }
 
 export default function FlightMaintenanceSchedule(
-  { flightScheduleData, setFlightScheduleData }: Readonly<{ flightScheduleData: Aircraft[]; setFlightScheduleData: (data: Aircraft[]) => void }>
+  { flightScheduleData, setFlightScheduleData, initialFlightScheduleData, unscheduledFlights, setUnscheduledFlights, rawData }: Readonly<{
+    flightScheduleData: GanttAircraft[];
+    setFlightScheduleData: (data: GanttAircraft[]) => void;
+    initialFlightScheduleData: GanttAircraft[];
+    unscheduledFlights?: GanttUnscheduledFlight[];
+    setUnscheduledFlights?: (flights: GanttUnscheduledFlight[]) => void;
+    rawData?: import('../../../lib/scheduler/types').SerializedRawScheduleData;
+  }>
 ) {
   const [liveTimeTick, setLiveTimeTick] = useState(Date.now());
   useEffect(() => {
@@ -57,78 +87,170 @@ export default function FlightMaintenanceSchedule(
     }, 60000);
     return () => clearInterval(interval);
   }, []);
-
-  // Fleet health from A400 predictive monitor
-  interface A400HealthEntry { id: string; displayName: string; worstStatus: string; }
-  const [fleetHealth, setFleetHealth] = useState<A400HealthEntry[]>([]);
-  const [fleetHealthError, setFleetHealthError] = useState(false);
-  useEffect(() => {
-    fetch('/api/fleet-health')
-      .then(r => r.json())
-      .then(data => {
-        if (data.error) { setFleetHealthError(true); return; }
-        setFleetHealth(data.aircraft || []);
-      })
-      .catch(() => setFleetHealthError(true));
-  }, []);
-
-  const getA400HealthForAircraft = useCallback((tailNumber: string): A400HealthEntry | null => {
-    if (fleetHealth.length === 0) return null;
-    const idx = getA400IndexForTail(tailNumber) % fleetHealth.length;
-    return fleetHealth[idx] || null;
-  }, [fleetHealth]);
   const router = useRouter();
   const [weekOffset, setWeekOffset] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedMaintenance, setSelectedMaintenance] = useState<any>(null);
+  const [selectedMaintenance, setSelectedMaintenance] = useState<SelectedMaintenance | null>(null);
   const [isAddFlightModalOpen, setIsAddFlightModalOpen] = useState(false);
+  const [pendingSchedulerResult, setPendingSchedulerResult] = useState<PendingSchedulerResult | null>(null);
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
   const [pendingFlightData, setPendingFlightData] = useState<any>(null);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [lastAddedFlight, setLastAddedFlight] = useState<string | null>(null);
   const [autoScrollTarget, setAutoScrollTarget] = useState<string | null>(null);
-  const [showMaintenanceToast, setShowMaintenanceToast] = useState(false);
-  const [maintenanceAircraftNumber, setMaintenanceAircraftNumber] = useState<string>('');
-  const [maintenanceTimeoutId, setMaintenanceTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const [reschedulingCompleted, setReschedulingCompleted] = useState<string[]>([]);
+  const [scheduleImpact, setScheduleImpact] = useState<ScheduleImpact | null>(null);
+
+  // Accumulates raw legs for every interactively-added flight that has been
+  // confirmed. Included in InMemoryDataProvider on each subsequent add so that
+  // all previously-added flights remain visible in the schedule.
+  const addedFlightLegsRef = useRef<RawFlightLeg[]>([]);
+
+  // Maps confirmed added flight numbers → assigned tail number.
+  // Used to lock previously-confirmed added flights on subsequent scheduler
+  // re-runs, preventing them from being displaced by the new flight.
+  const confirmedAddedFlightsRef = useRef<Map<number, string>>(new Map());
 
   const resetToOriginalData = () => {
     setFlightScheduleData(JSON.parse(JSON.stringify(initialFlightScheduleData)));
-
+    addedFlightLegsRef.current = [];
+    confirmedAddedFlightsRef.current = new Map();
     setShowSuccessToast(false);
-    setShowMaintenanceToast(false);
-
     setLastAddedFlight(null);
-    setMaintenanceAircraftNumber('');
     setAutoScrollTarget(null);
-    setReschedulingCompleted([]);
     setPendingFlightData(null);
-
-    if (maintenanceTimeoutId) {
-      clearTimeout(maintenanceTimeoutId);
-      setMaintenanceTimeoutId(null);
-    }
+    setPendingSchedulerResult(null);
   };
 
-  const handleFlightSubmit = (flightData: any) => {
+  const handleFlightSubmit = async (flightData: any) => {
     setPendingFlightData(flightData);
     setIsAddFlightModalOpen(false);
+
+    // Run the full scheduler in-memory with the new flight legs appended.
+    // NOTE (DEMO): rawData is the base dataset passed from the server at page load.
+    // In a future DB-backed implementation this should fetch from an API instead.
+    if (rawData) {
+      const baseData = deserializeRawScheduleData(rawData);
+
+      // Derive the next flight number from both the original base data AND any
+      // flights added in this session, so numbers don't collide across multiple
+      // sequential adds.
+      const flightNumber = nextFlightNumber([
+        ...baseData.flightLegs,
+        ...addedFlightLegsRef.current,
+      ]);
+
+      // Convert the form's route legs to RawFlightLeg format for the scheduler.
+      const newLegs: RawFlightLeg[] = (flightData.route as Array<{
+        from: string; to: string;
+        departureDate: string; departureTime: string;
+        arrivalDate: string; arrivalTime: string;
+      }>).map((leg, idx) => ({
+        flightNumber,
+        legNumber: idx + 1,
+        origin: leg.from,
+        destination: leg.to,
+        departureDate: new Date(leg.departureDate + 'T00:00:00Z'),
+        departureTime: leg.departureTime ?? '00:00',
+        arrivalDate: new Date(leg.arrivalDate + 'T00:00:00Z'),
+        arrivalTime: leg.arrivalTime ?? '00:00',
+      }));
+
+      // Build locked assignments:
+      //   1. Past flights (departed before now) — cannot be displaced.
+      //   2. Previously-confirmed added flights — locked to their assigned tail
+      //      so subsequent adds do not displace them.
+      const nowMs = Date.now();
+      const lockedAssignments = new Map<number, string>(confirmedAddedFlightsRef.current);
+      for (const aircraft of flightScheduleData) {
+        for (const route of aircraft.routes) {
+          if (route.length === 0) continue;
+          const firstLeg = route[0];
+          const depMs = new Date(`${firstLeg.departureDate}T${firstLeg.departureTime}Z`).getTime();
+          if (firstLeg.flightNumber !== undefined && depMs < nowMs) {
+            lockedAssignments.set(firstLeg.flightNumber, aircraft.tailNumber);
+          }
+        }
+      }
+
+      // Pass current schedule's maintenance blocks as lockedMaintBlocks.
+      // The scheduler keeps past blocks (startDateTime < now) fixed and
+      // recomputes future blocks, so the new flight's impact on maintenance
+      // due dates is reflected without disrupting in-progress maintenance.
+      const lockedMaintBlocks = extractExistingMaintBlocks(flightScheduleData);
+
+      // Include all previously-confirmed added flights so they remain in the
+      // schedule alongside the new one.
+      const allAdditionalLegs = [...addedFlightLegsRef.current, ...newLegs];
+      const provider = new InMemoryDataProvider(baseData, allAdditionalLegs);
+      const output = await runScheduler(provider, new Date(), lockedAssignments, lockedMaintBlocks);
+      const ganttData = toGanttFormat(output);
+      const newUnscheduled = toUnscheduledFormat(output);
+
+      // Find which tail the scheduler assigned the new flight to.
+      const assignedBlock = output.scheduledBlocks.find(
+        b => b.type === 'FLIGHT' && b.legs?.some(l => l.flightNumber === flightNumber)
+      );
+      const assignedTailNumber = assignedBlock?.tailNumber ?? null;
+
+      setPendingSchedulerResult({ ganttData, unscheduledFlights: newUnscheduled, assignedTailNumber, flightNumber, newLegs });
+    }
+
     setIsConfirmationPopupOpen(true);
   };
 
   const handleConfirmFlight = () => {
-    if (pendingFlightData) {
-      const { updatedFleetData, assignedTailNumber } = processNewFlight(
+    if (pendingSchedulerResult) {
+      // Compute total flight hours for the new trip from its raw legs so the
+      // impact popup can show how many hours were added to the assigned tail.
+      const newFlightHours = pendingSchedulerResult.newLegs.reduce((sum, leg) => {
+        const dep = new Date(`${leg.departureDate.toISOString().slice(0, 10)}T${leg.departureTime}:00Z`);
+        const arr = new Date(`${leg.arrivalDate.toISOString().slice(0, 10)}T${leg.arrivalTime}:00Z`);
+        return sum + Math.max(0, (arr.getTime() - dep.getTime()) / 3_600_000);
+      }, 0);
+
+      // Compute the schedule impact before applying the new data so we still
+      // have the current (before) snapshot in flightScheduleData.
+      const impact = diffSchedule(
         flightScheduleData,
-        pendingFlightData,
+        pendingSchedulerResult.ganttData,
+        pendingSchedulerResult.flightNumber,
+        newFlightHours,
       );
-      setFlightScheduleData(updatedFleetData);
-      setIsConfirmationPopupOpen(false);
-      setPendingFlightData(null);
-      setShowSuccessToast(true);
-      setLastAddedFlight(assignedTailNumber);
-      setAutoScrollTarget(assignedTailNumber);
+
+      // Persist this flight's raw legs so the next add includes it.
+      addedFlightLegsRef.current = [
+        ...addedFlightLegsRef.current,
+        ...pendingSchedulerResult.newLegs,
+      ];
+
+      // Lock this flight to its assigned tail for all future re-runs.
+      if (pendingSchedulerResult.assignedTailNumber !== null) {
+        confirmedAddedFlightsRef.current = new Map(confirmedAddedFlightsRef.current);
+        confirmedAddedFlightsRef.current.set(
+          pendingSchedulerResult.flightNumber,
+          pendingSchedulerResult.assignedTailNumber,
+        );
+      }
+
+      setFlightScheduleData(pendingSchedulerResult.ganttData);
+      if (setUnscheduledFlights) {
+        setUnscheduledFlights(pendingSchedulerResult.unscheduledFlights);
+      }
+
+      const tailToHighlight = pendingSchedulerResult.assignedTailNumber;
+      if (tailToHighlight) {
+        setShowSuccessToast(true);
+        setLastAddedFlight(tailToHighlight);
+        setAutoScrollTarget(tailToHighlight);
+      }
+
+      // Show the schedule impact popup after closing the confirmation popup.
+      setScheduleImpact(impact);
     }
+
+    setIsConfirmationPopupOpen(false);
+    setPendingFlightData(null);
+    setPendingSchedulerResult(null);
   };
 
   const handleCancelConfirmation = () => {
@@ -139,166 +261,11 @@ export default function FlightMaintenanceSchedule(
   const handleSuccessToastClose = () => {
     setShowSuccessToast(false);
     setLastAddedFlight(null);
-
-    const today = new Date();
-    const currentDateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
-    const specialCases = {
-      'ZZ153': '2025-09-08',
-      'ZZ165': '2025-09-09',
-      'ZZ190': '2025-09-10',
-      'ZZ175': '2025-09-11',
-      'ZZ145': '2025-09-12'
-    };
-
-    let affectedAircraft = null;
-    for (const [aircraft, date] of Object.entries(specialCases)) {
-      if (date === currentDateString) {
-        affectedAircraft = aircraft;
-        break;
-      }
-    }
-
-    if (affectedAircraft) {
-      const timeoutId = setTimeout(() => {
-        setMaintenanceAircraftNumber(affectedAircraft);
-        setShowMaintenanceToast(true);
-        setAutoScrollTarget(affectedAircraft);
-
-        if (!reschedulingCompleted.includes(affectedAircraft)) {
-          handleMaintenanceRescheduling(affectedAircraft);
-        }
-      }, 10000);
-
-      setMaintenanceTimeoutId(timeoutId);
-    }
   };
-
-  const handleMaintenanceRescheduling = (aircraftNumber: string) => {
-    const today = new Date();
-    const currentDateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
-    const specialCases = {
-      'ZZ153': '2025-09-08',
-      'ZZ165': '2025-09-09',
-      'ZZ190': '2025-09-10',
-      'ZZ175': '2025-09-11',
-      'ZZ145': '2025-09-12'
-    };
-
-    if (specialCases[aircraftNumber as keyof typeof specialCases] === currentDateString) {
-      const updatedFlightScheduleData = [...flightScheduleData];
-
-      const sourceAircraftIndex = updatedFlightScheduleData.findIndex(aircraft => aircraft.tailNumber === aircraftNumber);
-      const zz199Index = updatedFlightScheduleData.findIndex(aircraft => aircraft.tailNumber === 'ZZ199');
-
-      if (sourceAircraftIndex !== -1 && zz199Index !== -1) {
-        const sourceAircraft = updatedFlightScheduleData[sourceAircraftIndex];
-
-        let nextFlightRouteIndex = -1;
-        for (let i = 0; i < sourceAircraft.routes.length; i++) {
-          const route = sourceAircraft.routes[i];
-          if (route.length > 0 && route[0].departureDate >= currentDateString) {
-            nextFlightRouteIndex = i;
-            break;
-          }
-        }
-
-        if (nextFlightRouteIndex !== -1) {
-          const flightRoute = sourceAircraft.routes[nextFlightRouteIndex];
-          updatedFlightScheduleData[zz199Index].routes.push(flightRoute);
-
-          updatedFlightScheduleData[sourceAircraftIndex].routes.splice(nextFlightRouteIndex, 1);
-
-          const currentTime = new Date();
-          const maintenanceStartTime = new Date(currentTime.getTime());
-
-          const daysToAdd = {
-            'ZZ153': 5,
-            'ZZ165': 4,
-            'ZZ190': 4,
-            'ZZ175': 4,
-            'ZZ145': 4
-          };
-
-          const maintenanceEndDate = new Date(today);
-          maintenanceEndDate.setDate(today.getDate() + daysToAdd[aircraftNumber as keyof typeof daysToAdd]);
-
-          const currentDate = new Date();
-          const currentDateString = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
-
-          updatedFlightScheduleData[sourceAircraftIndex].maintenance.forEach(maintenance => {
-            if (maintenance.type === 'Planned' && maintenance.scheduleStartDate >= currentDateString) {
-              const originalStartDate = new Date(maintenance.scheduleStartDate);
-              const originalEndDate = new Date(maintenance.scheduleEndDate);
-
-              originalStartDate.setDate(originalStartDate.getDate() + 10);
-              originalEndDate.setDate(originalEndDate.getDate() + 10);
-
-              maintenance.scheduleStartDate = `${originalStartDate.getFullYear()}-${String(originalStartDate.getMonth() + 1).padStart(2, "0")}-${String(originalStartDate.getDate()).padStart(2, "0")}`;
-              maintenance.scheduleEndDate = `${originalEndDate.getFullYear()}-${String(originalEndDate.getMonth() + 1).padStart(2, "0")}-${String(originalEndDate.getDate()).padStart(2, "0")}`;
-            }
-          });
-
-          updatedFlightScheduleData[sourceAircraftIndex].maintenance.push({
-            id: `${Math.floor(Math.random() * 90000) + 10000}`,
-            type: 'Planned',
-            scheduleStartDate: `${maintenanceStartTime.getFullYear()}-${String(maintenanceStartTime.getMonth() + 1).padStart(2, "0")}-${String(maintenanceStartTime.getDate()).padStart(2, "0")}`,
-            scheduleEndDate: `${maintenanceEndDate.getFullYear()}-${String(maintenanceEndDate.getMonth() + 1).padStart(2, "0")}-${String(maintenanceEndDate.getDate()).padStart(2, "0")}`,
-            scheduleStartTime: `${String(maintenanceStartTime.getHours()).padStart(2, "0")}:${String(maintenanceStartTime.getMinutes()).padStart(2, "0")}`,
-            scheduleEndTime: '23:59'
-          });
-
-          setFlightScheduleData(updatedFlightScheduleData);
-
-          setReschedulingCompleted(prev => [...prev, aircraftNumber]);
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (maintenanceTimeoutId) {
-        clearTimeout(maintenanceTimeoutId);
-      }
-    };
-  }, [maintenanceTimeoutId]);
 
   const handleEditFlightDetails = () => {
     setIsConfirmationPopupOpen(false);
     setIsAddFlightModalOpen(true);
-  };
-
-  const getFlashingDotColor = (aircraftNumber: string) => {
-    const today = new Date();
-    const currentDateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
-    const specialCases = {
-      'ZZ153': '2025-09-08',
-      'ZZ165': '2025-09-09',
-      'ZZ190': '2025-09-10',
-      'ZZ175': '2025-09-11',
-      'ZZ145': '2025-09-12'
-    };
-
-    if (specialCases[aircraftNumber as keyof typeof specialCases] === currentDateString &&
-      reschedulingCompleted.includes(aircraftNumber)) {
-      return 'red';
-    }
-
-    if (aircraftNumber === 'ZZ199') {
-      const isAnyAircraftAffectedToday = Object.values(specialCases).includes(currentDateString);
-      const isAnyReschedulingDone = Object.keys(specialCases).some(aircraft =>
-        specialCases[aircraft as keyof typeof specialCases] === currentDateString &&
-        reschedulingCompleted.includes(aircraft)
-      );
-      if (isAnyAircraftAffectedToday && isAnyReschedulingDone) {
-        return 'green';
-      }
-    }
-
-    return null;
   };
   const today = useMemo(() => new Date(liveTimeTick), [liveTimeTick]);
 
@@ -418,7 +385,7 @@ export default function FlightMaintenanceSchedule(
     } else {
       return `${startMonth} ${startDate.getDate()} - ${endMonth} ${endDate.getDate()}, ${year}`;
     }
-  }, [weekOffset]);
+  }, [weekOffset, today]);
 
   const scrollToWeek = useCallback((weekOffset: number) => {
     if (scrollContainerRef.current) {
@@ -437,7 +404,7 @@ export default function FlightMaintenanceSchedule(
         );
       }
       if (targetIndex >= 0) {
-        const cellWidth = 181;
+        const cellWidth = 241;
         const scrollPosition = targetIndex * cellWidth;
         scrollContainerRef.current.scrollTo({
           left: scrollPosition,
@@ -478,12 +445,12 @@ export default function FlightMaintenanceSchedule(
     }
   }, [autoScrollTarget]);
 
-  const filteredAircraftData = useMemo(() => {
+  const filteredGanttAircraftData = useMemo(() => {
     if (!debouncedSearchQuery.trim()) return flightScheduleData;
 
     const query = debouncedSearchQuery.toLowerCase();
     return flightScheduleData.filter(
-      (aircraft: Aircraft) =>
+      (aircraft: GanttAircraft) =>
         aircraft.tailNumber.toLowerCase().includes(query) ||
         getDynamicStatusForAircraft(aircraft).toLowerCase() === query
     );
@@ -503,11 +470,11 @@ export default function FlightMaintenanceSchedule(
     return (totalMinutes / (24 * 60)) * 100;
   };
 
-  const getMaintenanceSchedulesForAircraft = useCallback(
-    (aircraft: Aircraft) => {
+  const getMaintenanceSchedulesForGanttAircraft = useCallback(
+    (aircraft: GanttAircraft) => {
       const maintenanceItems: any[] = [];
       aircraft.maintenance.forEach(
-        (maintenance: MaintenanceItem, maintenanceIndex: number) => {
+        (maintenance: GanttMaintenanceItem, maintenanceIndex: number) => {
           const startDate = maintenance.scheduleStartDate;
           const endDate = maintenance.scheduleEndDate;
           const startDateIndex = fullDateRange.findIndex(
@@ -550,22 +517,23 @@ export default function FlightMaintenanceSchedule(
     startPosition: number;
     endPosition: number;
     routeText: string;
-    routes: RouteLeg[];
+    routes: GanttRouteLeg[];
+    flightNumber?: number;
     type: "flight";
   };
 
   const getJourneySegments = useCallback(
-    (aircraft: Aircraft): JourneySegment[] => {
+    (aircraft: GanttAircraft): JourneySegment[] => {
       const segments: JourneySegment[] = [];
       if (!Array.isArray(aircraft.routes)) return segments;
 
-      aircraft.routes.forEach((segmentArr: RouteLeg[]) => {
+      aircraft.routes.forEach((segmentArr: GanttRouteLeg[]) => {
         if (!segmentArr || segmentArr.length === 0) return;
         const firstLeg = segmentArr[0];
         const lastLeg = segmentArr[segmentArr.length - 1];
 
         const cities: string[] = [firstLeg.from];
-        segmentArr.forEach((r: RouteLeg) => {
+        segmentArr.forEach((r: GanttRouteLeg) => {
           cities.push(r.to);
         });
         const routeText = cities.join("-");
@@ -593,6 +561,7 @@ export default function FlightMaintenanceSchedule(
           endPosition,
           routeText,
           routes: segmentArr,
+          flightNumber: firstLeg.flightNumber,
           type: "flight",
         });
       });
@@ -632,11 +601,21 @@ export default function FlightMaintenanceSchedule(
     }
   };
 
-  const handlePlannedMaintenanceClick = (maintenance: any, aircraft: Aircraft) => {
+  const handlePlannedMaintenanceClick = (maintenance: { id: string; maintenanceType: GanttMaintenanceItem['type']; maintenanceIndex: number }, aircraft: GanttAircraft) => {
+    const item = aircraft.maintenance[maintenance.maintenanceIndex];
     setSelectedMaintenance({
-      ...maintenance,
+      id: item.id,
+      maintenanceType: item.type,
+      maintenanceIndex: maintenance.maintenanceIndex,
+      scheduleStartDate: item.scheduleStartDate,
+      scheduleEndDate: item.scheduleEndDate,
+      scheduleStartTime: item.scheduleStartTime,
+      scheduleEndTime: item.scheduleEndTime,
+      durationHours: item.durationHours,
+      tasks: item.tasks,
       aircraftTailNumber: aircraft.tailNumber,
       aircraftStatus: getDynamicStatusForAircraft(aircraft),
+      currentHours: aircraft.currentHours,
     });
     setIsModalOpen(true);
   };
@@ -660,17 +639,17 @@ export default function FlightMaintenanceSchedule(
 
   return (
     <>
-      <div className="w-full">
-        <div className="bg-white rounded-t-[11px] shadow-[0px_5px_45px_rgba(0,0,0,0.25)] py-2">
-          <div className="flex items-center justify-between px-6">
+      <div className="w-full flex-shrink-0">
+        <div className="bg-white rounded-t-[11px] shadow-[0px_5px_45px_rgba(0,0,0,0.25)] py-4">
+          <div className="flex items-center justify-between px-8">
             <div className="flex items-center">
-              <h1 className="text-lg font-bold text-black">
+              <h1 className="text-[15px] font-bold text-black">
                 Smart scheduling
               </h1>
-              <div className="flex items-center pl-8">
+              <div className="flex items-center pl-16">
                 <button
                   type="button"
-                  className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0"
+                  className="flex items-center gap-3 cursor-pointer bg-transparent border-none p-0"
                   onClick={goToToday}
                   aria-label="Go to today"
                   tabIndex={0}
@@ -681,23 +660,23 @@ export default function FlightMaintenanceSchedule(
                     }
                   }}
                 >
-                  <div className="flex items-center h-7">
+                  <div className="flex items-center h-10 ">
                     <img
-                      className="w-5 h-5"
+                      className="w-7 h-7"
                       src="/images/landing/icon-1.png"
                       alt="Today"
                     />
                   </div>
-                  <span className="text-[13px] font-medium text-[#393939]">
+                  <span className="text-[15px] font-medium text-[#393939]">
                     Today
                   </span>
                 </button>
 
-                <div className="flex items-center gap-1 ml-4">
-                  <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2 ml-8">
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      className="flex items-center justify-center w-8 h-8 p-2 cursor-pointer transform rotate-180"
+                      className="flex items-center justify-center w-11 h-11 p-3 cursor-pointer transform rotate-180"
                       onClick={goToPreviousWeek}
                       aria-label="Go to previous week"
                       tabIndex={0}
@@ -709,7 +688,7 @@ export default function FlightMaintenanceSchedule(
                       }}
                     >
                       <img
-                        className="w-3 h-4 transform rotate-180"
+                        className="w-4 h-5 transform rotate-180"
                         src="/images/landing/vector-5.png"
                         alt="Previous"
                       />
@@ -717,7 +696,7 @@ export default function FlightMaintenanceSchedule(
 
                     <button
                       type="button"
-                      className="flex items-center justify-center w-8 h-8 p-2 cursor-pointer"
+                      className="flex items-center justify-center w-11 h-11 p-3 cursor-pointer"
                       onClick={goToNextWeek}
                       aria-label="Go to next week"
                       tabIndex={0}
@@ -729,14 +708,14 @@ export default function FlightMaintenanceSchedule(
                       }}
                     >
                       <img
-                        className="w-3 h-4"
+                        className="w-4 h-5"
                         src="/images/landing/vector-5-1.png"
                         alt="Next"
                       />
                     </button>
 
-                    <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-medium text-gray-700">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[15px] font-medium text-gray-700">
                         {getWeekRangeText}
                       </span>
                     </div>
@@ -745,65 +724,64 @@ export default function FlightMaintenanceSchedule(
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-9">
               <div
-                className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-[45px] w-64"
+                className="flex items-center gap-3 px-3 py-3 bg-white rounded-[45px] w-96"
                 style={{ border: "1px solid #b8b8b8" }}
               >
                 <img
-                  className="w-5 h-5"
+                  className="w-8 h-8"
                   src="/images/landing/icon-left.png"
                   alt="Search"
                 />
                 <input
                   type="text"
                   placeholder="Search flights"
-                  className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-500 text-sm"
+                  className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-500 text-[15px]"
                   value={searchQuery}
                   onChange={handleSearchChange}
                 />
               </div>
 
               <button
-                className="flex items-center justify-center gap-2 px-6 py-2 bg-gradient-to-b from-[rgba(52,156,230,1)] to-[rgba(41,116,169,1)] border border-[#1165a2] rounded-full"
+                className="flex items-center justify-center gap-3 px-10 py-3.5 bg-gradient-to-b from-[rgba(52,156,230,1)] to-[rgba(41,116,169,1)] border border-[#1165a2] rounded-full"
                 onClick={() => {
-                  resetToOriginalData();
                   setIsAddFlightModalOpen(true);
                 }}
               >
-                <span className="text-sm font-bold text-white">Add flight</span>
+                <span className="text-[15px] font-bold text-white">Add flight</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 p-3 min-h-0">
-        <div className="h-full bg-white rounded-lg shadow-lg border overflow-hidden">
+      <div className="flex-1 min-h-0 flex flex-col gap-2 pt-0 px-4 pb-4">
+        <div className="flex-1 min-h-0 bg-white rounded-lg shadow-lg border overflow-hidden">
           <div ref={scrollContainerRef} className="h-full overflow-auto">
             <div className="min-w-max">
               <div className="flex text-white border-b-2 sticky top-0 z-20 gap-1">
-                <div className="w-[180px] h-[44px] flex items-center justify-center bg-[#15213d] sticky left-0 z-30 text-[13px] text-white ">
+                <div className="w-[240px] h-[65px] flex items-center justify-center bg-[#15213d] sticky left-0 z-30 text-[15px] text-white ">
                   Aircraft tail numbers
                 </div>
 
                 {fullDateRange.map((date) => (
                   <div
                     key={date.fullDate.toISOString()}
-                    className={`w-[180px] h-[44px] flex items-center justify-between px-3 flex-shrink-0 text-white rounded-t-lg ${date.isToday ? "bg-[#4b67a7]" : "bg-[#52596a]"
+                    className={`w-[240px] h-[65px] flex items-center justify-between p-4 flex-shrink-0 text-white rounded-t-lg ${date.isToday ? "bg-[#4b67a7]" : "bg-[#52596a]"
                       }`}
                   >
-                    <div className="flex gap-1 items-center">
-                      <span className="text-lg font-bold">
+                    <div className="flex gap-2 items-center">
+                      <span className="text-[15px] font-bold">
                         {date.fullDate.getDate()}
                       </span>
-                        <span className="text-[12px] font-medium text-[#ffffff99]">
+                      <span className="text-[15px] font-medium text-[#ffffff99]">
                         {date.fullDate.toLocaleString("en-US", {
                           month: "short",
                         })}
                       </span>
                     </div>
-                    <div className="text-[12px]">
+                    <div className="text-[15px]">
                       {date.fullDate
                         .toLocaleDateString("en-US", { weekday: "short" })
                         .toUpperCase()}
@@ -812,10 +790,10 @@ export default function FlightMaintenanceSchedule(
                 ))}
               </div>
 
-              {filteredAircraftData.map((aircraft: Aircraft) => {
+              {filteredGanttAircraftData.map((aircraft: GanttAircraft) => {
                 const journeySegments = getJourneySegments(aircraft);
                 const maintenanceSchedules =
-                  getMaintenanceSchedulesForAircraft(aircraft);
+                  getMaintenanceSchedulesForGanttAircraft(aircraft);
 
                 return (
                   <div
@@ -825,7 +803,7 @@ export default function FlightMaintenanceSchedule(
                   >
                     <button
                       type="button"
-                      className="mt-1 cursor-pointer w-[180px] h-[54px] flex gap-2 items-center justify-center sticky left-0 z-10"
+                      className="mt-1 cursor-pointer w-[240px] h-[77px] flex gap-3 items-center justify-center sticky left-0 z-10"
                       style={{
                         background:
                           "linear-gradient(270deg, rgba(21, 46, 102, 1) 0%, rgba(16, 27, 52, 1) 100%)",
@@ -841,7 +819,7 @@ export default function FlightMaintenanceSchedule(
                           ),
                         }}
                       ></div>
-                      <div className="w-[16px] h-[16px]">
+                      <div className="w-[24px] h-[24px]">
                         <img
                           src="/images/landing/airport-13.png"
                           alt="Airport"
@@ -852,57 +830,18 @@ export default function FlightMaintenanceSchedule(
                           <div className="font-bold text-white text-[15px]">
                             {aircraft.tailNumber}
                           </div>
-                          {aircraft.tailNumber === 'ZZ198' && lastAddedFlight === 'ZZ198' && (
+                          {lastAddedFlight !== null && aircraft.tailNumber === lastAddedFlight && (
                             <div className="relative">
                               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                               <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
                             </div>
                           )}
-                          {(() => {
-                            const flashingColor = getFlashingDotColor(aircraft.tailNumber);
-                            if (flashingColor) {
-                              return (
-                                <div className="relative">
-                                  <div className={`w-3 h-3 ${flashingColor === 'red' ? 'bg-red-500' : 'bg-green-500'} rounded-full animate-pulse`}></div>
-                                  <div className={`absolute inset-0 w-3 h-3 ${flashingColor === 'red' ? 'bg-red-500' : 'bg-green-500'} rounded-full animate-ping opacity-75`}></div>
-                                </div>
-                              );
-                            }
-                            return null;
-                          })()}
-                          {/* Fleet Monitor health badge */}
-                          {(() => {
-                            const health = getA400HealthForAircraft(aircraft.tailNumber);
-                            if (!health || health.worstStatus === 'Good') return null;
-                            const isCritical = health.worstStatus === 'Critical';
-                            return (
-                              <span
-                                title={`Fleet Monitor: ${health.worstStatus} — ${health.displayName}`}
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '3px',
-                                  padding: '1px 5px',
-                                  borderRadius: '8px',
-                                  fontSize: '9px',
-                                  fontWeight: 700,
-                                  letterSpacing: '0.5px',
-                                  border: `1px solid ${isCritical ? 'rgba(255,71,87,0.5)' : 'rgba(199,109,65,0.5)'}`,
-                                  background: isCritical ? 'rgba(255,71,87,0.12)' : 'rgba(255,165,2,0.12)',
-                                  color: isCritical ? '#ff4757' : '#ffa502',
-                                  whiteSpace: 'nowrap',
-                                }}
-                              >
-                                {isCritical ? '⚠ CRIT' : '⚠ WARN'}
-                              </span>
-                            );
-                          })()}
                         </div>
-                        <div className="flex gap-1 items-center text-sm text-muted-foreground">
-                          <div className="text-wrapper-20">
+                        <div className="flex gap-1 items-center text-[15px] text-muted-foreground">
+                          <div className="text-[15px]">
                             {getDynamicStatusForAircraft(aircraft)}
                           </div>
-                          <div className="w-[11px] h-[11px]">
+                          <div className="w-[13.3px] h-[13.3px]">
                             <img src="/images/landing/open-end-wrench-24.png" />
                           </div>
                         </div>
@@ -915,7 +854,7 @@ export default function FlightMaintenanceSchedule(
                         ref={(el) => {
                           cellRefs.current[colIndex] = el;
                         }}
-                        className={`mt-1 w-[180px] h-[54px] relative flex-shrink-0 overflow-hidden ${date.isToday
+                        className={`mt-1 w-[240px] h-[77px] relative flex-shrink-0 ${date.isToday
                           ? "bg-[#e9b7b575]"
                           : colIndex % 2 !== 0
                             ? "bg-[#e1e0e0]"
@@ -941,7 +880,7 @@ export default function FlightMaintenanceSchedule(
                               backgroundColor: "#1e35b9",
                             }}
                           >
-                            {aircraft === filteredAircraftData[0] && (
+                            {aircraft === filteredGanttAircraftData[0] && (
                               <div
                                 className="absolute w-4 h-4 bg-black border-2 border-white rounded-full shadow-lg"
                                 style={{
@@ -969,7 +908,7 @@ export default function FlightMaintenanceSchedule(
                         (date) =>
                           date.dateString === toUTCString(lastLeg.arrivalDate)
                       );
-                      const cellWidth = 181;
+                      const cellWidth = 241;
                       const nameColumnWidth = 241;
                       const startOffsetInCell =
                         (timeToPosition(firstLeg.departureTime) / 100) *
@@ -1029,27 +968,34 @@ export default function FlightMaintenanceSchedule(
                                   .arrivalTime
                                 })`}
                             >
-                              <div className="flex items-center w-full justify-between px-2">
-                                <div className="flex items-center gap-1">
+                              <div className="flex items-center w-full justify-between px-2 overflow-hidden">
+                                <div className="flex items-center gap-1 flex-shrink-0">
                                   <img
-                                    className=" w-[16px] h-[16px]"
+                                    className="w-[17px] h-[17px]"
                                     src="/images/landing/airplane-take-off-8.png"
                                     alt="Takeoff"
                                   />
-                                  <span className="text-[#91c9ff] font-bold text-[11px] min-w-[36px] text-left">
+                                  <span className="text-[#91c9ff] font-bold text-[14px] min-w-[42px] text-left">
                                     {segment.routes[0].departureTime}
                                   </span>
                                 </div>
-                                <div className="text-[11px] text-white font-bold px-1 flex-1 text-center">
-                                  {segment.routeText}
+                                <div className="flex items-center flex-1 overflow-hidden px-1 justify-center gap-2">
+                                  {segment.flightNumber && (
+                                    <span className="text-[#91c9ff] font-bold text-[17px] flex-shrink-0">
+                                      FN {segment.flightNumber}
+                                    </span>
+                                  )}
+                                  <span className="text-[14px] text-white font-bold overflow-hidden whitespace-nowrap">
+                                    {segment.routeText}
+                                  </span>
                                 </div>
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center gap-1 flex-shrink-0">
                                   <img
-                                    className="w-[16px] h-[16px]"
+                                    className="w-[17px] h-[17px]"
                                     src="/images/landing/airplane-landing-15.png"
                                     alt="Landing"
                                   />
-                                  <span className="text-[#91c9ff] font-bold text-[11px] min-w-[36px] text-right">
+                                  <span className="text-[#91c9ff] font-bold text-[14px] min-w-[42px] text-right">
                                     {
                                       segment.routes[segment.routes.length - 1]
                                         .arrivalTime
@@ -1066,7 +1012,7 @@ export default function FlightMaintenanceSchedule(
                               align="start"
                               sideOffset={2}
                             >
-                              <FlightDetailsPopup routes={segment.routes} />
+                              <FlightDetailsPopup routes={segment.routes} flightNumber={segment.flightNumber} />
                             </HoverCard.Content>
                           </HoverCard.Portal>
                         </HoverCard.Root>
@@ -1074,8 +1020,8 @@ export default function FlightMaintenanceSchedule(
                     })}
 
                     {maintenanceSchedules.map(
-                      (maintenance, maintenanceIndex) => {
-                        const cellWidth = 181;
+                      (maintenance) => {
+                        const cellWidth = 241;
                         const nameColumnWidth = 241;
 
                         const startOffsetInCell =
@@ -1113,7 +1059,7 @@ export default function FlightMaintenanceSchedule(
                         return isPlannedMaintenance ? (
                           <button
                             key={`maintenance-${maintenance.id}`}
-                            className={`absolute transform -translate-y-1/2 h-[45px] rounded-lg z-0 flex items-center justify-center border cursor-pointer hover:opacity-80`}
+                            className={`absolute transform -translate-y-1/2 h-[45px] rounded-lg z-0 flex items-center justify-center border cursor-pointer hover:opacity-80 overflow-hidden`}
                             style={{
                               left: `${leftOffset}px`,
                               width: `${lineWidth}px`,
@@ -1135,23 +1081,24 @@ export default function FlightMaintenanceSchedule(
                             }}
                             type="button"
                           >
-                            <span className="text-[11px] text-white font-bold px-1 flex items-center">
+                            <span className="text-[14px] text-white font-bold px-1 flex items-center whitespace-nowrap overflow-hidden">
                               <img
                                 src="/images/landing/open-end-wrench-5.png"
                                 alt="Spanner"
                                 style={{
-                                  width: "14px",
-                                  height: "14px",
-                                  marginRight: "4px",
+                                  width: "17px",
+                                  height: "17px",
+                                  marginRight: "5px",
+                                  flexShrink: 0,
                                 }}
                               />
-                              {`Planned Maintenance [${maintenance.id}]`}
+                              {`Planned Maintenance`}
                             </span>
                           </button>
                         ) : (
                           <div
                             key={`maintenance-${maintenance.id}`}
-                            className="absolute transform -translate-y-1/2 h-[32px] rounded-lg z-0 flex items-center justify-center border"
+                            className="absolute transform -translate-y-1/2 h-[45px] rounded-lg z-0 flex items-center justify-center border overflow-hidden"
                             style={{
                               left: `${leftOffset}px`,
                               width: `${lineWidth}px`,
@@ -1161,18 +1108,19 @@ export default function FlightMaintenanceSchedule(
                             }}
                             title={`Maintenance: ${maintenance.maintenanceType}`}
                           >
-                            <span className="text-[11px] text-white font-bold px-1 flex items-center">
+                            <span className="text-[14px] text-white font-bold px-1 flex items-center whitespace-nowrap overflow-hidden">
                               <img
                                 src="/images/landing/open-end-wrench-5.png"
                                 alt="Spanner"
                                 style={{
-                                  width: "14px",
-                                  height: "14px",
-                                  marginRight: "4px",
+                                  width: "17px",
+                                  height: "17px",
+                                  marginRight: "5px",
+                                  flexShrink: 0,
                                 }}
                               />
                               {maintenance.maintenanceType === "In-Depth"
-                                ? `In-Depth Maintenance [${maintenance.id}]`
+                                ? `In-Depth Maintenance`
                                 : maintenance.maintenanceType}
                             </span>
                           </div>
@@ -1182,6 +1130,159 @@ export default function FlightMaintenanceSchedule(
                   </div>
                 );
               })}
+
+              {/* ── Unable to Schedule rows — inside the Gantt grid ── */}
+              {unscheduledFlights && unscheduledFlights.length > 0 && (
+                <>
+                  {/* Section divider header */}
+                  <div className="flex gap-1 sticky left-0 z-20">
+                    <div
+                      className="w-full flex items-center gap-3 px-5 py-2"
+                      style={{ background: "linear-gradient(270deg, rgba(120, 20, 40, 1) 0%, rgba(70, 10, 20, 1) 100%)" }}
+                    >
+                      <svg className="w-4 h-4 text-red-300 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L1 21h22L12 2zm0 3.5L19.5 19h-15L12 5.5zM11 16v2h2v-2h-2zm0-6v4h2v-4h-2z" />
+                      </svg>
+                      <span className="text-white font-bold text-[15px] tracking-wide">
+                        Unable to Schedule — {unscheduledFlights.length} flight{unscheduledFlights.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* One Gantt row per unscheduled flight */}
+                  {unscheduledFlights.map((flight) => {
+                    const [depDate, depTime] = flight.departure.split(" ");
+                    const [arrDate, arrTime] = flight.arrival.split(" ");
+
+                    const cellWidth = 241;
+                    const nameColumnWidth = 241;
+
+                    const startDateIndex = fullDateRange.findIndex(d => d.dateString === depDate);
+                    const endDateIndex = (() => {
+                      let idx = fullDateRange.findIndex(d => d.dateString === arrDate);
+                      // If arrival is same day as departure or not found, use departure day
+                      return idx >= 0 ? idx : startDateIndex;
+                    })();
+
+                    const startOffsetInCell = (timeToPosition(depTime) / 100) * cellWidth;
+                    const endOffsetInCell = (timeToPosition(arrTime) / 100) * cellWidth;
+                    const leftOffset =
+                      (cellOffsets[startDateIndex] ?? nameColumnWidth + startDateIndex * cellWidth) +
+                      startOffsetInCell;
+                    const endOffset =
+                      (cellOffsets[endDateIndex] ?? nameColumnWidth + endDateIndex * cellWidth) +
+                      endOffsetInCell;
+                    const lineWidth = Math.max(endOffset - leftOffset, 10);
+                    const showBlock = lineWidth > 0 && leftOffset >= 0 && startDateIndex >= 0;
+
+                    return (
+                      <div
+                        key={`unscheduled-${flight.flightNumber}`}
+                        className="flex gap-1 relative"
+                      >
+                        {/* Left label — generic, matches aircraft row style */}
+                        <div
+                          className="mt-1 w-[240px] h-[77px] flex gap-3 items-center justify-center sticky left-0 z-10"
+                          style={{ background: "linear-gradient(270deg, rgba(21, 46, 102, 1) 0%, rgba(16, 27, 52, 1) 100%)" }}
+                        >
+                          <div className="w-[15px] h-full bg-red-500 flex-shrink-0" />
+                          <div className="w-[24px] h-[24px] flex items-center justify-center flex-shrink-0">
+                            <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 2L1 21h22L12 2zm0 3.5L19.5 19h-15L12 5.5zM11 16v2h2v-2h-2zm0-6v4h2v-4h-2z" />
+                            </svg>
+                          </div>
+                          <div className="flex flex-col flex-1 items-start justify-between overflow-hidden pr-1">
+                            <div className="flex items-baseline gap-2">
+                              <div className="font-bold text-white text-[15px]">Unscheduled</div>
+                              <div className="text-[#91c9ff] text-[11px] font-semibold">FN {flight.flightNumber}</div>
+                            </div>
+                            <div className="text-red-300 text-[11px] leading-tight whitespace-normal">{parseShortReason(flight.reason)}</div>
+                          </div>
+                        </div>
+
+                        {/* Grid cells */}
+                        {fullDateRange.map((date, colIndex) => (
+                          <div
+                            key={`unscheduled-${flight.flightNumber}-${date.dateString}`}
+                            className={`mt-1 w-[240px] h-[77px] relative flex-shrink-0 ${
+                              date.isToday
+                                ? "bg-[#f5d5d575]"
+                                : colIndex % 2 !== 0
+                                  ? "bg-[#f0d8d8]"
+                                  : "bg-[#f5e0e0]"
+                            }`}
+                          >
+                            <div className="absolute inset-0 flex">
+                              {Array.from({ length: 24 }, (_, hour) => (
+                                <div
+                                  key={hour}
+                                  className="flex-1 border-r border-red-300 opacity-20"
+                                  style={{ width: `${100 / 24}%` }}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Flight block positioned on the timeline */}
+                        {showBlock && (
+                          <HoverCard.Root openDelay={0} closeDelay={0}>
+                            <HoverCard.Trigger asChild>
+                              <div
+                                className="absolute transform -translate-y-1/2 h-[45px] rounded-lg z-0 flex items-center justify-center border overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                                style={{
+                                  left: `${leftOffset}px`,
+                                  width: `${lineWidth}px`,
+                                  top: "50%",
+                                  backgroundColor: "#b91c1c",
+                                  border: "1px solid #991b1b",
+                                }}
+                              >
+                                <div className="flex items-center w-full justify-between px-2 overflow-hidden">
+                                  <div className="flex items-center gap-1 flex-shrink-0">
+                                    <img className="w-[17px] h-[17px]" src="/images/landing/airplane-take-off-8.png" alt="Takeoff" />
+                                    <span className="text-red-200 font-bold text-[14px] min-w-[42px] text-left">{depTime}</span>
+                                  </div>
+                                  <div className="flex items-center flex-1 overflow-hidden px-1 justify-center gap-2">
+                                    <span className="text-red-200 font-bold text-[17px] flex-shrink-0">
+                                      FN {flight.flightNumber}
+                                    </span>
+                                    <span className="text-[14px] text-white font-bold overflow-hidden whitespace-nowrap">
+                                      {flight.legs.length > 0
+                                        ? [flight.legs[0].from, ...flight.legs.map(l => l.to)].join('-')
+                                        : ''}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-1 flex-shrink-0">
+                                    <img className="w-[17px] h-[17px]" src="/images/landing/airplane-landing-15.png" alt="Landing" />
+                                    <span className="text-red-200 font-bold text-[14px] min-w-[42px] text-right">{arrTime}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </HoverCard.Trigger>
+                            <HoverCard.Portal>
+                              <HoverCard.Content
+                                className="z-50 w-auto bg-transparent"
+                                side="top"
+                                align="start"
+                                sideOffset={2}
+                              >
+                                <div className="flex flex-col gap-2">
+                                  <div className="bg-[#1a0a0a] border border-red-700 rounded-xl shadow-2xl px-5 py-4 w-[360px] lg:w-[400px] xl:w-[440px] 2xl:w-[480px]">
+                                    <div className="text-red-400 font-bold text-base uppercase tracking-widest mb-2">Unable to Schedule</div>
+                                    <div className="text-red-100 text-base leading-relaxed">{flight.reason}</div>
+                                  </div>
+                                  <FlightDetailsPopup routes={flight.legs} flightNumber={flight.flightNumber} />
+                                </div>
+                              </HoverCard.Content>
+                            </HoverCard.Portal>
+                          </HoverCard.Root>
+                        )}
+                      </div>
+                    );
+                  })}
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -1191,6 +1292,7 @@ export default function FlightMaintenanceSchedule(
         <AlertDialog.Portal>
           <AlertDialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 z-50" />
           <AlertDialog.Content className="fixed inset-10 z-50 overflow-auto">
+            <AlertDialog.Title className="sr-only">Task Details</AlertDialog.Title>
             <div className="bg-white rounded-lg shadow-lg w-full h-full">
               <div className="flex items-center justify-between p-4 border-b">
                 <div>
@@ -1220,6 +1322,15 @@ export default function FlightMaintenanceSchedule(
                 <PartsMaintenanceTaskList
                   aircraftTailNumber={selectedMaintenance?.aircraftTailNumber}
                   maintenanceId={selectedMaintenance?.id}
+                  maintenanceType={selectedMaintenance?.maintenanceType}
+                  aircraftStatus={selectedMaintenance?.aircraftStatus}
+                  scheduleStartDate={selectedMaintenance?.scheduleStartDate}
+                  scheduleEndDate={selectedMaintenance?.scheduleEndDate}
+                  scheduleStartTime={selectedMaintenance?.scheduleStartTime}
+                  scheduleEndTime={selectedMaintenance?.scheduleEndTime}
+                  durationHours={selectedMaintenance?.durationHours}
+                  currentHours={selectedMaintenance?.currentHours}
+                  tasks={selectedMaintenance?.tasks}
                   onClose={() => setIsModalOpen(false)}
                 />
               </div>
@@ -1240,6 +1351,7 @@ export default function FlightMaintenanceSchedule(
         <AlertDialog.Portal>
           <AlertDialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 z-50" />
           <AlertDialog.Content className="fixed inset-10 z-50 overflow-hidden">
+            <AlertDialog.Title className="sr-only">Add Flight Details</AlertDialog.Title>
             <div className="bg-white rounded-lg shadow-lg w-full h-full flex flex-col">
               <div className="flex items-center justify-between p-4 border-b flex-shrink-0">
                 <div>
@@ -1280,9 +1392,12 @@ export default function FlightMaintenanceSchedule(
         <AlertDialog.Portal>
           <AlertDialog.Overlay className="fixed inset-0 bg-black/50 z-[9998]" />
           <AlertDialog.Content className="fixed left-1/2 top-1/2 z-[9999] max-h-[85vh] w-[90vw] max-w-[1400px] -translate-x-1/2 -translate-y-1/2 flex flex-col">
+            <AlertDialog.Title className="sr-only">Confirm Flight Details</AlertDialog.Title>
             {pendingFlightData && (
               <AddFlightDetailsConfirmationPopup
                 flightData={pendingFlightData}
+                assignedTailNumber={pendingSchedulerResult?.assignedTailNumber ?? null}
+                isUnschedulable={pendingSchedulerResult?.assignedTailNumber === null && pendingSchedulerResult !== null}
                 onCancel={handleCancelConfirmation}
                 onConfirm={handleConfirmFlight}
                 onEdit={handleEditFlightDetails}
@@ -1291,6 +1406,14 @@ export default function FlightMaintenanceSchedule(
           </AlertDialog.Content>
         </AlertDialog.Portal>
       </AlertDialog.Root>
+
+
+      {scheduleImpact && (
+        <ScheduleImpactPopup
+          impact={scheduleImpact}
+          onClose={() => setScheduleImpact(null)}
+        />
+      )}
 
       <Toast.Provider duration={Infinity}>
         <Toast.Root
@@ -1324,70 +1447,13 @@ export default function FlightMaintenanceSchedule(
 
           <div className="flex-1">
             <Toast.Title className="text-gray-800 font-semibold text-2xl leading-tight">
-              Flight Route successfully added to aircraft ZZ198
+              Flight Route successfully added to aircraft {lastAddedFlight}
             </Toast.Title>
           </div>
 
           <Toast.Close
             className="ml-2 text-gray-500 hover:text-gray-700 flex-shrink-0 p-2 hover:bg-white/50 rounded-lg transition-all duration-200 ease-in-out hover:shadow-sm border border-transparent hover:border-gray-300"
             onClick={handleSuccessToastClose}
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </Toast.Close>
-        </Toast.Root>
-
-        <Toast.Root
-          className="fixed top-16 left-1/2 transform -translate-x-1/2 rounded-lg p-5 flex items-center gap-4 z-[100] min-w-[400px] 
-                     data-[state=open]:animate-in data-[state=closed]:animate-out 
-                     data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 
-                     data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 
-                     data-[state=closed]:slide-out-to-top-48 data-[state=open]:slide-in-from-top-48
-                     data-[state=open]:duration-500 data-[state=closed]:duration-300
-                     data-[state=open]:ease-out data-[state=closed]:ease-in"
-          style={{
-            backgroundColor: '#ffeec3',
-            border: '1.33px solid #be6a2b',
-            boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(190, 106, 43, 0.1)'
-          }}
-          open={showMaintenanceToast}
-        >
-          <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-md relative" style={{ backgroundColor: '#ff8c00' }}>
-            <svg
-              className="w-6 h-6 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L1 21h22L12 2zm0 3.5L19.5 19h-15L12 5.5zM11 16v2h2v-2h-2zm0-6v4h2v-4h-2z" />
-            </svg>
-          </div>
-
-          <div className="flex-1">
-            <Toast.Title className="text-gray-800 font-extrabold text-2xl leading-tight">
-              Maintenance required for aircraft {maintenanceAircraftNumber}
-            </Toast.Title>
-
-            <Toast.Description className="pt-2 text-gray-800 text-xl leading-tight">
-              All <strong>{maintenanceAircraftNumber}</strong> flights within the maintenance window have been rescheduled to aircraft <strong>ZZ199</strong>.
-            </Toast.Description>
-          </div>
-
-          <Toast.Close
-            className="ml-2 text-gray-500 hover:text-gray-700 flex-shrink-0 p-2 hover:bg-white/50 rounded-lg transition-all duration-200 ease-in-out hover:shadow-sm border border-transparent hover:border-gray-300"
-            onClick={() => {
-              setShowMaintenanceToast(false);
-              setMaintenanceAircraftNumber('');
-              setReschedulingCompleted([]);
-            }}
           >
             <svg
               className="w-6 h-6"

@@ -1,19 +1,20 @@
 "use client";
 import React, { useState } from "react";
+import { DEMO_TAIL_NUMBER, DEMO_HOME_AIRPORT } from "../../../lib/demoConfig";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import * as Select from '@radix-ui/react-select';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { ChevronDownIcon, ChevronUpIcon, CheckIcon, CalendarIcon } from '@radix-ui/react-icons';
 
-const selectTriggerClass = "w-full h-14 px-3 border border-[rgba(42,245,86,0.25)] rounded-md bg-[var(--color-bg-elevated)] focus:outline-none focus:ring-2 focus:ring-[rgba(42,245,86,0.5)] flex items-center justify-between data-[state=open]:ring-2 data-[state=open]:ring-[rgba(42,245,86,0.5)]";
-const selectContentClass = "bg-[var(--color-bg-elevated)] border border-[rgba(42,245,86,0.25)] rounded-md shadow-lg z-50 max-h-60 overflow-y-auto";
-const selectItemClass = "px-3 py-2 rounded cursor-pointer hover:bg-[rgba(42,245,86,0.08)] focus:bg-blue-50 focus:outline-none flex items-center data-[highlighted]:bg-blue-50";
-const radioItemClass = "w-5 h-5 rounded-full border-2 border-[rgba(42,245,86,0.25)] data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 relative focus:outline-none focus:ring-2 focus:ring-blue-300";
+const selectTriggerClass = "w-full h-14 px-3 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-between data-[state=open]:ring-2 data-[state=open]:ring-blue-500";
+const selectContentClass = "bg-white border border-gray-300 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto";
+const selectItemClass = "px-3 py-2 rounded cursor-pointer hover:bg-blue-50 focus:bg-blue-50 focus:outline-none flex items-center data-[highlighted]:bg-blue-50";
+const radioItemClass = "w-5 h-5 rounded-full border-2 border-gray-300 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 relative focus:outline-none focus:ring-2 focus:ring-blue-300";
 
 const fieldContainerClass = "flex flex-col gap-2 w-60";
-const labelClass = "text-base lg:text-lg text-[var(--color-text-primary)] font-roboto tracking-wide";
-const inputClass = "w-60 h-14 px-3 border border-[rgba(42,245,86,0.25)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgba(42,245,86,0.5)]";
+const labelClass = "text-base lg:text-lg text-black font-roboto tracking-wide";
+const inputClass = "w-60 h-14 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500";
 
 const TextInput = React.forwardRef<
   HTMLInputElement,
@@ -23,8 +24,8 @@ const TextInput = React.forwardRef<
 >(({ className, variant = 'default', ...props }, ref) => {
   const baseClasses = inputClass;
   const variantClasses = {
-    default: "bg-[var(--color-bg-elevated)]",
-    disabled: "bg-[var(--color-bg-surface)] text-[#607A60] cursor-not-allowed"
+    default: "bg-white",
+    disabled: "bg-gray-100 text-gray-500 cursor-not-allowed"
   };
 
   return (
@@ -41,7 +42,7 @@ TextInput.displayName = "TextInput";
 const DatePickerWithIcon = ({ selected, onChange, placeholder, showTimeSelect = false, showTimeSelectOnly = false, dateFormat = "dd/MM/yyyy", timeIntervals = 15, timeCaption = "Time", fieldType = "date" }: any) => {
   const getIcon = () => {
     if (!showTimeSelect && !showTimeSelectOnly) {
-      return <CalendarIcon className="w-4 h-4 text-[#607A60]" />;
+      return <CalendarIcon className="w-4 h-4 text-gray-500" />;
     }
 
     if (fieldType === "arrival" || fieldType === "arriving") {
@@ -69,7 +70,6 @@ const DatePickerWithIcon = ({ selected, onChange, placeholder, showTimeSelect = 
         borderRadius: '6px',
         fontSize: '16px',
         backgroundColor: 'white',
-        color: 'black',
         cursor: 'pointer'
       }}
       {...props}
@@ -114,7 +114,7 @@ const DatePickerWithIcon = ({ selected, onChange, placeholder, showTimeSelect = 
         timeCaption={timeCaption}
         dateFormat={showTimeSelectOnly ? "h:mm aa" : dateFormat}
         timeFormat="h:mm aa"
-        className={`${inputClass} pl-10 !text-black`}
+        className={`${inputClass} pl-10`}
         placeholderText={placeholder}
         popperClassName="z-[9999]"
         popperPlacement="bottom-start"
@@ -178,8 +178,6 @@ interface AddFlightPopupProps {
 
 export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFlightPopupProps>) {
   const [selectedCategory, setSelectedCategory] = useState(initialData?.category || 'Cargo');
-  const [healthWarning, setHealthWarning] = useState<{ severity: 'Critical' | 'Warning'; components: string[] } | null>(null);
-  const [submitted, setSubmitted] = useState(false);
 
   const currentDate = new Date();
 
@@ -248,8 +246,8 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
     const route = [];
 
     route.push({
-      from: 'LHR',
-      to: legs.length > 0 && legs[0].airport ? legs[0].airport : 'LHR',
+      from: DEMO_HOME_AIRPORT,
+      to: legs.length > 0 && legs[0].airport ? legs[0].airport : DEMO_HOME_AIRPORT,
       departureDate: getLocalDateString(fromDate),
       departureTime: fromTime?.toTimeString().slice(0, 5),
       arrivalDate: legs.length > 0 ? getLocalDateString(legs[0].arrivalDate) : getLocalDateString(returnDate),
@@ -271,7 +269,7 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
       const lastLeg = legs[legs.length - 1];
       route.push({
         from: lastLeg.airport,
-        to: 'LHR',
+        to: DEMO_HOME_AIRPORT,
         departureDate: getLocalDateString(lastLeg.departureDate),
         departureTime: lastLeg.departureTime?.toTimeString().slice(0, 5),
         arrivalDate: getLocalDateString(returnDate),
@@ -279,12 +277,12 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
       });
     }
 
+    // tailNumber and flightNumber are assigned by the scheduler on confirmation —
+    // they are not set here.
     const flightData = {
-      tailNumber: 'ZZ198',
-      flightNumber: 'ZZ156',
       category: selectedCategory,
-      fromAirport: 'LHR',
-      toAirport: 'LHR',
+      fromAirport: DEMO_HOME_AIRPORT,
+      toAirport: DEMO_HOME_AIRPORT,
       fromDate: fromDate,
       fromTime: fromTime,
       returnDate: returnDate,
@@ -296,22 +294,6 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
     if (onSubmit) {
       onSubmit(flightData);
     }
-
-    setSubmitted(true);
-    fetch('/api/fleet-health')
-      .then(r => r.json())
-      .then(data => {
-        if (data.error || !data.aircraft || data.aircraft.length === 0) return;
-        const aircraft = data.aircraft[data.aircraft.length - 1];
-        const criticalComps = (aircraft.components || []).filter((c: any) => c.status === 'Critical');
-        const warningComps = (aircraft.components || []).filter((c: any) => c.status === 'Warning');
-        if (criticalComps.length > 0) {
-          setHealthWarning({ severity: 'Critical', components: criticalComps.map((c: any) => c.componentName) });
-        } else if (warningComps.length > 0) {
-          setHealthWarning({ severity: 'Warning', components: warningComps.map((c: any) => c.componentName) });
-        }
-      })
-      .catch(() => {});
   };
 
   const addSecondLeg = () => {
@@ -344,45 +326,12 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
   const secondLeg = legs.find(leg => leg.id === 'second-leg');
 
   return (
-    <div className="w-full bg-[var(--color-bg-elevated)] overflow-hidden h-full flex flex-col">
-      {/* Fleet Monitor Health Alert (shown after submission) */}
-      {submitted && healthWarning && (
-        <div style={{
-          padding: '10px 16px',
-          background: healthWarning.severity === 'Critical' ? 'rgba(255,71,87,0.08)' : 'rgba(255,165,2,0.08)',
-          borderBottom: `2px solid ${healthWarning.severity === 'Critical' ? '#ff4757' : '#ffa502'}`,
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '10px',
-        }}>
-          <div style={{ fontSize: '18px', flexShrink: 0 }}>{healthWarning.severity === 'Critical' ? '🚫' : '⚠️'}</div>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: '13px', color: healthWarning.severity === 'Critical' ? '#cc2233' : '#b87400', marginBottom: '3px' }}>
-              Fleet Monitor Alert — {healthWarning.severity} Components Detected
-            </div>
-            <div style={{ fontSize: '12px', color: '#555', lineHeight: 1.5 }}>
-              {healthWarning.severity === 'Critical'
-                ? 'This aircraft has CRITICAL components that require immediate maintenance. Flight scheduling is not recommended.'
-                : 'This aircraft has WARNING components. Review before scheduling.'}
-              {' '}Affected: <strong>{healthWarning.components.slice(0, 3).join(', ')}{healthWarning.components.length > 3 ? ` +${healthWarning.components.length - 3} more` : ''}</strong>
-            </div>
-            <a
-              href="http://localhost:3001/parts-and-equipment"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: 'inline-block', marginTop: '5px', fontSize: '11px', color: '#2AF556', fontWeight: 600, textDecoration: 'none' }}
-            >
-              Check parts availability →
-            </a>
-          </div>
-        </div>
-      )}
-
+    <div className="w-full bg-white overflow-hidden h-full flex flex-col">
       <div className="flex-1 overflow-y-auto p-6 lg:p-8">
         <div className="w-full mb-8">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <h3 className="text-lg lg:text-xl font-bold text-[var(--color-text-primary)] font-roboto">
+              <h3 className="text-lg lg:text-xl font-bold text-black font-roboto">
                 Selected Category
               </h3>
               <img
@@ -404,10 +353,10 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
                     className={radioItemClass}
                   >
                     <RadioGroup.Indicator className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-2 h-2 rounded-full bg-[var(--color-bg-elevated)]" />
+                      <div className="w-2 h-2 rounded-full bg-white" />
                     </RadioGroup.Indicator>
                   </RadioGroup.Item>
-                  <label className="text-base lg:text-lg text-[var(--color-text-primary)] font-roboto tracking-wide cursor-pointer">
+                  <label className="text-base lg:text-lg text-black font-roboto tracking-wide cursor-pointer">
                     {category}
                   </label>
                 </div>
@@ -420,7 +369,7 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
           <div className="flex flex-col gap-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg lg:text-xl font-bold text-[var(--color-text-primary)] font-roboto">
+                <h3 className="text-lg lg:text-xl font-bold text-black font-roboto">
                   Selected Route
                 </h3>
                 <img
@@ -436,14 +385,14 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
               <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 pb-2">
                 <div className="flex flex-col items-center">
                   <div className="relative flex flex-col items-center h-22">
-                    <div className="w-7 h-7 bg-[rgba(42,245,86,0.2)] rounded-full flex items-center justify-center relative z-10">
+                    <div className="w-7 h-7 bg-gray-300 rounded-full flex items-center justify-center relative z-10">
                       <img
                         className="w-4 h-4"
                         src="/images/add-flight-popup/airplane-take-off-2@2x.png"
                         alt="Takeoff"
                       />
                     </div>
-                    <div className="absolute top-7 w-0.5 h-32 bg-[rgba(42,245,86,0.2)] z-0"></div>
+                    <div className="absolute top-7 w-0.5 h-32 bg-gray-300 z-0"></div>
                   </div>
                 </div>
 
@@ -495,17 +444,17 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
 
               <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
                 <div className="w-7"></div>
-                <div className="w-[85%] h-px bg-[rgba(42,245,86,0.2)] my-2"></div>
+                <div className="w-[85%] h-px bg-gray-300 my-2"></div>
               </div>
 
               <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 pb-2">
                 <div className="flex flex-col items-center">
                   <div className="relative flex flex-col items-center h-24">
-                    <div className="absolute top-0 w-0.5 h-12 bg-[rgba(42,245,86,0.2)] z-0"></div>
-                    <div className="w-7 h-7 bg-[rgba(42,245,86,0.2)] rounded-full flex items-center justify-center relative z-10">
+                    <div className="absolute top-0 w-0.5 h-12 bg-gray-300 z-0"></div>
+                    <div className="w-7 h-7 bg-gray-300 rounded-full flex items-center justify-center relative z-10">
                       <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
                     </div>
-                    <div className="absolute top-7 w-0.5 h-32 bg-[rgba(42,245,86,0.2)] z-0"></div>
+                    <div className="absolute top-7 w-0.5 h-32 bg-gray-300 z-0"></div>
                   </div>
                 </div>
 
@@ -535,7 +484,7 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
                               <ChevronUpIcon />
                             </Select.ScrollUpButton>
                             <Select.Viewport className="p-1">
-                              {airports.filter(airport => airport.code !== 'LHR').map((airport) => (
+                              {airports.filter(airport => airport.code !== DEMO_HOME_AIRPORT).map((airport) => (
                                 <Select.Item
                                   key={airport.code}
                                   value={airport.code}
@@ -614,7 +563,7 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
                       {!hasSecondLeg && (
                         <button
                           onClick={addSecondLeg}
-                          className="border-2 border-[#2AF556] rounded-full p-4 hover:bg-[rgba(42,245,86,0.08)] transition-colors h-13"
+                          className="border-2 border-blue-600 rounded-full p-4 hover:bg-blue-50 transition-colors h-13"
                           title="Add second leg"
                         >
                           <img
@@ -633,14 +582,14 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
                 <>
                   <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
                     <div className="w-7"></div>
-                    <div className="w-[85%] h-px bg-[rgba(42,245,86,0.2)] my-2"></div>
+                    <div className="w-[85%] h-px bg-gray-300 my-2"></div>
                   </div>
 
                   <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 pb-2">
                     <div className="flex flex-col items-center">
                       <div className="relative flex flex-col items-center h-24">
-                        <div className="absolute top-7 w-0.5 h-32 bg-[rgba(42,245,86,0.2)] z-0"></div>
-                        <div className="w-7 h-7 bg-[rgba(42,245,86,0.2)] rounded-full flex items-center justify-center relative z-10">
+                        <div className="absolute top-7 w-0.5 h-32 bg-gray-300 z-0"></div>
+                        <div className="w-7 h-7 bg-gray-300 rounded-full flex items-center justify-center relative z-10">
                           <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
                         </div>
                       </div>
@@ -668,7 +617,7 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
                                   <ChevronUpIcon />
                                 </Select.ScrollUpButton>
                                 <Select.Viewport className="p-1">
-                                  {airports.filter(airport => airport.code !== 'LHR').map((airport) => (
+                                  {airports.filter(airport => airport.code !== DEMO_HOME_AIRPORT).map((airport) => (
                                     <Select.Item
                                       key={airport.code}
                                       value={airport.code}
@@ -746,7 +695,7 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
                         <div className="flex flex-row gap-2 items-end ml-4">
                           <button
                             onClick={removeSecondLeg}
-                            className="p-4 hover:bg-[var(--color-bg-surface)] rounded transition-colors h-13"
+                            className="p-4 hover:bg-gray-100 rounded transition-colors h-13"
                             title="Delete second leg"
                           >
                             <img
@@ -764,13 +713,13 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
 
               <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
                 <div className="w-7"></div>
-                <div className="w-[85%] h-px bg-[rgba(42,245,86,0.2)] my-2"></div>
+                <div className="w-[85%] h-px bg-gray-300 my-2"></div>
               </div>
 
               <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 pb-2">
                 <div className="flex flex-col items-center">
                   <div className="relative flex flex-col items-center h-22">
-                    <div className="w-7 h-7 bg-[rgba(42,245,86,0.2)] rounded-full flex items-center justify-center relative z-10">
+                    <div className="w-7 h-7 bg-gray-300 rounded-full flex items-center justify-center relative z-10">
                       <img
                         className="w-4 h-4"
                         src="/images/add-flight-popup/airplane-landing-2@2x.png"
@@ -828,11 +777,11 @@ export default function AddFlightPopup({ onSubmit, initialData }: Readonly<AddFl
       </div>
 
       <div className="flex flex-col gap-7 pb-6">
-        <div className="w-full h-px bg-[rgba(42,245,86,0.2)]"></div>
+        <div className="w-full h-px bg-gray-300"></div>
         <div className="flex items-center justify-between px-7">
           <div className="w-80 h-8"></div>
           <div className="flex items-center gap-4">
-            <button className="flex items-center justify-center gap-1 px-11 py-4 border border-[#2AF556] text-[#2AF556] bg-transparent rounded-full font-bold text-[15px] hover:bg-[rgba(42,245,86,0.08)] transition-colors min-w-[200px]">
+            <button className="flex items-center justify-center gap-1 px-11 py-4 border border-[#4270e0] text-[#4270e0] bg-transparent rounded-full font-bold text-[15px] hover:bg-blue-50 transition-colors min-w-[200px]">
               Clear All
             </button>
             <button

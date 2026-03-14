@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { DEMO_HOME_AIRPORT } from "../../../lib/demoConfig";
 
 type DateTimeType = Date | string | null;
 
@@ -14,8 +15,6 @@ interface FlightLeg {
 
 interface AddFlightDetailsConfirmationPopupProps {
   flightData: {
-    tailNumber: string;
-    flightNumber: string;
     category: string;
     fromAirport: string;
     toAirport: string;
@@ -33,6 +32,10 @@ interface AddFlightDetailsConfirmationPopupProps {
     }>;
     legs: FlightLeg[];
   };
+  /** Tail number assigned by the scheduler. Null if the flight is unschedulable. */
+  assignedTailNumber: string | null;
+  /** True if the scheduler could not fit this flight on any tail. */
+  isUnschedulable: boolean;
   onCancel: () => void;
   onConfirm: () => void;
   onEdit: () => void;
@@ -147,6 +150,8 @@ const getAirportName = (code: string) => {
 
 export default function AddFlightDetailsConfirmationPopup({
   flightData,
+  assignedTailNumber,
+  isUnschedulable,
   onCancel,
   onConfirm,
   onEdit,
@@ -156,9 +161,9 @@ export default function AddFlightDetailsConfirmationPopup({
     : [];
 
   const planeRoute = buildPlaneRoute(
-    flightData.fromAirport || 'LHR',
+    flightData.fromAirport || DEMO_HOME_AIRPORT,
     legsToDisplay,
-    flightData.toAirport || 'LHR'
+    flightData.toAirport || DEMO_HOME_AIRPORT
   );
 
   const totalFlightTime = calculateFlightTime(
@@ -170,14 +175,14 @@ export default function AddFlightDetailsConfirmationPopup({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-[var(--color-bg-elevated)] rounded-lg w-[95vw] max-w-[1400px] h-[95vh] flex flex-col">
+      <div className="bg-white rounded-lg w-[95vw] max-w-[1400px] h-[95vh] flex flex-col">
         <div className="flex flex-col items-center gap-6 pt-6 pb-0 w-full">
           <div className="flex w-full items-center justify-between px-6">
             <div className="flex items-start gap-5">
-              <div className="text-[var(--color-text-primary)] font-bold text-2xl">Add Flight Details</div>
+              <div className="text-black font-bold text-2xl">Add Flight Details</div>
             </div>
             <div className="flex items-center gap-7">
-              <button onClick={onCancel} className="w-6 h-6 flex items-center justify-center hover:bg-[var(--color-bg-surface)] rounded">
+              <button onClick={onCancel} className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M18 6L6 18" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M6 6L18 18" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -185,7 +190,7 @@ export default function AddFlightDetailsConfirmationPopup({
               </button>
             </div>
           </div>
-          <div className="w-full h-px bg-[rgba(42,245,86,0.2)]"></div>
+          <div className="w-full h-px bg-gray-300"></div>
         </div>
 
         <div className="flex-1 flex justify-center overflow-y-auto">
@@ -194,17 +199,17 @@ export default function AddFlightDetailsConfirmationPopup({
             <div className="flex flex-col gap-6 px-6 pt-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="text-[var(--color-text-primary)] font-bold text-xl">Flight Route Overview</div>
+                  <div className="text-black font-bold text-xl">Flight Route Overview</div>
                   <img className="w-5 h-5" src="/images/add-flight-popup/24px---ic-info-5@2x.png" alt="Info" />
                 </div>
                 <div className="flex items-center gap-4">
                   <button
                     onClick={onEdit}
-                    className="flex items-center justify-center gap-1 px-11 py-4 border border-[#2AF556] text-[#2AF556] bg-transparent rounded-full font-bold text-base hover:bg-[rgba(42,245,86,0.08)] transition-colors"
+                    className="flex items-center justify-center gap-1 px-11 py-4 border border-[#4270e0] text-[#4270e0] bg-transparent rounded-full font-bold text-base hover:bg-blue-50 transition-colors"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="#2AF556" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#2AF556" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="#4270e0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="#4270e0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     Edit Details
                   </button>
@@ -218,8 +223,14 @@ export default function AddFlightDetailsConfirmationPopup({
                 }}
               >
                 <div className="flex flex-col gap-3">
-                  <div className="text-white font-bold text-base">Tail No</div>
-                  <div className="text-white font-bold text-xl">ZZ198</div>
+                  <div className="text-white font-bold text-base">Assigned Tail</div>
+                  <div className="text-white font-bold text-xl">
+                    {isUnschedulable ? (
+                      <span className="text-red-300">Unschedulable</span>
+                    ) : (
+                      assignedTailNumber ?? '—'
+                    )}
+                  </div>
                 </div>
                 <div className="flex flex-col gap-3">
                   <div className="text-white font-bold text-base">Plane Route</div>
@@ -233,13 +244,21 @@ export default function AddFlightDetailsConfirmationPopup({
                   <div className="text-white font-bold text-base">Total Estimated Flying Time</div>
                   <div className="text-white font-bold text-xl">{totalFlightTime}</div>
                 </div>
-                <div className="flex flex-col gap-3">
-                  <div className="text-white font-bold text-base">Total Distance Covered</div>
-                  <div className="text-white font-bold text-xl">60000 Miles</div>
-                </div>
               </div>
 
-              <div className="w-full h-px bg-[rgba(42,245,86,0.2)]"></div>
+              {isUnschedulable && (
+                <div className="flex items-center gap-3 px-4 py-3 mt-2 bg-red-50 border border-red-300 rounded-lg">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="#dc2626" strokeWidth="2"/>
+                    <path d="M12 8v4M12 16h.01" stroke="#dc2626" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                  <span className="text-red-700 text-sm font-medium">
+                    No tail available for this flight window. This flight will be added to the Unable to Schedule list.
+                  </span>
+                </div>
+              )}
+
+              <div className="w-full h-px bg-gray-300 mt-4"></div>
             </div>
 
             <div className="flex flex-col p-6">
@@ -247,42 +266,42 @@ export default function AddFlightDetailsConfirmationPopup({
               <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 pb-2">
                 <div className="flex flex-col items-center">
                   <div className="relative flex flex-col items-center h-22">
-                    <div className="w-7 h-7 bg-[rgba(42,245,86,0.2)] rounded-full flex items-center justify-center relative z-10">
+                    <div className="w-7 h-7 bg-gray-300 rounded-full flex items-center justify-center relative z-10">
                       <img className="w-5 h-5" src="/images/add-flight-popup/airplane-take-off-2@2x.png" alt="Takeoff" />
                     </div>
-                    <div className="absolute top-7 w-px h-20 bg-[rgba(42,245,86,0.2)] z-0"></div>
+                    <div className="absolute top-7 w-px h-20 bg-gray-300 z-0"></div>
                   </div>
                 </div>
                 <div className="flex-1">
                   <div className="flex items-end gap-8">
                     <div className="flex items-center gap-8">
                       <div className="flex flex-col gap-2 w-52">
-                        <div className="text-[var(--color-text-primary)] font-medium text-lg">From</div>
-                        <div className="text-[#607A60] font-normal text-lg">{getAirportName(flightData.fromAirport || 'LHR')}</div>
+                        <div className="text-black font-medium text-lg">From</div>
+                        <div className="text-gray-600 font-normal text-lg">{getAirportName(flightData.fromAirport || DEMO_HOME_AIRPORT)}</div>
                       </div>
                       <div className="flex gap-14">
                         <div className="flex flex-col gap-2">
                           <div className="flex items-center gap-2">
                             <img className="w-5 h-5" src="/images/add-flight-popup/calendar-18@2x.png" alt="Calendar" />
-                            <div className="text-[var(--color-text-primary)] font-medium text-lg">Departure date</div>
+                            <div className="text-black font-medium text-lg">Departure date</div>
                           </div>
-                          <div className="text-[#607A60] font-normal text-lg">
+                          <div className="text-gray-600 font-normal text-lg">
                             {flightData.fromDate ? formatDateTime(flightData.fromDate) : '16 Aug 2025'}
                           </div>
                         </div>
                         <div className="flex flex-col gap-2">
                           <div className="flex items-center gap-2">
                             <img className="w-5 h-5" src="/images/add-flight-popup/airplane-take-off-2@2x.png" alt="Takeoff" />
-                            <div className="text-[var(--color-text-primary)] font-medium text-lg">Departure time</div>
+                            <div className="text-black font-medium text-lg">Departure time</div>
                           </div>
-                          <div className="text-[#607A60] font-normal text-lg">
+                          <div className="text-gray-600 font-normal text-lg">
                             {flightData.fromTime ? `${formatTimeOnly(flightData.fromTime)} hrs` : '08:30 hrs'}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="w-full h-px bg-[rgba(42,245,86,0.2)] mt-4"></div>
+                  <div className="w-full h-px bg-gray-300 mt-4"></div>
                 </div>
               </div>
 
@@ -291,10 +310,10 @@ export default function AddFlightDetailsConfirmationPopup({
                   <div className="flex flex-col items-center">
 
                     <div className="relative w-7 flex flex-col items-center h-22">
-                      <div className="absolute top-0 w-7 h-7 bg-[var(--color-bg-elevated)] rounded-full flex items-center justify-center" style={{ border: '2px solid #2AF556' }}>
-                        <span className="text-[var(--color-text-primary)] font-medium text-sm tracking-wide">{index + 1}</span>
+                      <div className="absolute top-0 w-7 h-7 bg-white rounded-full flex items-center justify-center" style={{ border: '2px solid #4270e0' }}>
+                        <span className="text-black font-medium text-sm tracking-wide">{index + 1}</span>
                       </div>
-                      <div className="absolute top-7 w-px h-28 bg-[rgba(42,245,86,0.2)] z-0"></div>
+                      <div className="absolute top-7 w-px h-28 bg-gray-300 z-0"></div>
 
                     </div>
                   </div>
@@ -302,49 +321,49 @@ export default function AddFlightDetailsConfirmationPopup({
                     <div className="flex items-end gap-8">
                       <div className="flex items-center gap-8">
                         <div className="flex flex-col gap-2 w-52">
-                          <div className="text-[var(--color-text-primary)] font-medium text-lg">To ({index === 0 ? 'First' : 'Second'} leg)</div>
-                          <div className="text-[#607A60] font-normal text-lg">{getAirportName(leg.airport)}</div>
+                          <div className="text-black font-medium text-lg">To ({index === 0 ? 'First' : 'Second'} leg)</div>
+                          <div className="text-gray-600 font-normal text-lg">{getAirportName(leg.airport)}</div>
                         </div>
                         <div className="flex gap-11">
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
                               <img className="w-5 h-5" src="/images/add-flight-popup/calendar-19@2x.png" alt="Calendar" />
-                              <div className="text-[var(--color-text-primary)] font-medium text-lg">Estimated arriving date</div>
+                              <div className="text-black font-medium text-lg">Estimated arriving date</div>
                             </div>
-                            <div className="text-[#607A60] font-normal text-lg">{leg.arrivalDate ? formatDateTime(leg.arrivalDate) : '16 Aug 2025'}</div>
+                            <div className="text-gray-600 font-normal text-lg">{leg.arrivalDate ? formatDateTime(leg.arrivalDate) : '16 Aug 2025'}</div>
                           </div>
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
                               <img className="w-5 h-5" src="/images/add-flight-popup/airplane-landing-2@2x.png" alt="Landing" />
-                              <div className="text-[var(--color-text-primary)] font-medium text-lg">Estimated arriving time</div>
+                              <div className="text-black font-medium text-lg">Estimated arriving time</div>
                             </div>
-                            <div className="text-[#607A60] font-normal text-lg">{leg.arrivalTime ? formatTimeOnly(leg.arrivalTime) : '15:00'} hrs</div>
+                            <div className="text-gray-600 font-normal text-lg">{leg.arrivalTime ? formatTimeOnly(leg.arrivalTime) : '15:00'} hrs</div>
                           </div>
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
                               <img className="w-5 h-5" src="/images/add-flight-popup/calendar-20@2x.png" alt="Calendar" />
-                              <div className="text-[var(--color-text-primary)] font-medium text-lg">Estimated departure date</div>
+                              <div className="text-black font-medium text-lg">Estimated departure date</div>
                             </div>
-                            <div className="text-[#607A60] font-normal text-lg">{leg.departureDate ? formatDateTime(leg.departureDate) : '17 Aug 2025'}</div>
+                            <div className="text-gray-600 font-normal text-lg">{leg.departureDate ? formatDateTime(leg.departureDate) : '17 Aug 2025'}</div>
                           </div>
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
                               <img className="w-5 h-5" src="/images/add-flight-popup/airplane-take-off-2@2x.png" alt="Takeoff" />
-                              <div className="text-[var(--color-text-primary)] font-medium text-lg">Estimated departure time</div>
+                              <div className="text-black font-medium text-lg">Estimated departure time</div>
                             </div>
-                            <div className="text-[#607A60] font-normal text-lg">{leg.departureTime ? formatTimeOnly(leg.departureTime) : '10:00'} hrs</div>
+                            <div className="text-gray-600 font-normal text-lg">{leg.departureTime ? formatTimeOnly(leg.departureTime) : '10:00'} hrs</div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="w-full h-px bg-[rgba(42,245,86,0.2)] mt-4"></div>
+                    <div className="w-full h-px bg-gray-300 mt-4"></div>
                   </div>
                 </div>
               ))}
 
               <div className="flex items-start gap-8 py-4">
                 <div className="relative w-7 h-8">
-                  <div className="absolute top-0 w-7 h-7 bg-[rgba(42,245,86,0.2)] rounded-full flex items-center justify-center">
+                  <div className="absolute top-0 w-7 h-7 bg-gray-300 rounded-full flex items-center justify-center">
                     <img className="w-5 h-5" src="/images/add-flight-popup/airplane-landing-2@2x.png" alt="Landing" />
                   </div>
                 </div>
@@ -352,32 +371,32 @@ export default function AddFlightDetailsConfirmationPopup({
                   <div className="flex items-end gap-8">
                     <div className="flex items-center gap-8">
                       <div className="flex flex-col gap-2 w-52">
-                        <div className="text-[var(--color-text-primary)] font-medium text-lg">Return</div>
-                        <div className="text-[#607A60] font-normal text-lg">{getAirportName(flightData.toAirport || 'LHR')}</div>
+                        <div className="text-black font-medium text-lg">Return</div>
+                        <div className="text-gray-600 font-normal text-lg">{getAirportName(flightData.toAirport || DEMO_HOME_AIRPORT)}</div>
                       </div>
                       <div className="flex gap-11">
                         <div className="flex flex-col gap-2">
                           <div className="flex items-center gap-2">
                             <img className="w-5 h-5" src="/images/add-flight-popup/calendar-21@2x.png" alt="Calendar" />
-                            <div className="text-[var(--color-text-primary)] font-medium text-lg">Estimated return date</div>
+                            <div className="text-black font-medium text-lg">Estimated return date</div>
                           </div>
-                          <div className="text-[#607A60] font-normal text-lg">
+                          <div className="text-gray-600 font-normal text-lg">
                             {flightData.returnDate ? formatDateTime(flightData.returnDate) : '19 Aug 2025'}
                           </div>
                         </div>
                         <div className="flex flex-col gap-2">
                           <div className="flex items-center gap-2">
                             <img className="w-5 h-5" src="/images/add-flight-popup/airplane-landing-2@2x.png" alt="Landing" />
-                            <div className="text-[var(--color-text-primary)] font-medium text-lg">Estimated return time</div>
+                            <div className="text-black font-medium text-lg">Estimated return time</div>
                           </div>
-                          <div className="text-[#607A60] font-normal text-lg">
+                          <div className="text-gray-600 font-normal text-lg">
                             {flightData.returnTime ? `${formatTimeOnly(flightData.returnTime)} hrs` : '08:35 hrs'}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="w-full h-px bg-[rgba(42,245,86,0.2)] mt-4"></div>
+                  <div className="w-full h-px bg-gray-300 mt-4"></div>
                 </div>
               </div>
             </div>
@@ -385,13 +404,13 @@ export default function AddFlightDetailsConfirmationPopup({
         </div>
 
         <div className="flex flex-col gap-6 pb-6">
-          <div className="w-full h-px bg-[rgba(42,245,86,0.2)]"></div>
+          <div className="w-full h-px bg-gray-300"></div>
           <div className="flex items-center justify-between px-6">
             <div className="w-90"></div>
             <div className="flex items-center gap-4">
               <button
                 onClick={onCancel}
-                className="flex items-center justify-center gap-1 px-11 py-4 border border-[#2AF556] text-[#2AF556] bg-transparent rounded-full font-bold text-base hover:bg-[rgba(42,245,86,0.08)] transition-colors"
+                className="flex items-center justify-center gap-1 px-11 py-4 border border-[#4270e0] text-[#4270e0] bg-transparent rounded-full font-bold text-base hover:bg-blue-50 transition-colors"
               >
                 Cancel
               </button>
