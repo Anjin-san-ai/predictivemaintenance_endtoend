@@ -6,7 +6,6 @@ import "./styleguide.css";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getA400IndexForTail } from "@/utils/a400Bridge";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import type { GanttAircraft, GanttMaintenanceItem, GanttRouteLeg } from "@/lib/scheduler/types";
 import { getDynamicStatusForAircraft, getStatusColor } from "@/utils/aircraftUtils";
@@ -173,8 +172,7 @@ export default function MaintenanceOverviewClient({ aircraft }: Props) {
       .then(r => r.json())
       .then(data => {
         if (data.error || !data.aircraft) return;
-        const idx = getA400IndexForTail(aircraft.tailNumber) % data.aircraft.length;
-        const ac = data.aircraft[idx];
+        const ac = data.aircraft.find((a: { id: string }) => a.id === aircraft.tailNumber);
         if (ac) {
           setAircraftHealth(ac.components || []);
           setWorstStatus(ac.worstStatus || 'Good');
@@ -476,8 +474,8 @@ export default function MaintenanceOverviewClient({ aircraft }: Props) {
                       <div className="rectangle-2957">
                         <iframe
                           src={typeof window !== 'undefined' && window.location.hostname !== 'localhost'
-                            ? 'https://a400-webapp-ercscuhvf3h7ftdw.uksouth-01.azurewebsites.net'
-                            : 'http://localhost:3000'}
+                            ? `https://a400-webapp-ercscuhvf3h7ftdw.uksouth-01.azurewebsites.net?aircraft=${encodeURIComponent(aircraft.tailNumber)}`
+                            : `http://localhost:3000?aircraft=${encodeURIComponent(aircraft.tailNumber)}`}
                           frameBorder="0"
                           width="100%"
                           height="100%"
