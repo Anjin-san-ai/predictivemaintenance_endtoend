@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), 'public', 'agent-network.html');
+    const filePath = path.join(process.cwd(), 'src', 'data', 'agent-network.html');
     const html = fs.readFileSync(filePath, 'utf-8');
     return new NextResponse(html, {
       headers: {
